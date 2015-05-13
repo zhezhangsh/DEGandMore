@@ -36,3 +36,5 @@ Rscript ./GSEA_example.r ./GSEA_example.yaml
 ```
 Rscript ./GSEA_example.r ./GSEA_example.yaml norun
 ```
+
+- Open the index.html file to view results
