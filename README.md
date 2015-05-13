@@ -14,7 +14,11 @@ library(DEGandMore);
 - This example run will save all input and output files into the current directory. Create a new directory and set it as the current directory if you want to
 - Copy these input files into your current directory. These files are for the example run only. Prepare your own input file to make a customized run
 ```
-
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GENE_SYMBOL.chip
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
 ```
 - Run the GSEA_example script
 ```
