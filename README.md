@@ -32,7 +32,7 @@ wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GENE_SYMBOL.ch
 Rscript ./GSEA_example.r ./GSEA_example.yaml
 ```
 
-- Alternatively, run below if want to make the actual GSEA run later. The shell script will be save in ./RunGSEA.sh
+- Alternatively, run the script as below if want to make the actual GSEA run later. The shell script will be save in ./RunGSEA.sh
 ```
 Rscript ./GSEA_example.r ./GSEA_example.yaml norun
 ```
