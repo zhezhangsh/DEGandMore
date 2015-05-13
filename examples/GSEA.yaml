@@ -1,23 +1,23 @@
 ---
-###################### Copy this file to the folder where GSEA results will be saved before editing ######################
+###################### Copy and rename this file to the folder where GSEA results and edit it to specify inputs ######################
 
 ########################################################################################################################################################
 ## Required fields
 
-# Program location
-jar: /home/zhangz/tools/gsea/gsea2-2.2.0.jar # Location of precompiled Java executible of GSEA
-# Run mode
-preranked: no # Input data is preranked .rnk file if yes; other formats if no: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats
-# Number of thread to run on multiple .gmt files on parallel
-thread: 8
+jar: /home/zhangz/tools/gsea/gsea2-2.2.0.jar  # Location of precompiled Java executible of GSEA
+preranked: no                                 # Run mode. Input data is preranked .rnk file if yes; other formats if no: http://www.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats
+thread: 8                                     # Number of thread to run on multiple .gmt files on parallel
 
 #############################################################################
 # Must specify for each run
-name: test # analysis name, used as prefix to output
-out: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/GSEA/ # Output folder
-input: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/human_tumor.gct # .gct file if <preranked> is <no>; .rnk file if <preranked> is <no>
-class: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/human_tumor.cls # sample classes; ignored if <preranked> is <yes>
-chip: /nas/is1/rchive/data/gene.set/public/msigdb/src/msigdb_v5.0_chip/GENE_SYMBOL.chip # gene annotation. leave it empty if not using any (gene IDs in .gmt files and input must match)
+name: human_tumor                                                                                           # analysis name, used as prefix to output
+out: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/GSEA/human_tumor                       # output folder
+input: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/GSEA/human_tumor/human_tumor.gct     # .gct file if <preranked> is <no>; .rnk file if <preranked> is <no>
+class: /nas/is1/zhangz/projects/curran/2015-02_RNA_Mouse_Model/results/GSEA/human_tumor/human_tumor.cls     # sample classes; ignored if <preranked> is <yes>
+chip: /nas/is1/rchive/data/gene.set/public/msigdb/src/msigdb_v5.0_chip/GENE_SYMBOL.chip                     # gene annotation. leave it empty if not using any (gene IDs in .gmt files and input must match)
+groups:                                                                                                     # names of the groups to be compared; the first is always the control group
+  control: Medullo
+  case: ATRT
 #############################################################################
 
 # GMT files. One GSEA run for each, saved in separate folders
@@ -42,20 +42,21 @@ gmt:
 
 ########################################################################################################################################################
 ## Extra options
-# Based on ENCODE default (see STAR manual) 
 options:
+  ##############################################
   # parameters commonly changed from run to run
-  metric: Diff_of_Classes # metric for raning genes: <Signal2Noise>, <tTest>, <Cosine>, <Euclidean>, <Manhatten>, <Pearson>, <Ratio_of_Classes>, <Diff_of_Classes>, or <log2_Ratio_of_Classes>
-  nperm: 100 # number of permuations
-  permute: gene_set # type of permuation: <gene_set> or <phenotype>
-  plot_top_x: 100 # number of top pathways to plot 
+  metric: Diff_of_Classes   # metric for raning genes: <Signal2Noise>, <tTest>, <Cosine>, <Euclidean>, <Manhatten>, <Pearson>, <Ratio_of_Classes>, <Diff_of_Classes>, or <log2_Ratio_of_Classes>
+  nperm: 1000               # number of permuations
+  permute: gene_set         # type of permuation: <gene_set> or <phenotype>
+  plot_top_x: 100           # number of top pathways to plot 
   set_max: 500 
-  set_min: 15 
+  set_min: 5 
+  ##############################################
   # paramater rarely to be changed
-  scoring_scheme: weighted # weighted enrichment statistics: <classic>, <weighted>, <weighted_p2> or <weighted_p1.5>
-  collapse: true # collapse redundant genes: <true> or <false>
-  mode: Max_probe # which one to use when there is redudant genes: <Max_probe> or <Median_of_probes>
-  norm: meandiv # normalization mode: <none> or <meandiv>
+  scoring_scheme: weighted    # weighted enrichment statistics: <classic>, <weighted>, <weighted_p2> or <weighted_p1.5>
+  collapse: true              # collapse redundant genes: <true> or <false>
+  mode: Max_probe             # which one to use when there is redudant genes: <Max_probe> or <Median_of_probes>
+  norm: meandiv               # normalization mode: <none> or <meandiv>
   rnd_type: no_balance 
   sort: real 
   order: descending 
@@ -67,3 +68,6 @@ options:
   save_rnd_lists: false 
   zip_report: false 
   gui: false
+  ##############################################
+  
+# the end of this file must be an empty new line #
