@@ -16,7 +16,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
   
     # Top level collections
     collections<-c(
-       Hallmark = "Collection 0: Hallmark gene sets",
+       H = "Collection 0: Hallmark gene sets",
        C1 = "Collection 1: Positional gene sets",
        C2 = "Collection 2: Curated gene sets",
        C3 = "Collection 3: Motif gene sets",
