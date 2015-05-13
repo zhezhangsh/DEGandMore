@@ -16,7 +16,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
   
     # Top level collections
     collections<-c(
-       H = "Collection 0: Hallmark gene sets",
+       HALLMARK = "Collection 0: Hallmark gene sets",
        C1 = "Collection 1: Positional gene sets",
        C2 = "Collection 2: Curated gene sets",
        C3 = "Collection 3: Motif gene sets",
@@ -76,7 +76,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
       
       tb<-transform(tb, name1=paste('<a href = ', shQuote(urls[,1]), '>', 'Full list', '</a>'))
       tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
-      colnames(tb)<-c('Gene set collection', name1, name2);
+      colnames(tb)<-c('Gene set collection', paste(name1, name2, sep='>'), paste(name2, name1, sep='>'));
       
       print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
     }

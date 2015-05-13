@@ -60,8 +60,8 @@ GSEAviaJava<-function(fn.yaml, execute=TRUE) {
     } else {
       run<-sapply(cmmd, system);
     }
-    gnm<-paste('Higher_in_', c(yaml$groups[[1]], yaml$groups[[2]]), sep='');
-    SummarizeGSEA(gnm[1], gnm[2]);
+
+    SummarizeGSEA(yaml$groups[[1]], yaml$groups[[2]]);
   }
  
   # save shell command lines
