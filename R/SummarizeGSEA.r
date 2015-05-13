@@ -7,6 +7,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
     # wd                    Working directory, where all the GSEA results locate
     # GSEACollection        Whether the GSEA gene set collections themseleves were used for analysis
     
+    library(methods);
     library(googleVis);
     library(R2HTML);
     
@@ -75,7 +76,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
     tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
     colnames(tb)<-c('Gene set collection', name1, name2);
     
-    print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
+    print.gvis(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
 
     setwd(wd0);
 }

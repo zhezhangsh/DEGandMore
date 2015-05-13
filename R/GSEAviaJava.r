@@ -49,15 +49,19 @@ GSEAviaJava<-function(fn.yaml, execute=TRUE) {
   cur.wd<-getwd();
   setwd(out);
   
-  n<-round(yaml$thread[1]);
-  if (n>1) {
-    library(snow);
-    cl<-makeCluster(n, type='SOCK');
-    run<-clusterApplyLB(cl, cmmd, system);
-    stopCluster(cl);
-  } else {
-    run<-sapply(cmmd, system);
+  # Run GSEA
+  if (execute) {
+    n<-round(yaml$thread[1]);
+    if (n>1) {
+      library(snow);
+      cl<-makeCluster(n, type='SOCK');
+      run<-clusterApplyLB(cl, cmmd, system);
+      stopCluster(cl);
+    } else {
+      run<-sapply(cmmd, system);
+    }
   }
+ 
   
   # save shell command lines
   writeLines(paste(cmmd, '\n\n', sep=''), './RunGSEA.sh');
