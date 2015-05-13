@@ -76,7 +76,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
     tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
     colnames(tb)<-c('Gene set collection', name1, name2);
     
-    print.gvis(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
+    print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
 
     setwd(wd0);
 }
