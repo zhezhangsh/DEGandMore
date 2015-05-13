@@ -14,11 +14,15 @@ library(DEGandMore);
 - This example run will save all input and output files into the current directory. Create a new directory and set it as the current directory if you want to
 - Copy these input files into your current directory. These files are for the example run only. Prepare your own input file to make a customized run
 ```
-wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GENE_SYMBOL.chip
-wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
-wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
-wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
-wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GSEA_example.r               
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GSEA_example.yaml              
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GSEA_example.cls               
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GSEA_example.gct  
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/gsea2-2.2.0.jar          
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/h.all.v5.0.symbols.gmt
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/c2.cp.kegg.v5.0.symbols.gmt 
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/c2.cp.reactome.v5.0.symbols.gmt
+wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GENE_SYMBOL.chip    
 ```
 - Run the GSEA_example script
 ```
