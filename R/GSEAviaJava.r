@@ -60,14 +60,13 @@ GSEAviaJava<-function(fn.yaml, execute=TRUE) {
     } else {
       run<-sapply(cmmd, system);
     }
+    gnm<-c(yaml$groups[[1]], yaml$groups[[2]]);
+    SummarizeGSEA(paste(gnm[1], gnm[2], sep='>'), paste(gnm[2], gnm[1], sep='>'));
   }
  
-  
   # save shell command lines
   writeLines(paste(cmmd, '\n\n', sep=''), './RunGSEA.sh');
-  
-  SummarizeGSEA(yaml$groups[[1]], yaml$groups[[2]])
-  
+    
   setwd(cur.wd);
   
   cmmd;

@@ -16,7 +16,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
   
     # Top level collections
     collections<-c(
-       Hallmark = "Hallmark gene sets: Well-defined biological states or processes",
+       Hallmark = "Collection 0: Hallmark gene sets",
        C1 = "Collection 1: Positional gene sets",
        C2 = "Collection 2: Curated gene sets",
        C3 = "Collection 3: Motif gene sets",
@@ -56,28 +56,31 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
     })
     pos<-sapply(names(pos), function(x) paste(x, pos[x], sep='/')); 
     neg<-sapply(names(neg), function(x) paste(x, neg[x], sep='/'));
-    f<-f[file.exists(pos)&file.exists(neg)];
-    pos<-pos[f];
-    neg<-neg[f];
     
-    nm<-sapply(strsplit(f, sep), function(x) x[1]);    
-    if (GSEACollection) {
-#        for (i in 1:length(collections)) nm[toupper(nm)==toupper(names(collections)[i])][1]<-collections[i];
+    # create the index.html file
+    if (length(pos)>0 & length(pos)==length(neg)) {
+      f<-f[file.exists(pos)&file.exists(neg)];
+      pos<-pos[f];
+      neg<-neg[f];
+      
+      nm<-sapply(strsplit(f, sep), function(x) x[1]);    
+      if (GSEACollection) {
         for (i in 1:length(collections)) nm[grepl(toupper(names(collections)[i]), toupper(nm))][1]<-collections[i];
         for (i in 1:length(collections2)) nm[grep(names(collections2)[i], nm, ignore=TRUE)][1]<-collections2[i]; 
+      }
+      
+      urls<-cbind(pos, neg);
+      rownames(urls)<-nm; 
+      
+      tb<-data.frame(Name=rownames(urls), name1=rep('Full list', nrow(urls)), name2=rep('Full list', nrow(urls)));
+      
+      tb<-transform(tb, name1=paste('<a href = ', shQuote(urls[,1]), '>', 'Full list', '</a>'))
+      tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
+      colnames(tb)<-c('Gene set collection', name1, name2);
+      
+      print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
     }
-
-    urls<-cbind(pos, neg);
-    rownames(urls)<-nm; 
-  
-    tb<-data.frame(Name=rownames(urls), name1=rep('Full list', nrow(urls)), name2=rep('Full list', nrow(urls)));
     
-    tb<-transform(tb, name1=paste('<a href = ', shQuote(urls[,1]), '>', 'Full list', '</a>'))
-    tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
-    colnames(tb)<-c('Gene set collection', name1, name2);
-    
-    print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
-
     setwd(wd0);
 }
 
