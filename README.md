@@ -37,8 +37,16 @@ Rscript ./GSEA_example.r ./GSEA_example.yaml norun
 
 ```
 
-- 
+- Or, run the example within your R console or RStudio
 ```
+# Only the first time 
+library(devtools);
+install_github("zhezhangsh/DEGandMore");
+
+# For each run
+library(DEGandMore);
+GSEAviaJava('GSEA_example.yaml');
+
 ```
 
 - Open the index.html file to view results
