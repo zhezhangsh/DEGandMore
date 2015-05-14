@@ -26,15 +26,19 @@ wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/c2.cp.reactome
 wget https://github.com/zhezhangsh/DEGandMore/raw/master/examples/GENE_SYMBOL.chip    
 ```
 
-- Run the GSEA_example script
+- Run the GSEA_example script on shell
 
 ```
 Rscript ./GSEA_example.r ./GSEA_example.yaml
+
+# Alternatively, run the script as below if want to make the actual GSEA run later. 
+# The shell script will be save in ./RunGSEA.sh
+Rscript ./GSEA_example.r ./GSEA_example.yaml norun
+
 ```
 
-- Alternatively, run the script as below if want to make the actual GSEA run later. The shell script will be save in ./RunGSEA.sh
+- 
 ```
-Rscript ./GSEA_example.r ./GSEA_example.yaml norun
 ```
 
 - Open the index.html file to view results
