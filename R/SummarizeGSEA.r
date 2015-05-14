@@ -21,7 +21,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
        C2 = "Collection 2: Curated gene sets",
        C3 = "Collection 3: Motif gene sets",
        C4 = "Collection 4: Computational gene sets",
-       C5 = "Collection 5: GO gene setss",
+       C5 = "Collection 5: GO gene sets",
        C6 = "Collection 6: Oncogenic signatures gene sets",
        C7 = "Collection 7: Immunologic signatures gene sets"
     );
@@ -65,8 +65,8 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
       
       nm<-sapply(strsplit(f, sep), function(x) x[1]);    
       if (GSEACollection) {
+        for (i in 1:length(collections2)) nm[grepl(names(collections2)[i], nm, ignore=TRUE)][1]<-collections2[i];       
         for (i in 1:length(collections)) nm[grepl(toupper(names(collections)[i]), toupper(nm))][1]<-collections[i];
-        for (i in 1:length(collections2)) nm[grep(names(collections2)[i], nm, ignore=TRUE)][1]<-collections2[i]; 
       }
       
       urls<-cbind(pos, neg);
