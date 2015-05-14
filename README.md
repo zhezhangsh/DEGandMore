@@ -8,7 +8,7 @@ install_github("zhezhangsh/DEGandMore");
 library(DEGandMore);
 ```
 
-#### Make an example run of GSEA via command line
+#### Run GSEA on MSigDB collections and summarize outputs
 
 - Make sure both of Rscript and java are in your PATH
 - This example run will save all input and output files into the current directory. Create a new directory and set it as the current directory if you want to
