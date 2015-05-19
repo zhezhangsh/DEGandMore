@@ -3,3 +3,8 @@
 export("GSEAviaJava");
 export("PrepareGSEA");
 export("SummarizeGSEA");
+
+export("AddAPCluster");
+export("DegPCA");
+export("DegPCA2Groups");
+export("PCALegend");
