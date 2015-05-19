@@ -1,4 +1,5 @@
-
+export("DeRankProd");
+export("SummarizeRP");
 
 export("GSEAviaJava");
 export("PrepareGSEA");
@@ -8,3 +9,6 @@ export("AddAPCluster");
 export("DegPCA");
 export("DegPCA2Groups");
 export("PCALegend");
+
+export("WriteExcel");
+export("WriteExcelSheet");
