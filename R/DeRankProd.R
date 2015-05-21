@@ -58,6 +58,9 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
     }
   }		
   
+  # FDR cannot be greater than 1
+  for (i in 1:length(tbs)) tbs[[i]][, 'FDR']<-pmin(1, tbs[[i]][, 'FDR']);
+  
   if (save.it) save(tbs, file=paste(class1, '-vs-', class2, '.rdata', sep=''));
   tbs;
 }
