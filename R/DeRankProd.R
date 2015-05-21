@@ -15,7 +15,8 @@ DeRankProd<-function(mtrx, clss, nperm=100) {
   means<-sapply(clss, function(c) rowMeans(mtrx[, c, drop=FALSE]));
   colnames(means)<-paste('Mean', nm, sep='_');
   
-  stat<-lapply(stat, function(stat) cbind(Rank=stat[, 1], means, stat[, -1]));
+  cnm<-c(paste("Log2(", nm[2], '/', nm[1], ')', sep=''), "FoldChange", "PValue", "FDR")
+  stat<-lapply(stat, function(stat) cbind(stat[, !(colnames(stat) %in% cnm)], means, stat[, cnm]));
   
   stat;
 }
@@ -35,7 +36,7 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
     p<-(tbs[[1]][,3]+(1-tbs[[2]][,3]))/2;
     p<-2*pmin(p, 1-p);
     p[p<0]<-0;
-    a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], p=p, FDR=p.adjust(p, method='BH'));
+    a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], PValue=p, FDR=p.adjust(p, method='BH'));
     if (!identical(NA, genename)) rownames(a)<-genename;
     tbs$single.rank<-a;
   }
