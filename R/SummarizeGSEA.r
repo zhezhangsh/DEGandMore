@@ -80,6 +80,25 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
       tb<-tb[order(tb[[1]]), ];
       
       print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
+      
+      # Files with full table of results
+      fn1<-sub('.html$', '.xls', c(pos, neg));
+      nm1<-rep(sub('Collection ', '', nm), 2);
+      tbls<-lapply(fn1, function(f) read.csv2(f, sep='\t', row=1));
+      coll<-rep(nm1, as.vector(sapply(tbls, nrow)));
+      tbl<-do.call('rbind', tbls);
+      tbl<-data.frame(Collection=coll, Gene_set=tbl[[1]], Size=as.vector(tbl[[3]]), NES=as.vector(tbl[[5]]), PValue=as.vector(tbl[[6]]), FDR=as.vector(tbl[[7]]), stringsAsFactors=FALSE);
+      for (i in 3:6) tbl[, i]<-as.numeric(tbl[, i]);
+      tbl<-tbl[order(tbl$NES), ];
+      di<-rep('No', nrow(tbl));
+      di[tbl$NES<0]<-'Yes';
+      tbl<-data.frame(tbl, di, stringsAsFactors=FALSE);
+      names(tbl)[ncol(tbl)]<-paste(name2, name1, sep='>');
+      
+      library(DT);
+      library(htmlwidgets);
+      saveWidget(datatable(tbl), 'full_list.html', selfcontained=FALSE);
+      saveRDS(tbl, file='full_list.rds');
     }
     
     setwd(wd0);
