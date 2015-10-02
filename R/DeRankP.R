@@ -2,7 +2,7 @@
 
 ###################################################################
 # Make output consistent with other methods
-DeRankP<-function(mtrx, grps, logged=TRUE, nperm=100, ...) {
+DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   library(DEGandMore);
   
   stat<-DeRankProd(mtrx, grps, logged, nperm, ...);
@@ -16,17 +16,19 @@ DeRankP<-function(mtrx, grps, logged=TRUE, nperm=100, ...) {
   list(stat=s[rownames(mtrx), ], group=grps, rp=list(original=stat$rp, summarized=stat[1:2]));
 }
 
-DeRankProd<-function(mtrx, grps, logged=TRUE, nperm=100, ...) {
+DeRankProd<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   library(RankProd);
   
   nm<-names(grps);
   default.nm<-c('Control', 'Case');
   if (is.null(nm)) nm<-default.nm else nm[is.na(nm) | nm=='']<-default.nm[is.na(nm) | nm==''];
   
-  cl<-rep(0:1, sapply(grps, length));
-  
-  capture.output(rp<-RP(mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE], cl, num.perm=nperm, logged=logged, ...))->x;
-  
+  if (paired & length(grps[[1]])==length(grps[[2]])) {
+    capture.output(rp<-RP(mtrx[, grps[[1]]]-mtrx[, grps[[2]]], rep(1, length(grps[[1]])), num.perm=nperm, logged=logged, ...))->x;
+  } else {
+    capture.output(rp<-RP(mtrx[, c(grps[[1]], grps[[2]])], rep(0:1, sapply(grps, length)), num.perm=nperm, logged=logged, ...))->x;
+  }
+
   stat<-SummarizeRP(rp, nm[1], nm[2], save.it=FALSE, single.ranking=TRUE, write.rnk=FALSE, write.excel=FALSE);
   
   means<-sapply(grps, function(c) rowMeans(mtrx[, c, drop=FALSE]));

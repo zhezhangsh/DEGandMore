@@ -1,0 +1,217 @@
+---
+title: "Differential Gene Expression"
+author: "Jim Zhang"
+date: "October 2, 2015"
+output: html_document
+---
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+
+library(DEGandMore);
+
+rerun.all<-TRUE;
+
+fn.fig<-c();
+res<-list();
+
+path.inputs<-"/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/r/pairwise_inputs.rds";
+```
+
+```{r load_data, include=FALSE}
+if (!file.exists(path.inputs)) stop("Error: No inputs to run pairwise comparison");
+inputs<-readRDS(path.inputs);
+res$inputs<-inputs;
+
+# All input variables
+anno<-inputs$anno;
+expr<-inputs$expr;
+g1.ind<-inputs$indexes[[1]];
+g2.ind<-inputs$indexes[[2]];
+g1.name<-inputs$names[1];
+g2.name<-inputs$names[2];
+g1.name<-gsub('-', '_', g1.name);
+g2.name<-gsub('-', '_', g2.name);
+genome<-inputs$genome;
+paired<-inputs$paired;
+homolog<-inputs$homolog;
+penalty<-inputs$penalty;
+deg.method<-inputs$deg$method;
+cutoff.l2r<-inputs$deg$cutoff.l2r;
+cutoff.p<-inputs$deg$cutoff.p;
+cutoff.fdr<-inputs$deg$cutoff.pdf;
+num.top<-inputs$deg$num.top;
+nperm<-inputs$deg$nperm;
+logged<-inputs$deg$logged;
+path.output<-inputs$output;
+
+if (!exists('expr')) expr<-eval(parse(text=load('expr.rdata')));
+if (!exists('anno')) anno<-eval(parse(text=load('anno.rdata')));
+if (!identical(rownames(expr), rownames(anno))) stop('Row names of annotation and gene expression data are not identical');
+if (!exists('paired')) paired<-FALSE; 
+if (!exists('g1.ind')) stop('Error: Index of samples in group 1 unknown');
+if (!exists('g2.ind')) stop('Error: Index of samples in group 2 unknown');
+if (!exists('g1.name')) stop('Error: Name of group 1 unknown');
+if (!exists('g2.name')) stop('Error: Name of group 2 unknown');
+if (length(g1.ind)<2) stop('Error: Not enough samples in group ', g1.name, ', minimum=2');
+if (length(g2.ind)<2) stop('Error: Not enough samples in group ', g2.name, ', minimum=2');
+if (paired & length(g1.ind)!=length(g2.ind)) stop('Error: Unequal sample sizes for paired comparison, ', length(g1.ind), ' vs. ', length(g2.ind));
+if (is.null(path)) path.output<-getwd();
+if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
+
+path<-paste(g1.name, g2.name, sep='-vs-');
+path<-paste(path.output, path, sep='/');
+path.figure<-paste(path, 'figure', sep='/');
+if (!file.exists(path)) dir.create(path, recursive = TRUE);
+if (!file.exists(path.figure)) dir.create(path.figure, recursive = TRUE);
+
+e1<-expr[, g1.ind, drop=FALSE];
+e2<-expr[, g2.ind, drop=FALSE];
+e1.2<-cbind(e1, e2); 
+grps<-list(g1.ind, g2.ind);
+names(grps)<-c(g1.name, g2.name);
+```
+
+```{r analysis_variance, include=FALSE}
+fn.fig['variance']<-paste(path.figure, 'variance.pdf', sep='/')); 
+pdf(fn.fig['variance'], width=6.4, height=8);
+par(mfrow=c(3,1), mar=c(4,5,2,2));
+
+# Distribution of average expression level
+m<-rowMeans(e1.2);
+d<-density(m);
+x<-d$x;
+y<-d$y;
+plot(d, type='n', yaxs='i', xaxs='i', xlim=c(min(x), max(x)), ylim=c(0, 1.1*max(y)), xlab='', ylab='Density', main='A. Distribution of Expression Measurement', cex.lab=2, cex.main=1.5);
+title(xlab='Gene Expression Measurement (sample average)', line=2, cex=2);
+
+x0<-as.vector(summary(m))[2:5];
+y0<-sapply(x0, function(x0, x, y) y[which(abs(x-x0)==min(abs(x-x0)))], x=x, y=y);
+col<-c('blue', 'red', 'orange', 'green');
+segments(x0, 0, x0, y0, lty=1, col=col, lwd=1);
+lines(d, col='darkgrey', lwd=4); 
+text(x0, y0/2, srt=90, labels=round(x0, 3));
+legend(min(x)+0.75*(max(x)-min(x)), max(y), legend=c('First quantile', 'Median', 'Mean', 'Third quantile'), lty=1, col=col, bty='n', lwd=2);
+
+# Distribution of standard deviation across samples
+sd<-apply(e1.2, 1, sd);
+d<-density(sd); 
+x<-d$x;
+y<-d$y;
+plot(d, type='n', yaxs='i', xaxs='i', xlim=c(min(x), max(x)), ylim=c(0, 1.1*max(y)), xlab='', ylab='Density', main='B. Distribution of Variance', cex.lab=2, cex.main=1.5);
+title(xlab='Gene Standard Deviation (between samples)', line=2, cex=2);
+
+x0<-as.vector(summary(sd))[2:5];
+y0<-sapply(x0, function(x0, x, y) y[which(abs(x-x0)==min(abs(x-x0)))], x=x, y=y);
+col<-c('blue', 'red', 'orange', 'green');
+segments(x0, 0, x0, y0, lty=1, col=col, lwd=1);
+lines(d, col='darkgrey', lwd=4);
+text(x0, y0/2, srt=90, labels=round(x0, 3));
+legend(min(x)+0.75*(max(x)-min(x)), max(y), legend=c('First quantile', 'Median', 'Mean', 'Third quantile'), lty=1, col=col, bty='n', lwd=2);
+
+plot(m, sd, xlab='', ylab='Standard Deviation', main='C. Variance vs. Expression Measurement', cex.lab=2, cex.main=1.5, cex=0.5, col='darkgrey');
+title(xlab='Expression Measurement', line=2, cex=2);
+lines(lowess(m, sd), lwd=3, col=2);
+
+dev.off();
+```
+
+```{r analysis_boxplot, include=FALSE}
+fn.fig['boxplot']<-paste(path.figure, 'boxplot.pdf', sep='/');
+pdf(fn.fig['boxplot'], width=6.4, height=4); 
+par(mfrow=c(1,1), mai=c(0.7, 0.6, .1,.1))
+plot(0, type='n', xlim=c(0.5, 0.5+ncol(e1.2)), ylim=c(min(e1.2), max(e1.2)), ylab='', xlab='', xaxt='n'); 
+lines(1:ncol(e1.2), apply(e1.2, 2, median), col='green', lwd=1);
+title(ylab='Expression Level', line=2);
+cex<-max(strwidth(colnames(e1.2), unit='in'));
+boxplot(data.frame(e1.2), las=3, notch=TRUE, boxwex=.6, col=c(rep('lightgrey', ncol(e1)), rep('lightblue', ncol(e2))), names=colnames(e1.2), cex.axis=min(1, 0.4/cex), yaxt='n', add=TRUE, pch=19, cex=0.4)->x;
+dev.off();
+```
+
+```{r analysis_clustering, include=FALSE}
+fn.fig['clustering']<-paste(path.figure, 'clustering.pdf', sep='/');
+pdf(fn.fig['clustering'], width=6.4, height=4.8);
+par(mfrow=c(1,1), mai=c(0.2, 0.8, .2 , .2));
+plot(hclust(dist(t(e1.2))), main='', ylab='', xlab='', sub='', cex=min(1, 5/ncol(e1.2)/0.12), frame.plot=TRUE);
+title(ylab='Distance', line=2.5, cex.lab=2);
+dev.off();
+```
+
+```{r analysis_pca, include=FALSE}
+fn.fig['pca']<-paste(path.figure, 'pca.pdf', sep='/');
+pdf(fn.fig['pca'], width=6.4, height=4.8);
+
+pca<-prcomp(t(e1.2));
+
+X<-pca$x[,1];
+Y<-pca$x[,2];
+per<-round(summary(pca)$importance[2, 1:2]*100, 2);
+pca$importance<-summary(pca)$importance;
+res$pca<-pca;
+
+col<-rep(c('darkgreen', 'deeppink1'), c(length(g1.ind), length(g2.ind)));
+
+layout(matrix(1:2, nrow=1), width=c(3,1));
+par(mai=c(1,1,.25,.25));
+
+cx<-max(1.25, min(4, 24/length(X)))
+plot(X, Y, col=col, pch=19, cex=cx, xlim=c(min(X)*1.1, max(X)*1.1), ylim=c(min(Y)*1.1, max(Y)*1.1), 
+    xlab=paste('PC1', ', ', per[1], '%', sep=''), ylab=paste('PC2', ', ', per[2], '%', sep=''), cex.lab=1.5);
+
+text(X, Y, label=1:length(X), col='white', cex=.3*cx);
+
+par(mai=c(1, 0, 0.25, 0));
+plot(0, type='n', xlim=c(0, 100), ylim=c(1, 100), axes=FALSE, bty='n', xaxs='i', yaxs='i', xlab='', ylab='');
+
+w<-strwidth(1:length(X), cex=1.2);
+w0<-1.2*80/max(w, 80);
+h0<-1.2*(100/length(X))/4.0;
+cex<-min(1.2, w0, h0); 
+
+points(rep(5, length(X)), 100-(1:length(X))*4.0*cex, col=col, pch=19, cex=1.5*cex);
+text(5+cex*5, 100-(1:length(X))*4.0*cex, labels=colnames(e1.2), adj=0, col=col, pch=19, cex=cex);
+text(rep(5, length(labels)), 100-(1:length(X))*4.0*cex, labels=1:length(X), col='white', cex=0.8*cex);
+
+dev.off();
+```
+
+```{r analysis_deg, include=FALSE}
+# Adjust expr matrix if a penalty is given for large between-sample variance
+if(penalty>0) {
+  if (penalty>1) penalty<-1;
+  colnames(means)<-paste('Mean_', c(g1.name, g2.name), sep='');
+  if (paired) sd<-apply(expr[, g2.ind]-expr[, g1.ind], 1, sd) else {
+    v1<-apply(expr[, g1.ind], 1, var);
+    v2<-apply(expr[, g2.ind], 1, var);
+    df1<-length(g1.ind)-1;
+    df2<-length(g2.ind)-1;
+    sd<-sqrt((df1*v1+df2*v2)/(df1+df2));
+    sd[sd==0]<-min(sd[sd>0])/2;
+   }
+  pnl<-quantile(sd, probs=seq(0, 1, 0.01))[100*round(1-penalty,2)+1];
+  expr.temp<-expr; # save the original
+  expr[, g2.ind]<-apply(expr[, g2.ind], 2, function(d) means[,1]+(d-means[,1])/(pnl+sd));
+}
+
+stat<-DeWrapper(expr, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
+
+# Run RP analysis
+library(RankProd);
+if (paired & length(g1.ind)==length(g2.ind)) {
+    rp<-RP(expr[, g1.ind]-expr[, g2.ind], rep(1, length(g1.ind)), num.perm=250);
+    rp<-SummarizeRP(rp, g1.name, g2.name, NA, FALSE, TRUE, FALSE, FALSE);
+} else {
+    rp<-RP(expr[, c(g1.ind, g2.ind)], rep(0:1, c(length(g1.ind), length(g2.ind))), num.perm=nperm);
+    rp<-SummarizeRP(rp, g1.name, g2.name, NA, FALSE, TRUE, FALSE, FALSE);
+}
+
+colnames(rp[[3]])[6]<-'PValue';
+cnm<-colnames(rp[[1]])[c(5,6,3, 4)];
+out<-lapply(rp, function(rp) cbind(Rank=rp[,1], means, rp[, cnm]));
+names(out)<-c(paste(c('Higher', 'Lower'), '_in_', g2.name, sep=''), 'Single_rank');
+
+if (penalty>0) {
+for (i in 1:length(out)) out[[i]][, cnm[1:2]]<-cbind(l2r, fc);
+expr<-expr.temp;
+}
+```
