@@ -1,22 +1,41 @@
 # A default run of Rank Product test on 2 groups of samples, and summary of results
-DeRankProd<-function(mtrx, clss, nperm=100) {
+
+###################################################################
+# Make output consistent with other methods
+DeRankP<-function(mtrx, grps, logged=TRUE, nperm=100, ...) {
+  library(DEGandMore);
+  
+  stat<-DeRankProd(mtrx, grps, logged, nperm, ...);
+  
+  s<-stat$single.rank[, 4:6];
+  if (logged) s<-cbind(s, s[, 3]) else s<-cbind(s, log2(s[,2]/s[,1]));
+  s[is.na(s)]<-0;
+  s<-cbind(s, stat$single.rank[, c(8, 9, 2, 3, 1)]);
+  colnames(s)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR', 'RP1', 'RP2', 'Rank');
+  
+  list(stat=s[rownames(mtrx), ], group=grps, rp=list(original=stat$rp, summarized=stat[1:2]));
+}
+
+DeRankProd<-function(mtrx, grps, logged=TRUE, nperm=100, ...) {
   library(RankProd);
   
-  nm<-names(clss);
+  nm<-names(grps);
   default.nm<-c('Control', 'Case');
   if (is.null(nm)) nm<-default.nm else nm[is.na(nm) | nm=='']<-default.nm[is.na(nm) | nm==''];
   
-  cl<-rep(0:1, sapply(clss, length));
+  cl<-rep(0:1, sapply(grps, length));
   
-  rp<-RP(mtrx[, c(clss[[1]], clss[[2]]), drop=FALSE], cl, num.perm=nperm);
+  capture.output(rp<-RP(mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE], cl, num.perm=nperm, logged=logged, ...))->x;
   
   stat<-SummarizeRP(rp, nm[1], nm[2], save.it=FALSE, single.ranking=TRUE, write.rnk=FALSE, write.excel=FALSE);
   
-  means<-sapply(clss, function(c) rowMeans(mtrx[, c, drop=FALSE]));
+  means<-sapply(grps, function(c) rowMeans(mtrx[, c, drop=FALSE]));
   colnames(means)<-paste('Mean', nm, sep='_');
   
-  cnm<-c(paste("Log2(", nm[2], '/', nm[1], ')', sep=''), "FoldChange", "PValue", "FDR")
+  cnm<-c(paste("Log2(", nm[2], '/', nm[1], ')', sep=''), "FoldChange", "PValue", "FDR");
   stat<-lapply(stat, function(stat) cbind(stat[, !(colnames(stat) %in% cnm)], means, stat[, cnm]));
+  
+  stat$rp<-rp;
   
   stat;
 }
