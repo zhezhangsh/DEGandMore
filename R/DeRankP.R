@@ -34,7 +34,7 @@ DeRankProd<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   means<-sapply(grps, function(c) rowMeans(mtrx[, c, drop=FALSE]));
   colnames(means)<-paste('Mean', nm, sep='_');
   
-  cnm<-c(paste("Log2(", nm[2], '/', nm[1], ')', sep=''), "FoldChange", "PValue", "FDR");
+  cnm<-c(paste("Log2(", nm[2], '/', nm[1], ')', sep=''), "FoldChange", "Pvalue", "FDR");
   stat<-lapply(stat, function(stat) cbind(stat[, !(colnames(stat) %in% cnm)], means, stat[, cnm]));
   
   stat$rp<-rp;
@@ -47,17 +47,21 @@ DeRankProd<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
 SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.ranking=FALSE, write.rnk=FALSE, write.excel=FALSE) {
   
   tbs<-lapply(1:2, function(i) cbind(sapply(rp[4:1], function(rp) rp[[i]]), -1*rp$AveFC, exp(-1*rp$AveFC*log(2))));
-  colnames(tbs[[1]])<-colnames(tbs[[2]])<-c('Rank', 'RankProduct', 'PValue', 'FDR', paste('Log2(', class2, '/', class1, ')', sep=''), 'FoldChange');
+  colnames(tbs[[1]])<-colnames(tbs[[2]])<-c('Rank', 'RankProduct', 'Pvalue', 'FDR', paste('Log2(', class2, '/', class1, ')', sep=''), 'FoldChange');
   if (!identical(NA, genename)) rownames(tbs[[1]])<-rownames(tbs[[2]])<-genename;
   names(tbs)[1]<-paste(class1, '<', class2);
   names(tbs)[2]<-paste(class1, '>', class2);
   
   if (single.ranking) { # use a single ranking for both directions of change
     rk<-rank(log2(tbs[[1]][,2])+log2(1/tbs[[2]][,2]));
-    p<-(tbs[[1]][,3]+(1-tbs[[2]][,3]))/2;
-    p<-2*pmin(p, 1-p);
-    p[p<0]<-0;
-    a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], PValue=p, FDR=p.adjust(p, method='BH'));
+    p<-rep(1, length(rk)); 
+    p[tbs[[1]][, 5]>0]<-tbs[[1]][tbs[[1]][, 5]>0, 3];
+    p[tbs[[1]][, 5]<0]<-tbs[[2]][tbs[[1]][, 5]<0, 3];
+    p<-pmin(1, 2*p);
+#     p<-(tbs[[1]][,3]+(1-tbs[[2]][,3]))/2;
+#     p<-2*pmin(p, 1-p);
+#     p[p<0]<-0;
+    a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], Pvalue=p, FDR=p.adjust(p, method='BH'));
     if (!identical(NA, genename)) rownames(a)<-genename;
     tbs$single.rank<-a;
   }

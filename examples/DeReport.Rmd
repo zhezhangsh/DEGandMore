@@ -8,6 +8,7 @@ output: html_document
 ```{r global_setup, include=FALSE}
 knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
+library(awsomics);
 library(DEGandMore);
 
 rerun.all<-TRUE;
@@ -39,7 +40,7 @@ penalty<-inputs$penalty;
 deg.method<-inputs$deg$method;
 cutoff.l2r<-inputs$deg$cutoff.l2r;
 cutoff.p<-inputs$deg$cutoff.p;
-cutoff.fdr<-inputs$deg$cutoff.pdf;
+cutoff.fdr<-inputs$deg$cutoff.fdr;
 num.top<-inputs$deg$num.top;
 nperm<-inputs$deg$nperm;
 logged<-inputs$deg$logged;
@@ -176,6 +177,14 @@ dev.off();
 ```
 
 ```{r analysis_deg, include=FALSE}
+means<-cbind(rowMeans(expr[, g1.ind]), rowMeans(expr[, g2.ind]));
+colnames(means)<-c(g1.name, g2.name);
+if (logged) l2r<-means[,2]-means[,1] else  l2r<-log2(means[,2]/means[,1]);
+l2r[is.na(l2r)]<-0;
+fc<-exp(l2r*log(2));
+mn<-cbind(means, l2r, fc);
+colnames(mn)<-c(paste('Mean', names(grps), sep='_'), 'LogFC', 'FoldChange');
+
 # Adjust expr matrix if a penalty is given for large between-sample variance
 if(penalty>0) {
   if (penalty>1) penalty<-1;
@@ -189,29 +198,126 @@ if(penalty>0) {
     sd[sd==0]<-min(sd[sd>0])/2;
    }
   pnl<-quantile(sd, probs=seq(0, 1, 0.01))[100*round(1-penalty,2)+1];
-  expr.temp<-expr; # save the original
-  expr[, g2.ind]<-apply(expr[, g2.ind], 2, function(d) means[,1]+(d-means[,1])/(pnl+sd));
-}
+  e<-expr; # save the original
+  e[, g2.ind]<-apply(e[, g2.ind], 2, function(d) means[,1]+(d-means[,1])/(pnl+sd));
+} else e<-expr;
 
-stat<-DeWrapper(expr, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
-
-# Run RP analysis
-library(RankProd);
-if (paired & length(g1.ind)==length(g2.ind)) {
-    rp<-RP(expr[, g1.ind]-expr[, g2.ind], rep(1, length(g1.ind)), num.perm=250);
-    rp<-SummarizeRP(rp, g1.name, g2.name, NA, FALSE, TRUE, FALSE, FALSE);
+############################################################################################
+de<-DeWrapper(e, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
+############################################################################################
+  
+if (deg.method == DeMethods[3]) { # Rank Product methods
+  s<-de$results$stat; 
+  rp<-de$results$rp$summarized; 
+  out<-lapply(rp, function(x) x[, c('Rank', 'Pvalue', 'FDR')]);
+  out[[3]]<-cbind(out[[1]], out[[2]]);
+  cnm<-rep(paste(c('Higher', 'Lower'), 'in', g2.name, sep='_'), each=3);
+  colnames(out[[3]])<-paste(colnames(out[[3]]), cnm, sep='_')
+  out<-lapply(out, function(out) cbind(mn[rownames(out), , drop=FALSE], out));
+  names(out)<-c(paste(c('Higher', 'Lower'), '_in_', g2.name, sep=''), 'Single_rank');
+  degs<-lapply(out[1:2], function(x) {
+    deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'FDR']<=cutoff.fdr & abs(x[, 'LogFC'])>=cutoff.l2r, , drop=FALSE];
+    if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'Rank']<=num.top, , drop=FALSE]; 
+    deg;
+  }); 
+  degs<-lapply(degs, function(d) d[order(d[, 'Rank']), ]);
 } else {
-    rp<-RP(expr[, c(g1.ind, g2.ind)], rep(0:1, c(length(g1.ind), length(g2.ind))), num.perm=nperm);
-    rp<-SummarizeRP(rp, g1.name, g2.name, NA, FALSE, TRUE, FALSE, FALSE);
+  out<-cbind(mn[rownames(de$results$stat), , drop=FALSE], de$results$stat[, 5:ncol(s)]);
+  degs<-lapply(c(1, -1), function(di) {
+    x<-out[sign(out[, 'LogFC'])==di, , drop=FALSE];
+    deg<-x[x[, 'Pvalue']<=cutoff.p & x[, 'FDR']<=cutoff.fdr & abs(x[, 'LogFC'])>=cutoff.l2r, , drop=FALSE];
+    if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & abs(x[, 'LogFC'])>=sort(abs(x[, 'LogFC']), decreasing = TRUE)[min(num.top, nrow(x))], , drop=FALSE]; 
+    deg;
+  }); 
+  degs<-lapply(degs, function(d) d[order(-1*abs(d[, 'LogFC'])), , drop=FALSE])
 }
 
-colnames(rp[[3]])[6]<-'PValue';
-cnm<-colnames(rp[[1]])[c(5,6,3, 4)];
-out<-lapply(rp, function(rp) cbind(Rank=rp[,1], means, rp[, cnm]));
-names(out)<-c(paste(c('Higher', 'Lower'), '_in_', g2.name, sep=''), 'Single_rank');
-
-if (penalty>0) {
-for (i in 1:length(out)) out[[i]][, cnm[1:2]]<-cbind(l2r, fc);
-expr<-expr.temp;
-}
+up<-degs[[1]];
+dn<-degs[[2]];
 ```
+
+```{r deg_summary, include=FALSE}
+fn.fig['deg']<-paste(path.figure, 'deg.pdf', sep='/');
+pdf(fn.fig['deg'], width=6.4, height=4.8);
+par(mai=c(0.4, 0.5, 0.3, 0.05), mfrow=c(2,2));
+
+#if (class(out)=='list') d<-out[[length(out)]] else d<-out;
+d<-de$results$stat;
+
+# M-A Plot
+plot(rowMeans(d[,1:2]), d[,'LogFC'], main='M-A Plot', pch=19, col='darkgrey',  cex=.25, xlab='', ylab='', cex.axis=.75);
+abline(h=0, lwd=1, col=1);
+lines(lowess(d[,'LogFC']~rowMeans(d[,1:2])), lwd=2, col=3);
+ylab<-paste('Log2(', g2.name, '/', g1.name, ')', sep='');
+xlab<-paste('Log2(', g1.name, ')/2 + Log2(', g2.name, ')/2', sep='');
+title(xlab=xlab, ylab=ylab, line=1.6, cex.lab=.75);
+
+#Volcano Plot
+x<-d[,'LogFC'];
+p<-d[,'Pvalue'];
+p[p==0]<-min(p[p>0])/exp(abs(d[p==0,3])*log(2));
+y<--1*log10(p);
+z<-sqrt(abs(x*y));
+cx<-z/(max(z));
+plot(x, y, main='Volcano Plot', pch=19, col='darkgrey',  cex=0.8*cx, xlab='', ylab='', cex.axis=.75, ylim=c(0, 1.1*max(y)), yaxs='i', xlim=c(-1*max(abs(x)), max(abs(x))), yaxt='n');
+xlab<-paste('Log2(', g2.name, '/', g1.name, ')', sep='');
+title(xlab=xlab, ylab='P value', line=1.6, cex.lab=.75);
+axis(2, at=0:ceiling(max(y)), labels=10^(-1*(0:ceiling(max(y)))));
+abline(h=-1*log10(0.05), v=c(-1,1), col=4, lty=3);
+box();
+
+# P Value Distribution
+hist(p[p<1], br=seq(0, 1, 0.01), cex.axis=.75, main='P Value Distribution');
+title(xlab='P value', ylab='Count', line=1.6, cex.lab=.75);
+box();
+
+# FDR
+q<-round(d[, 'FDR'], 2);
+n<-sapply(seq(min(q), 1, 0.01), function(x) length(q[q<=x]));
+plot(1, type='n', log='y', xlab='', ylab='', cex.axis=.75, xlim=0.01*c(1, 100), ylim=c(1, nrow(expr)), main='FDR');
+abline(v=seq(0, 1, .05), lty=3, col=8);
+lines(seq(min(q), 1, 0.01), n, lwd=2, col=2);
+title(xlab='FDR cutoff', ylab='Count', line=1.6, cex.lab=.75);
+box();
+
+dev.off();
+
+#FDR counts
+c<-c(0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25);
+n.fdr<-sapply(c, function(c) sapply(c(1, -1), function(di) nrow(d[sign(d[, 'LogFC'])==di & d[, 'FDR']<=c, , drop=FALSE])));
+fdr.table<-cbind(c, t(n.fdr), colSums(n.fdr)); 
+colnames(fdr.table)<-c('FDR', paste(c('Higher', 'Lower'), 'in', g2.name, sep='_'), 'Total')
+
+# Plot top genes
+fn.fig['top']<-paste(path.figure, 'top.pdf', sep='/');
+pdf(fn.fig['top'], width=6.4, height=2.4);
+par(mfrow=c(1,2), mai=c(0.7, 0.35, 0.3, 0.05));
+ind<-c(rownames(up)[1], rownames(dn)[1]);
+
+cex<-min(0.75, min(0.5/max(strwidth(colnames(e1.2), unit='in'))));
+col<-rep(c('grey', 'lightblue'), c(length(g1.ind), length(g2.ind)));
+for (ii in 1:2) barplot(e1.2[ind[ii], ], las=3, cex.names=cex, main=as.vector(anno[ind[ii], 1]), cex.main=.75, cex.axis=.75, col=col);
+dev.off();
+
+fn.fig['heatmap']<-paste(path.figure, 'heatmap.pdf', sep='/');
+pdf(fn.fig['heatmap'], width=6.4, height=6.4);
+
+par(mfrow=c(1,1));
+goi<-e1.2[c(rownames(up), rownames(dn)), ];
+rownames(goi)<-as.vector(anno[rownames(goi), 1]);
+SC.Heatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
+dev.off();
+```
+
+
+\begin{center}\textbf{Figure Interpretation: Top Genes}\end{center}
+These are top-ranked genes with higher or lower expression  in \Sexpr{g2.name}.
+<<heatmap, include=FALSE, results=hide, echo=FALSE, fig=TRUE, eval=TRUE, width=10, height=10>>=
+########################################################################################################################
+########################################################################################################################
+par(mfrow=c(1,1));
+goi<-e1.2[c(rownames(up), rownames(dn)), ];
+rownames(goi)<-as.vector(anno[rownames(goi), 1]);
+SC.Heatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
+########################################################################################################################
+@
