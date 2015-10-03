@@ -1,8 +1,8 @@
-export("DeMethods")
 
 export("AddAPCluster");
 export("DeDeSeq2");
 export("DeEdgeR");
+export("DegHeatmap");
 export("DegPCA");
 export("DegPCA2Groups");
 export("DeRankP");
