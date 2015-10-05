@@ -19,7 +19,7 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods[1], args=list()) {
   
     library(DEGandMore);
   
-    if (!(mthd %in% DeMethods)) stop("No method named: ", mthd, "\n");
+    if (!(mthd %in% DeMethods())) stop("No method named: ", mthd, "\n");
     
     # standardize data types of inputs to all methods
     mtrx<-as.matrix(mtrx);
