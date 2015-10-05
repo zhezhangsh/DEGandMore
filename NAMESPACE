@@ -5,6 +5,7 @@ export("DeEdgeR");
 export("DegHeatmap");
 export("DegPCA");
 export("DegPCA2Groups");
+export("DeMethods");
 export("DeRankP");
 export("DeRankProd");
 export("DeSam");

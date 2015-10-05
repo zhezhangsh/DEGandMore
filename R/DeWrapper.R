@@ -1,7 +1,7 @@
 
 ######################################################################################
 # Names of DE methods
-DeMethods<-c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq2', 'DeEdgeR', 'DeVoomLimma');
+DeMethods<-function () c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq2', 'DeEdgeR', 'DeVoomLimma');
 
 # DeT         Student's T test
 # DeSam       SAM (significance analysis of microarray) test

@@ -44,6 +44,7 @@ cutoff.fdr<-inputs$deg$cutoff.fdr;
 num.top<-inputs$deg$num.top;
 nperm<-inputs$deg$nperm;
 logged<-inputs$deg$logged;
+geneset<-readRDS(inputs$geneset); 
 path.output<-inputs$output;
 
 if (!exists('expr')) expr<-eval(parse(text=load('expr.rdata')));
@@ -57,7 +58,7 @@ if (!exists('g2.name')) stop('Error: Name of group 2 unknown');
 if (length(g1.ind)<2) stop('Error: Not enough samples in group ', g1.name, ', minimum=2');
 if (length(g2.ind)<2) stop('Error: Not enough samples in group ', g2.name, ', minimum=2');
 if (paired & length(g1.ind)!=length(g2.ind)) stop('Error: Unequal sample sizes for paired comparison, ', length(g1.ind), ' vs. ', length(g2.ind));
-if (is.null(path)) path.output<-getwd();
+if (is.null(path.output)) path.output<-getwd();
 if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
 
 path<-paste(g1.name, g2.name, sep='-vs-');
@@ -74,7 +75,7 @@ names(grps)<-c(g1.name, g2.name);
 ```
 
 ```{r analysis_variance, include=FALSE}
-fn.fig['variance']<-paste(path.figure, 'variance.pdf', sep='/')); 
+fn.fig['variance']<-paste(path.figure, 'variance.pdf', sep='/'); 
 pdf(fn.fig['variance'], width=6.4, height=8);
 par(mfrow=c(3,1), mar=c(4,5,2,2));
 
@@ -206,7 +207,7 @@ if(penalty>0) {
 de<-DeWrapper(e, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
 ############################################################################################
   
-if (deg.method == DeMethods[3]) { # Rank Product methods
+if (deg.method == DeMethods()[3]) { # Rank Product methods
   s<-de$results$stat; 
   rp<-de$results$rp$summarized; 
   out<-lapply(rp, function(x) x[, c('Rank', 'Pvalue', 'FDR')]);
@@ -221,6 +222,7 @@ if (deg.method == DeMethods[3]) { # Rank Product methods
     deg;
   }); 
   degs<-lapply(degs, function(d) d[order(d[, 'Rank']), ]);
+  stat<-out[[3]];
 } else {
   out<-cbind(mn[rownames(de$results$stat), , drop=FALSE], de$results$stat[, 5:ncol(s)]);
   degs<-lapply(c(1, -1), function(di) {
@@ -229,11 +231,16 @@ if (deg.method == DeMethods[3]) { # Rank Product methods
     if (nrow(deg) < num.top) deg<-x[x[, 'Pvalue']<=cutoff.p & abs(x[, 'LogFC'])>=sort(abs(x[, 'LogFC']), decreasing = TRUE)[min(num.top, nrow(x))], , drop=FALSE]; 
     deg;
   }); 
-  degs<-lapply(degs, function(d) d[order(-1*abs(d[, 'LogFC'])), , drop=FALSE])
+  degs<-lapply(degs, function(d) d[order(-1*abs(d[, 'LogFC'])), , drop=FALSE]);
+  stat<-out;
 }
 
 up<-degs[[1]];
 dn<-degs[[2]];
+
+stat.table<-cbind(anno[rownames(stat), ], stat);
+stat.formatted<-awsomics::FormatNumeric(cbind(ID=rownames(stat.table), stat.table));
+stat.formatted$ID<-awsomics::AddHref(stat.formatted$ID, awsomics::UrlEntrezGene(stat.formatted$ID));
 ```
 
 ```{r deg_summary, include=FALSE}
@@ -242,7 +249,7 @@ pdf(fn.fig['deg'], width=6.4, height=4.8);
 par(mai=c(0.4, 0.5, 0.3, 0.05), mfrow=c(2,2));
 
 #if (class(out)=='list') d<-out[[length(out)]] else d<-out;
-d<-de$results$stat;
+d<-cbind(mn, de$results$stat[, 5:6]);
 
 # M-A Plot
 plot(rowMeans(d[,1:2]), d[,'LogFC'], main='M-A Plot', pch=19, col='darkgrey',  cex=.25, xlab='', ylab='', cex.axis=.75);
@@ -299,25 +306,53 @@ col<-rep(c('grey', 'lightblue'), c(length(g1.ind), length(g2.ind)));
 for (ii in 1:2) barplot(e1.2[ind[ii], ], las=3, cex.names=cex, main=as.vector(anno[ind[ii], 1]), cex.main=.75, cex.axis=.75, col=col);
 dev.off();
 
+# Plot heatmap of top genes
 fn.fig['heatmap']<-paste(path.figure, 'heatmap.pdf', sep='/');
 pdf(fn.fig['heatmap'], width=6.4, height=6.4);
-
 par(mfrow=c(1,1));
 goi<-e1.2[c(rownames(up), rownames(dn)), ];
 rownames(goi)<-as.vector(anno[rownames(goi), 1]);
-SC.Heatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
+DegHeatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
 dev.off();
 ```
 
+```{r analysis_gsea, include=FALSE}
 
-\begin{center}\textbf{Figure Interpretation: Top Genes}\end{center}
-These are top-ranked genes with higher or lower expression  in \Sexpr{g2.name}.
-<<heatmap, include=FALSE, results=hide, echo=FALSE, fig=TRUE, eval=TRUE, width=10, height=10>>=
-########################################################################################################################
-########################################################################################################################
-par(mfrow=c(1,1));
-goi<-e1.2[c(rownames(up), rownames(dn)), ];
-rownames(goi)<-as.vector(anno[rownames(goi), 1]);
-SC.Heatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
-########################################################################################################################
-@
+########################################################################################################
+gse<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
+########################################################################################################
+
+path.gsea<-paste(path.output, 'gsea', names(degs), sep='/');
+sapply(path.gsea, function(path.gsea) if (!file.exists(path.gsea)) dir.create(path.gsea, recursive = TRUE))->x;
+names(gse)<-names(degs);
+saveRDS(gse, paste(path.output, 'gsea', 'gsea_full.rds', sep='/'));
+
+gsea.table<-lapply(gse, function(gse) {
+  g<-gse$stat;
+  lst<-gse$list[rownames(g)];
+  rand<-sapply(lst, function(l) { 
+    mtrx<-e1.2[rownames(e1.2) %in% l, , drop=FALSE];
+    flexclust::randIndex(table(kmeans(t(mtrx), 2)[[1]], rep(1:2, sapply(grps, length))));
+  })
+  an<-geneset[[1]][rownames(g), ];
+  data.frame(row.names = rownames(g), stringsAsFactors = TRUE, Source=an[,1], Collection=an[,2], Term=an[, 'Name'], 
+                Total=rowSums(gse$size[rownames(g), 3:4]), Within=gse$size[rownames(g), 4], Enrichment=g[, 'Odds_Ratio'], 
+                Rand=rand, Pvalue=g[, 'P_HyperGeo'], FDR=g[, 'FDR_BH']);
+}); 
+
+########################################################################################################
+# Biclustering
+bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
+
+# Formatted tables
+gsea.formatted<-lapply(gsea.table, function(t) {
+  an<-geneset[[1]][rownames(t), ];
+  t$Term<-awsomics::AddHref(t$Term, an[, 'URL']);
+  t$Total<-awsomics::AddHref(t$Total, paste('./term/term_', rownames(t), '_total.html', sep=''));
+  t$Within<-awsomics::AddHref(t$Within, paste('./term/term_', rownames(t), '_within.html', sep=''));
+  rownames(t)<-1:nrow(t);
+  awsomics::FormatNumeric(t);
+}); 
+
+
+```
