@@ -319,18 +319,18 @@ dev.off();
 rnk<-sign(d[, 'LogFC'])*sqrt(d[,'LogFC']^2+log10(p)^2);
 ```
 
-```{r analysis_gsea, include=FALSE}
+```{r analysis_ora, include=FALSE}
 
 ########################################################################################################
 gse<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
 ########################################################################################################
 
-path.gsea<-paste(path.output, 'gsea', names(degs), sep='/');
-sapply(path.gsea, function(path.gsea) if (!file.exists(path.gsea)) dir.create(path.gsea, recursive = TRUE))->x;
+path.ora<-paste(path.output, 'ora', names(degs), sep='/');
+sapply(path.ora, function(path.ora) if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE))->x;
 names(gse)<-names(degs);
-saveRDS(gse, paste(path.output, 'gsea', 'gsea_full.rds', sep='/'));
+saveRDS(gse, paste(path.output, 'ora', 'ora_full.rds', sep='/'));
 
-gsea.table<-lapply(gse, function(gse) {
+ora.table<-lapply(gse, function(gse) {
   g<-gse$stat;
   lst<-gse$list[rownames(g)];
   rand<-sapply(lst, function(l) { 
@@ -348,7 +348,7 @@ gsea.table<-lapply(gse, function(gse) {
 bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
 
 # Formatted tables
-gsea.formatted<-lapply(gsea.table, function(t) {
+ora.formatted<-lapply(ora.table, function(t) {
   an<-geneset[[1]][rownames(t), ];
   t$Term<-awsomics::AddHref(t$Term, an[, 'URL']);
   t$Total<-awsomics::AddHref(t$Total, paste('./term/term_', rownames(t), '_total.html', sep=''));
@@ -358,4 +358,9 @@ gsea.formatted<-lapply(gsea.table, function(t) {
 }); 
 
 
+```
+
+```{r kegg_gsea, include=FALSE}
+kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, paste(path.output, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
+               path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
 ```

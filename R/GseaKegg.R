@@ -5,7 +5,7 @@
 # Result illustration: Pathview
 
 GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='hsa', path='.', at.least.plot=5, at.most.plot=Inf, 
-                      ranking.penalty=0, num.thread=1, path.xml=NULL) {
+                      ranking.penalty=0, num.thread=1, path.xml='.') {
     # e                 Data matrix of input data, row names must be Entrez gene ID
     # g1.ind, g2.ind    Column indexes or names of 2 groups of samples in e
     # groups            Names of the two compared groups
@@ -204,10 +204,10 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         # writing tables to html files
         fmt<-list('0.000', '0.000', '0.000', '0.000', '0.0E+0', '0.00%');
         names(fmt)<-colnames(tbls[[1]][[1]])[3:8];
-#         lapply(1:2, function(i) {
-#             t<-tbls[[i]];
-#             sapply(names(t), function(nm) GeneList2HTML(t[[nm]], fn=paste(sb.genes[i], nm, sep='/'), genome=genome, chartid=nm, formats=fmt));
-#         })->x;
+        lapply(1:2, function(i) {
+            t<-tbls[[i]];
+            sapply(names(t), function(nm) GeneList2HTML(t[[nm]], fn=paste(sb.genes[i], nm, sep='/'), genome=genome, chartid=nm, formats=fmt));
+        })->x;
         ############################################################################################################
 
         # Plot heatmap of all pathways
