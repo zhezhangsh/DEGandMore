@@ -314,6 +314,9 @@ goi<-e1.2[c(rownames(up), rownames(dn)), ];
 rownames(goi)<-as.vector(anno[rownames(goi), 1]);
 DegHeatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
 dev.off();
+
+# pre-ranking of genes
+rnk<-sign(d[, 'LogFC'])*sqrt(d[,'LogFC']^2+log10(p)^2);
 ```
 
 ```{r analysis_gsea, include=FALSE}
