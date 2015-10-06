@@ -278,7 +278,6 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
 
             if(!file.exists(subf[i])) dir.create(subf[i]);
             awsomics::CreateDatatable(awsomics::FormatNumeric(tbl), fn=paste(subf[i], 'index.html', sep='/'), rownames=FALSE);
-
             tbl.raw;
         });
         
