@@ -361,6 +361,7 @@ ora.formatted<-lapply(ora.table, function(t) {
 ```
 
 ```{r kegg_gsea, include=FALSE}
-kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, paste(path.output, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
+kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, 
+               paste(path.output, '/KEGG', sep=''), 12, 12, ranking.penalty=penalty, 
                path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
 ```

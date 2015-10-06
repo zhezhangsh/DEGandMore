@@ -144,7 +144,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
           ids<-unlist(ids, use.names=FALSE);
         }
         else {
-          pv<-lapply(ids, function(id) pathview(v, pathway.id=id, species=genome, low = list(gene = "blue", cpd = "green"), xml.file=fn.xml[id], kegg.dir=path.xml));
+          capture.output(pv<-lapply(ids, function(id) pathview(v, pathway.id=id, species=genome, low = list(gene = "blue", cpd = "green"), xml.file=fn.xml[id], kegg.dir=path.xml)))->x;
         } 
         
         names(pv)<-ids;
@@ -276,8 +276,9 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
             tbl[!file.exists(paste(figf, '/heatmaps/', id, '.pdf', sep='')), 'Heatmap']<-'';
             tbl[!file.exists(paste(figf, '/colored_plots/', id, '.pathview.png', sep='')), 'Pathview']<-'';
 
-            print(gvisTable(tbl, options = list(allowHTML = TRUE, width='1280px', height='1080px', showRowNumber=TRUE), chartid=paste('KEGG_', sapply(strsplit(subf, '/'), function(x) x[length(x)])[i], sep=''), formats=fmt), file=paste(subf[i], '/index.html', sep='')); 
-            #tbl;
+            if(!file.exists(subf[i])) dir.create(subf[i]);
+            awsomics::CreateDatatable(awsomics::FormatNumeric(tbl), fn=paste(subf[i], 'index.html', sep='/'), rownames=FALSE);
+
             tbl.raw;
         });
         
@@ -285,10 +286,11 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         n<-sapply(stat.gg, function(x) c(nrow(x[!is.na(x[,3])&x[,3]<=0.05, , drop=FALSE]), c(nrow(x[!is.na(x[,3])&x[,4]<=0.25, , drop=FALSE]))));
         chg<-c(paste(c('Higher', 'Lower'), '_in_', g2.name, sep=''));
         smm<-data.frame(Change=chg, t(n));        
-        smm<-transform(smm, 'Change'=paste('<a href = ', shQuote(paste(c('Higher_in_', 'Lower_in_'), g2.name, '/index.html', sep='')), '>', as.vector(smm[,'Change']), '</a>', sep=''));
+        smm<-transform(smm, 'Change'=paste('<a href = ', shQuote(paste('./', c('Higher_in_', 'Lower_in_'), g2.name, '/index.html', sep='')), '>', as.vector(smm[,'Change']), '</a>', sep=''));
         colnames(smm)[2:3]<-c('p < 0.05', 'FDR < 0.25');
         
-        print(gvisTable(smm, options = list(allowHTML = TRUE, width='400px', height='200', showRowNumber=TRUE), chartid='Summary_Kegg_Analysis'), file=paste(path, '/index.html', sep='')); 
+        awsomics::CreateDatatable(smm, paste(path, '/index.html', sep=''), rownames = FALSE);
+        #print(gvisTable(smm, options = list(allowHTML = TRUE, width='400px', height='200', showRowNumber=TRUE), chartid='Summary_Kegg_Analysis'), file=paste(path, '/index.html', sep='')); 
 
         kegg<-list(Data=e, Genome=genome, Group_Names=groups, Groups=list(g1.ind, g2.ind), Paired=paired, Gene_sets=gs, Formatted=formatted, GAGE=Gage, RankProd=RankProd, Pathview=pv);
          
