@@ -6,8 +6,8 @@ output: html_document
 ---
 
 ```{r global_setup, include=FALSE}
-load("/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/result/pairwise//temp.RData")
-knitr::opts_chunk$set(eval=FALSE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+#load("/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/result/pairwise//temp.RData")
+knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
 library(DEGandMore);
@@ -245,7 +245,7 @@ stat.formatted<-awsomics::FormatNumeric(cbind(ID=rownames(stat.table), stat.tabl
 stat.formatted$ID<-awsomics::AddHref(stat.formatted$ID, awsomics::UrlEntrezGene(stat.formatted$ID));
 ```
 
-```{r deg_summary, include=FALSE}
+```{r summary_deg, include=FALSE}
 fn.fig['deg']<-paste(path.figure, 'deg.pdf', sep='/');
 pdf(fn.fig['deg'], width=6.4, height=4.8);
 par(mai=c(0.4, 0.5, 0.3, 0.05), mfrow=c(2,2));
@@ -321,14 +321,61 @@ dev.off();
 rnk<-sign(d[, 'LogFC'])*sqrt(d[,'LogFC']^2+log10(p)^2);
 ```
 
+```{r write_deg, include=FALSE}
+pth.deg<-paste(path, '/DEG', sep='');
+pth.deg1<-paste(pth.deg, '/Higher_in_', g2.name, sep='');
+pth.deg2<-paste(pth.deg, '/Lower_in_', g2.name, sep='');
+pth.deg1.bars<-paste(pth.deg1, '/bars', sep='');
+pth.deg2.bars<-paste(pth.deg2, '/bars', sep='');
+
+if (!exists(pth.deg)) dir.create(pth.deg, showWarnings = FALSE);
+if (!exists(pth.deg1.bars)) dir.create(pth.deg1.bars, showWarnings = FALSE, recursive = TRUE);
+if (!exists(pth.deg2.bars)) dir.create(pth.deg2.bars, showWarnings = FALSE, recursive = TRUE);
+ids<-c(up=rownames(up), dn=rownames(dn));
+names(ids)<-paste(rep(c(pth.deg1.bars, pth.deg2.bars), c(nrow(up), nrow(dn))), '/', ids, '.pdf', sep='');
+
+col<-rep(c('lightgrey', 'lightblue'), c(length(g1.ind), length(g2.ind)));
+wid<-1.2/(0.1*max(nchar(colnames(expr[, c(g1.ind, g2.ind)]))));
+fn.barplot<-sapply(names(ids), function(nm) {
+    pdf(nm, w=8, h=6); 
+    par(mai=c(1.2, 1, 0.6, 0.2));
+    barplot(expr[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Expression level', cex.lab=wid, cex.names=0.8*wid);
+    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
+    #plot.new();
+    par(mai=c(1.2, 1, 0.6, 0.2));
+    barplot(pctl[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Percentile (%)', ylim=c(0, 100), cex.lab=2, cex.names=wid);
+    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
+
+    dev.off();
+    nm;
+});
+
+# Write index tables of DEGs
+if (exists('homolog')) extra.url<-homolog; # Add links to homolog column in annotation else extra.url=list();
+
+cnm<-c(colnames(anno), colnames(up), 'Samples');
+up.tbl<-data.frame(anno[rownames(up), , drop=FALSE], up, rep('Figure', nrow(up)));
+colnames(up.tbl)<-cnm;
+up.tbl$Samples<-awsomics::AddHref(up.tbl$Samples, paste('./bars/', rownames(up), '.pdf', sep='')); 
+up.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(up.tbl), paste(pth.deg1, 'index.html', sep='/'), col.symbol=1, genome=genome, 
+                                             title=paste('Genes with higher expression in', g2.name), extra.url=extra.url);
+
+dn.tbl<-data.frame(anno[rownames(dn), , drop=FALSE], dn, rep('Figure', nrow(dn)));
+colnames(dn.tbl)<-cnm;
+dn.tbl$Samples<-awsomics::AddHref(dn.tbl$Samples, paste('./bars/', rownames(dn), '.pdf', sep='')); 
+dn.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(dn.tbl), paste(pth.deg2, 'index.html', sep='/'), col.symbol=1, genome=genome, 
+                                             title=paste('Genes with lower expression in', g2.name), extra.url=extra.url);
+```
+
 ```{r analysis_ora, include=FALSE}
 
 ########################################################################################################
 gse<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
 ########################################################################################################
 
-path.ora<-paste(path, 'ORA', names(degs), sep='/');
-sapply(path.ora, function(path.ora) if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE))->x;
+path.ora<-paste(path, 'ORA', sep='/');
+if (!file.exists(path.ora)) dir.create(path.ora);
+sapply(names(degs), function(nm) if (!file.exists(paste(path.ora, nm, sep='/'))) dir.create(paste(path.ora, nm, sep='/'), recursive = TRUE))->x;
 names(gse)<-names(degs);
 saveRDS(gse, paste(path.ora, 'ora_full.rds', sep='/'));
 
@@ -349,16 +396,81 @@ ora.table<-lapply(gse, function(gse) {
 # Biclustering
 bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
 
-# Formatted tables
-ora.formatted<-lapply(ora.table, function(t) {
+bic2gs<-lapply(bic, function(bic) lapply(bic[[2]], rownames));
+gs2bic<-lapply(bic2gs, function(b) lapply(split(rep(1:length(b), sapply(b, length)), unlist(b, use.names=FALSE)), function(x) sort(unique(x))));
+gs2bic<-lapply(gs2bic, function(b) sapply(b, function(b) paste(b, collapse=';')));
+ora.table<-lapply(names(ora.table), function(nm) {
+  b<-gs2bic[[nm]];
+  b<-b[rownames(ora.table[[nm]])];
+  b[is.na(b)]<-'';
+  ora.table[[nm]]$Cluster<-b;
+  ora.table[[nm]];
+});
+names(ora.table)<-names(bic);
+```
+
+```{r write_ora, include=FALSE}
+path.ora<-paste(path, 'ORA', sep='/');
+if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
+
+# Formatted tables of ORA results
+stat.slim<-data.frame(anno[rownames(stat), 1, drop=FALSE], awsomics::FormatNumeric(stat));
+ora.formatted<-lapply(names(ora.table), function(nm) {
+  if (!file.exists(paste(path.ora, nm, sep='/'))) dir.create(paste(path.ora, nm, sep='/'));
+  if (!file.exists(paste(path.ora, nm, 'term', sep='/'))) dir.create(paste(path.ora, nm, 'term', sep='/'));
+
+  t<-ora.table[[nm]];
   an<-geneset[[1]][rownames(t), ];
   t$Term<-awsomics::AddHref(t$Term, an[, 'URL']);
-  t$Total<-awsomics::AddHref(t$Total, paste('./term/term_', rownames(t), '_total.html', sep=''));
-  t$Within<-awsomics::AddHref(t$Within, paste('./term/term_', rownames(t), '_within.html', sep=''));
-  rownames(t)<-1:nrow(t);
-  awsomics::FormatNumeric(t);
-}); 
+  t$Total[1:min(250, nrow(t))]<-awsomics::AddHref(t$Total[1:min(250, nrow(t))], paste('./term/term_', 1:min(250, nrow(t)), '.html', sep=''));
+  #t$Within<-awsomics::AddHref(t$Within, paste('./term/term_', rownames(t), '_within.html', sep=''));
 
+  t<-awsomics::FormatNumeric(t);
+  awsomics::CreateDatatable(t, fn=paste(path.ora, nm, 'term.html', sep='/'), rownames = FALSE);
+  sapply(1:min(250, nrow(t)), function(i) {
+    g<-geneset$list[rownames(t)[i]][[1]];
+    t1<-stat.slim[rownames(stat.slim) %in% g, , drop=FALSE];
+    t1<-t1[order(t1[, paste('Rank', nm, sep='_')]), , drop=FALSE];
+    fn<-paste(path.ora, nm, 'term', paste('term_', i, '.html', sep=''), sep='/');
+    GeneList2Datatable(t1, fn, genome = genome, extra.url = extra.url, title = rownames(t)[i]);
+  });
+  
+  t;
+}); 
+names(ora.formatted)<-names(ora.table);
+
+# Formatted table of biclustering
+bic.formatted<-lapply(names(bic), function(nm) {
+  if (!file.exists(paste(path.ora, nm, sep='/'))) dir.create(paste(path.ora, nm, sep='/'));
+  if (!file.exists(paste(path.ora, nm, 'bicluster', sep='/'))) dir.create(paste(path.ora, nm, 'bicluster', sep='/'));
+
+  t<-awsomics::FormatNumeric(bic[[nm]]$summary);
+
+  # write individual files of biclusters
+  fns<-sapply(1:nrow(t), function(i) {
+    fn<- paste(path.ora, nm, 'bicluster', paste(t[i, 1], c('_terms.html', '_genes.html', '_heatmap.pdf'), sep=''), sep='/');
+    t1<-ora.formatted[[nm]][rownames(bic[[nm]][[2]][[i]]), ];
+    awsomics::CreateDatatable(t1, fn[1], FALSE, caption=paste('Terms of', t[i,1]));
+    t2<-stat.slim[colnames(bic[[nm]][[2]][[i]]), , drop=FALSE];
+    t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
+    GeneList2Datatable(t2, fn[2], genome = genome, extra.url = extra.url, title=paste('Genes of', t[i,1])); 
+    t3<-bic[[nm]][[2]][[i]];
+    rownames(t3)<-paste(ora.table[[nm]][rownames(t3), 2], ora.table[[nm]][rownames(t3), 3], sep=' - ');
+    colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), anno[colnames(t3), 1], sep=' - ');
+    if (min(t3)==1) col.min<-'#0000FF' else col.min<-'#999999';
+    awsomics::PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
+    fn;
+  });
+  bic.fn<-t(fns);
+  
+  # write index table
+  t$Num_Terms<-awsomics::AddHref(t$Num_Terms, bic.fn[, 1]);
+  t$Num_Genes<-awsomics::AddHref(t$Num_Genes, bic.fn[, 2]);
+  t$ID<-awsomics::AddHref(t$ID, bic.fn[, 3]);
+  awsomics::CreateDatatable(t, fn=paste(path.ora, nm, 'bicluster.html', sep='/'), rownames = FALSE);
+  
+  t;
+});
 ```
 
 ```{r kegg_gsea, include=FALSE}
@@ -367,78 +479,17 @@ kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome,
                path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
 ```
 
-```{r write_deg, include=FALSE}
-pth.deg<-paste(path, '/DEG', sep='');
-pth.deg1<-paste(pth.deg, '/Higher_in_', g2.name, sep='');
-pth.deg2<-paste(pth.deg, '/Lower_in_', g2.name, sep='');
-pth.deg1.bars<-paste(pth.deg1, '/bars', sep='');
-pth.deg2.bars<-paste(pth.deg2, '/bars', sep='');
-
-if (!exists(pth.deg)) dir.create(pth.deg, showWarnings = FALSE);
-if (!exists(pth.deg1.bars)) dir.create(pth.deg1.bars, showWarnings = FALSE, recursive = TRUE);
-if (!exists(pth.deg2.bars)) dir.create(pth.deg2.bars, showWarnings = FALSE, recursive = TRUE);
-ids<-c(up=rownames(up), dn=rownames(dn));
-names(ids)<-paste(rep(c(pth.deg1.bars, pth.deg2.bars), c(nrow(up), nrow(dn))), '/', ids, '.pdf', sep='');
-
-col<-rep(c('lightgrey', 'lightblue'), c(length(g1.ind), length(g2.ind)));
-wid<-1.2/(0.1*max(nchar(colnames(expr[, c(g1.ind, g2.ind)]))));
-fn.barplot<-sapply(names(ids), function(nm) {
-    pdf(nm, w=8, h=6); 
-    par(mai=c(1.2, 1, 0.6, 0.2));
-    barplot(expr[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Expression level', cex.lab=wid, cex.names=wid);
-    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
-    #plot.new();
-    par(mai=c(1.2, 1, 0.6, 0.2));
-    barplot(pctl[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Percentile (%)', ylim=c(0, 100), cex.lab=2, cex.names=wid);
-    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
-
-    dev.off();
-    nm;
-});
-
-# Write index tables of DEGs
-if (exists('homolog')) extra.url<-homolog; # Add links to homolog column in annotation else extra.url=list();
-
-cnm<-c('Sample', colnames(anno), colnames(up));
-up.tbl<-data.frame(rep('Figure', nrow(up)), anno[rownames(up.tbl), , drop=FALSE], up);
-colnames(up.tbl)<-cnm;
-up.tbl$Samples<-awsomics::AddHref(up.tbl$Samples, paste('./bars/', rownames(up), '.pdf', sep='')); 
-up.formatted<-GeneList2Datatable(up.tbl, paste(pth.deg1, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-              title=paste('Genes with higher expression in', g2.name), extra.url=extra.url);
-
-dn.tbl<-data.frame(rep('Figure', nrow(dn)), anno[rownames(dn), , drop=FALSE], dn);
-colnames(dn.tbl)<-cnm;
-dn.tbl$Samples<-awsomics::AddHref(dn.tbl$Samples, paste('./bars/', rownames(dn), '.pdf', sep='')); 
-colnames(dn.tbl)<-cnm;
-dn.formatted<-GeneList2Datatable(dn.tbl, paste(pth.deg2, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-              title=paste('Genes with lower expression in', g2.name), extra.url=extra.url);
-
-### write Excel file
-# format outputs
-f0<-list(id.name='Gene_ID', format=data.frame(ind=ncol(anno)+(1:10), fmt=c(rep('0.000', 4), '0', '0.0E+0', '0.0E+0', '0', '0.0E+0', '0.0E+0'))); # format: group comparison, full list
-f1<-list(id.name='Gene_ID', format=data.frame(ind=ncol(anno)+(1:7), fmt=c('0', rep('0.000', 4), '0.0E+0', '0.0E+0'))); # format: group comparison
-f2<-list(row.names=FALSE, format=data.frame(ind=3:7, fmt=c('0', '0.00', '0.00', '0.0E+0', '0.0E+0'))); # format: DAVID output
-
-# create spreadsheet of Excel file
-full<-cbind(out[[1]][, c(1, 6, 7)], out[[2]][, c(1, 6, 7)]);
-colnames(full)<-paste(colnames(full), rep(names(out)[1:2], each=ncol(full)/2), sep='_');
-full<-cbind(out[[3]][, 2:5], full);
-full<-cbind(anno[rownames(full), ], full);
-xls<-list(full, cbind(anno[rownames(up),], up), cbind(anno[rownames(dn), ], dn), dv.up$formatted, dv.dn$formatted);
-xls[[4]][, 4:7]<-sapply(4:7, function(i) as.numeric(as.vector(xls[[4]][, i])));
-xls[[4]][, 'FDR']<-xls[[4]][,'FDR']/100;
-xls[[5]][, 4:7]<-sapply(4:7, function(i) as.numeric(as.vector(xls[[5]][, i])));
-xls[[5]][, 'FDR']<-xls[[5]][,'FDR']/100;
-
-#xls<-list(out, anno[rownames(, dn, dv.up=dv[[1]], dv.dn=dv[[2]]);
-settings<-list(f0, f1, f1, f2, f2);
+```{r write_excel, include=FALSE}
+# Excel spreadsheets
+xls<-list(stat.table, stat.table[rownames(up), , drop=FALSE], stat.table[rownames(dn), , drop=FALSE],
+          ora.table[[1]], ora.table[[2]]);
 names(xls)<-c('Complete List', 
   paste('Top', nrow(up), ', higher in ', g2.name, sep=''), 
-	paste('Top', nrow(dn), ', lower in ', g2.name, sep=''),
-	paste('DAVID, higher in ', g2.name, sep=''),
-	paste('DAVID, lower in ', g2.name, sep='')
+  paste('Top', nrow(dn), ', lower in ', g2.name, sep=''),
+  paste('ORA, higher in ', g2.name, sep=''),
+  paste('ORA, lower in ', g2.name, sep='')
 );
-
-
+xls<-lapply(xls, awsomics::FormatNumeric);
+fn.xls<-paste(path, paste(g1.name, g2.name, sep='-vs-'), sep='/');
+WriteExcel(xls, fn.xls, ); 
 ```
-

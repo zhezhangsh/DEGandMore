@@ -16,6 +16,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
     # ranking.penalty   The penalty on high-variance genes during gene ranking. Value between 0 to 1. No penalty if 0. Larger value means more penalty on high variance genes
     # num.thread        Number of threads to use for running pathview function in parallel
 
+    library(org.Hs.eg.db);
     library(gage);
     library(pathview);
     library(RankProd)
