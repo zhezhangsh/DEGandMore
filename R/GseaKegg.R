@@ -129,6 +129,25 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
           names(fn.xml)<-ids;
         }
         
+        # file folder skeleton
+        if (!file.exists(path)) dir.create(path);
+        pth.rs<-paste(path, '/Files', sep='');        
+        if (!file.exists(pth.rs)) dir.create(pth.rs);
+        figf<-paste(pth.rs, '/figures', sep='');
+        if (!file.exists(figf)) dir.create(figf)
+        subf<-paste(path, '/', c("Higher_in_", "Lower_in_"), g2.name, sep='');
+        sapply(subf, function(subf) if (!file.exists(subf)) dir.create(subf));
+        sb<-paste(figf, 'colored_plots', sep='/');
+        if(!file.exists(sb)) dir.create(sb, recursive = TRUE);
+        sb.genes<-paste(subf, '/genes', sep='');
+        sapply(sb.genes, function(f) if (!file.exists(f)) dir.create(f));
+        sb.ht<-paste(figf, '/heatmaps', sep='');
+        sapply(sb.ht, function(f) if (!file.exists(f)) dir.create(f));
+        sb.bar<-paste(subf, '/bars', sep='');
+        sapply(sb.bar, function(f) if (!file.exists(f)) dir.create(f));
+        
+        wd<-getwd();
+        setwd(sb);
         #xmls<-paste(kegg.dir, '/', id, '.xml', sep='');
         #has.local<-file.exists(xmls);
         if (num.thread > 1) {
@@ -147,6 +166,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         else {
           capture.output(pv<-lapply(ids, function(id) pathview(v, pathway.id=id, species=genome, low = list(gene = "blue", cpd = "green"), xml.file=fn.xml[id], kegg.dir=path.xml)))->x;
         } 
+        setwd(wd);
         
         names(pv)<-ids;
         ############################################################################################################
@@ -155,32 +175,19 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         ############################################################################################################
         ############################################################################################################
         ############################################################################################################        
-    
-        if (!file.exists(path)) dir.create(path);
-        pth.rs<-paste(path, '/Files', sep='');        
-        if (!file.exists(pth.rs)) dir.create(pth.rs);
-        figf<-paste(pth.rs, '/figures', sep='');
-        if (!file.exists(figf)) dir.create(figf)
-        subf<-paste(path, '/', c("Higher_in_", "Lower_in_"), g2.name, sep='');
-        sapply(subf, function(subf) if (!file.exists(subf)) dir.create(subf));
         
         # copy plots to subfolders
         ############################################################################################################        
         ############################################################################################################        
-        sb<-paste(figf, '/', c('xml', 'reference_plots', 'colored_plots'), sep='');
-        sapply(sb, function(sb) if(!file.exists(sb)) dir.create(sb));
-        lapply(ids, function(id) {
-            fn<-paste(id, c('.xml', '.png', '.pathview.png'),sep='');
-            file.rename(fn[file.exists(fn)], paste(sb[file.exists(fn)], fn[file.exists(fn)], sep='/'));
-        })
+#         lapply(ids, function(id) {
+#             fn<-paste(path, paste(id, c('.xml', '.png', '.pathview.png'),sep=''), sep='/'); 
+#             file.rename(fn[file.exists(fn)], paste(sb[file.exists(fn)], fn[file.exists(fn)], sep='/'));
+#         })
         ############################################################################################################
        
         # Write gene list of each pathway
         ############################################################################################################        
         ############################################################################################################        
-        sb.genes<-paste(subf, '/genes', sep='');
-        sapply(sb.genes, function(f) if (!file.exists(f)) dir.create(f));
-        
         # Get gene symbol
         mp<-eg2id(rownames(e), 'SYMBOL', pkg.name=awsomics::GetGenomeAlias(genome, 'package'));
         symb<-mp[,2];
@@ -212,9 +219,6 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         # Plot heatmap of all pathways
         ############################################################################################################
         ############################################################################################################
-        sb.ht<-paste(figf, '/heatmaps', sep='');
-        sapply(sb.ht, function(f) if (!file.exists(f)) dir.create(f));
-        
         rp0<-stat.rp;
         rp0<-rp0[order(rp0[,1]),];
         t<-lapply(names(gs), function(nm) {
@@ -228,10 +232,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         
         # Plot bar distributions of all pathways
         ############################################################################################################
-        ############################################################################################################
-        sb.bar<-paste(subf, '/bars', sep='');
-        sapply(sb.bar, function(f) if (!file.exists(f)) dir.create(f));
-        
+        ############################################################################################################   
         rk<-lapply(1:2, function(i) {
             rp0<-rp[[i]];
             if (i==1) rv<-FALSE else rv<-TRUE;
