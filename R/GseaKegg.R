@@ -203,11 +203,9 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         names(gs.nm)<-sapply(strsplit(names(gs), ' '), function(x) x[1]);
 
         # writing tables to html files
-        fmt<-list('0.000', '0.000', '0.000', '0.000', '0.0E+0', '0.00%');
-        names(fmt)<-colnames(tbls[[1]][[1]])[3:8];
         lapply(1:2, function(i) {
             t<-tbls[[i]];
-            sapply(names(t), function(nm) GeneList2HTML(t[[nm]], fn=paste(sb.genes[i], nm, sep='/'), genome=genome, chartid=nm, formats=fmt));
+            sapply(names(t), function(nm) GeneList2Datatable(awsomics::FormatNumeric(t[[nm]]), fn=paste(sb.genes[i], nm, sep='/'), genome=genome, title=nm));
         })->x;
         ############################################################################################################
 
