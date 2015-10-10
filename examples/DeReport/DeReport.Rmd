@@ -1,16 +1,19 @@
 ---
-title: "Differential Gene Expression"
+title: "2-group differential gene expression"
 author: "Jim Zhang"
-date: "October 2, 2015"
-output:   
+date: "`r Sys.Date()`"
+output:
   html_document:
-    fig_caption: yes
     toc: yes
 ---
 
+```{r inputs, include=FALSE}
+path.inputs<-"/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/r/pairwise/HH_neg-vs-HH_pos.rds";
+```
+
 ```{r global_setup, include=FALSE}
-load("/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/result/pairwise//temp.RData")
-knitr::opts_chunk$set(eval=FALSE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+#load("/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/result/pairwise//temp.RData")
+knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
 library(DEGandMore);
@@ -19,8 +22,6 @@ rerun.all<-TRUE;
 
 fn.fig<-c();
 res<-list();
-
-path.inputs<-"/nas/is1/zhangz/projects/curran/2015-09_human_medullo_RNAseq/r/pairwise_inputs.rds";
 ```
 
 ```{r load_data, include=FALSE}
@@ -65,8 +66,8 @@ if (paired & length(g1.ind)!=length(g2.ind)) stop('Error: Unequal sample sizes f
 if (is.null(path.output)) path.output<-getwd();
 if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
 
-path<-paste(g1.name, g2.name, sep='-vs-');
-path<-paste(path.output, path, sep='/');
+path0<-paste(g1.name, g2.name, sep='-vs-');
+path<-paste(path.output, path0, sep='/');
 path.figure<-paste(path, 'figure', sep='/');
 if (!file.exists(path)) dir.create(path, recursive = TRUE);
 if (!file.exists(path.figure)) dir.create(path.figure, recursive = TRUE);
@@ -183,6 +184,9 @@ dev.off();
 ```
 
 ```{r analysis_deg, include=FALSE}
+pth.deg<-paste(path, '/DEG', sep='');
+if (!file.exists(pth.deg)) dir.create(pth.deg);
+
 means<-cbind(rowMeans(expr[, g1.ind]), rowMeans(expr[, g2.ind]));
 colnames(means)<-c(g1.name, g2.name);
 if (logged) l2r<-means[,2]-means[,1] else  l2r<-log2(means[,2]/means[,1]);
@@ -211,7 +215,9 @@ if(penalty>0) {
 ############################################################################################
 de<-DeWrapper(e, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
 ############################################################################################
-  
+
+saveRDS(de, file=paste(pth.deg, 'deg.rds', sep='/')); 
+
 if (deg.method == DeMethods()[3]) { # Rank Product methods
   s<-de$results$stat; 
   rp<-de$results$rp$summarized; 
@@ -246,6 +252,7 @@ dn<-degs[[2]];
 stat.table<-cbind(anno[rownames(stat), ], stat);
 stat.formatted<-awsomics::FormatNumeric(cbind(ID=rownames(stat.table), stat.table));
 stat.formatted$ID<-awsomics::AddHref(stat.formatted$ID, awsomics::UrlEntrezGene(stat.formatted$ID));
+awsomics::CreateDatatable(stat.formatted, fn = paste(path, 'DEG', 'all_genes.html', sep='/'), rownames = FALSE, caption = "Differential expression of all genes");
 ```
 
 ```{r summary_deg, include=FALSE}
@@ -320,12 +327,23 @@ rownames(goi)<-as.vector(anno[rownames(goi), 1]);
 DegHeatmap(goi,  col=rep(c('chartreuse1', 'deeppink1'), c(length(g1.ind), length(g2.ind))), plot.new=FALSE);
 dev.off();
 
+## Gene counts by FDR cutoffs
+fdr<-c(0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.25);
+if (deg.method == DeMethods()[3]) {
+  c1<-sapply(fdr, function(fdr) nrow(stat[stat[, 3]>0 & stat[, 7]<=fdr, , drop=FALSE]));
+  c2<-sapply(fdr, function(fdr) nrow(stat[stat[, 3]<0 & stat[, 10]<=fdr, , drop=FALSE]));
+} else {
+  c1<-sapply(fdr, function(fdr) nrow(stat[stat[, 'LogFC']>0 & stat[, 'FDR']<=fdr, , drop=FALSE]));
+  c2<-sapply(fdr, function(fdr) nrow(stat[stat[, 'LogFC']<0 & stat[, 'FDR']<=fdr, , drop=FALSE]));
+} 
+fdr.table<-cbind(fdr, c1, c2, c1+c2);
+colnames(fdr.table)<-c('FDR cutoff', names(degs), 'Total');
+
 # pre-ranking of genes
 rnk<-sign(d[, 'LogFC'])*sqrt(d[,'LogFC']^2+log10(p)^2);
 ```
 
 ```{r write_deg, include=FALSE}
-pth.deg<-paste(path, '/DEG', sep='');
 pth.deg1<-paste(pth.deg, '/Higher_in_', g2.name, sep='');
 pth.deg2<-paste(pth.deg, '/Lower_in_', g2.name, sep='');
 pth.deg1.bars<-paste(pth.deg1, '/bars', sep='');
@@ -416,6 +434,11 @@ names(ora.table)<-names(bic);
 path.ora<-paste(path, 'ORA', sep='/');
 if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
 
+gs.table<-lapply(split(geneset[[1]][, 'Collection'], geneset[[1]][, 'Source']), table);
+gs.table<-data.frame(stringsAsFactors = FALSE, Source=rep(names(gs.table), sapply(gs.table, length)), 
+                     Collection=unlist(lapply(gs.table, names), use.names=FALSE), Geneset=as.numeric(unlist(gs.table)));
+awsomics::CreateDatatable(gs.table, paste(path.ora, 'geneset.html', sep='/'), rownames = FALSE, caption = "Gene set collections");
+
 # Formatted tables of ORA results
 stat.slim<-data.frame(anno[rownames(stat), 1, drop=FALSE], awsomics::FormatNumeric(stat));
 ora.formatted<-lapply(names(ora.table), function(nm) {
@@ -467,9 +490,9 @@ bic.formatted<-lapply(names(bic), function(nm) {
   bic.fn<-t(fns);
   
   # write index table
-  t$Num_Terms<-awsomics::AddHref(t$Num_Terms, bic.fn[, 1]);
-  t$Num_Genes<-awsomics::AddHref(t$Num_Genes, bic.fn[, 2]);
-  t$ID<-awsomics::AddHref(t$ID, bic.fn[, 3]);
+  t$Num_Terms<-awsomics::AddHref(t$Num_Terms, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 1]));
+  t$Num_Genes<-awsomics::AddHref(t$Num_Genes, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 2]));
+  t$ID<-awsomics::AddHref(t$ID, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 3]));
   awsomics::CreateDatatable(t, fn=paste(path.ora, nm, 'bicluster.html', sep='/'), rownames = FALSE);
   
   t;
@@ -478,7 +501,7 @@ bic.formatted<-lapply(names(bic), function(nm) {
 
 ```{r kegg_gsea, include=FALSE}
 kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, 
-               path=paste(path, '/KEGG', sep=''), 20, 20, ranking.penalty=penalty, 
+               path=paste(path, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
                path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
 ```
 
@@ -497,13 +520,56 @@ fn.xls<-paste(path, paste(g1.name, g2.name, sep='-vs-'), sep='/');
 WriteExcel(xls, fn.xls, ); 
 ```
 
-# General information
+```{r convert_figure, include=FALSE}
+fn.png<-lapply(fn.fig, function(f) awsomics::ConvertPdf2Png(f, resize=80, density=150));
+fn.png[[length(fn.png)+1]]<-sapply(names(bic), function(nm) {
+  t<-bic[[nm]]$summary;
+  n<-t[,2]*t[,3];
+  f<-paste('bicluster/', t[n==max(n)[1], 1], '_heatmap.pdf', sep='');
+  awsomics::ConvertPdf2Png(paste(path.ora, nm, f, sep='/'), resize=80, density=150); 
+});
+fn.png[[length(fn.png)+1]]<-sapply(kegg$Formatted, function(t) {
+  ids<-as.vector(t$Pathway_ID);
+  fn<-paste(path, 'KEGG', 'Files', 'figures', 'colored_plots', paste(ids, '.pathview.png', sep=''), sep='/');
+  fn[file.exists(fn)][1];
+});
+```
+
+```{r zip, include=FALSE}
+zip(path, path, zip='zip');
+file.rename(paste(path, '.zip', sep=''), paste(path, '/', path0, '.zip', sep=''));
+```
+
+***
+# Results at a glance
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Click on numbers to browse:</span>
+ 
+```{r sig_count, eval=TRUE, include=TRUE}
+t<-cbind(c(nrow(up), nrow(dn)), sapply(ora.table, nrow),  sapply(bic, function(x) nrow(x[[1]])), sapply(kegg$Formatted, function(x) nrow(x[x[, 'P_Value']<=0.05, , drop=FALSE])));
+rownames(t)<-paste(c('Higher', 'Lower'), 'in', g2.name);
+colnames(t)<-c('DEG', 'ORA', 'Bicluster', 'KEGG_GSEA');
+t[, 1]<-awsomics::AddHref(t[,1], paste("./DEG", names(degs), 'index.html', sep='/'));
+t[, 2]<-awsomics::AddHref(t[,2], paste("./ORA", names(degs), 'term.html', sep='/'));
+t[, 3]<-awsomics::AddHref(t[,3], paste("./ORA", names(degs), 'bicluster.html', sep='/'));
+t[, 4]<-awsomics::AddHref(t[,4], paste("./KEGG", names(degs), 'index.html', sep='/'));
+knitr::kable(t);              
+```
+
+ - An online version of differential expression of all genes can be found [here](./DEG/all_genes.html)
+ - An Excel file of statistical results can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`). 
+ - A zip file of the all results can be downloaded from [here](./`r paste(path0, '.zip', sep='')`);
+
+***
+***
+# Introduction
   
 This document reports the analysis results from comparing the transcriptomes of two sample groups: **`r g1.name` vs. `r g2.name`**. 
   
-## Inputs
+***
+## Required input variables
   
-The inputs of this analysis include:
+The following inputs are required to generate this report. You can download an example of input data file from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport_Inputs.rds?raw=true).
 
  - **anno:** Gene annotation information as a data.frame.
   - the row names are unique Entrez gene IDs
@@ -532,8 +598,250 @@ The inputs of this analysis include:
  - **geneset:** Location to file with all the gene sets to be tested for over-representative analsysis of DEGs. 
  
  - **output:** Location to all output files
- 
-===
 
-___
-**END OF DOCUMENT
+***
+## Comparison metadata
+  
+ - **Total number of genes:** `r nrow(expr)`
+ - **Total number of samples:** `r ncol(expr)`
+ - **Comparison:** `r g1.name` (n=`r ncol(e1)`) vs. `r g2.name` (n=`r ncol(e2)`)
+  - **`r g1.name`:** `r paste(colnames(e1), collapse='; ')`
+  - **`r g2.name`:** `r paste(colnames(e2), collapse='; ')`
+ - **Output:** `r path`
+  
+***
+***
+# Sample analysis
+  
+This section analyzes the samples by summarizing their global expression patterns, through descriptive statistics, unsupervised clustering, and sample-sample correlation.
+  
+***
+## Global distribution
+  
+Distribution of average expression level and sample-sample variance. 
+
+ - **Figure 1A:** This figure is based on the average expression measurements of all genes. If the measurements have been log-transformed, they often have a bi-modal (two-peak) distribution: a high and narrow peak on the left corresponding to inactive genes and a relatively lower and wider peak on the right corresponding to actively expressed genes. If the base of log-transformation is 2, a difference of 1.0 on the x-axis corresponds to a 2-fold change of expression. Similarly, if the base is 10, the corresponding expression change is 10-fold per 1.0 difference on the x-axis. (note that microarray measurements, raw or processed, are not exactly proportional to the actual mRNA abundancy, so the term fold change should not be taken literally.)
+ - **Figure 1B:** This figure is based on the between-sample standard deviations of all genes. The distribution usually has a single peak and a long tail on the right side. An enlarged tail usually indicates more genes are differentially expressed between samples. In a high quality data set, a gene not differentially expressed between samples should have small variance. So, if we assume that the majority of genes have no or little differential expression, the skewness of the peak towards the left side roughly represents data quality. 
+ - **Figure 1C:** This figure summarizes the relationship between gene expression measurements and their between-sample variance. Genes having smaller variance are more likely to get significant results from Student t test and similar methods. So, if there is a strong dependency of variance on expression measurements, the analysis of differential expression will be affected by the baseline expression level of genes. Variance stabilization procedure is commonly used during data normalization to minimize such dependency. In the figure, the red line is the result of LOWESS smoothing and the majority of this line should be approximately straight and horizontal if the data has been normalized properly. In practice, the LOWESS line is usually a curve higher in the middle.
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 1: </span>
+  
+![](`r fn.png[[1]]`)
+  
+***
+## Sample-sample correlation
+
+All genes in this data set were used to calculate the Pearson's correlation between each pair of samples. The result is often used to identify potential outlier samples as the outliers tend to have relatively lower correlation coefficient to any of the other samples. 
+ 
+ - **Figure 2:** Each boxplot summarizes the distribution of expression measurements within each sample. If we can assume that all samples have approximately the same global gene expression profile, the boxes should have similar positions regardless of which group they belong to. This assumption is not always true though. For example, normal cells and cancer cells could have dramatically different global gene expression pattern. Within each boxplot, the notches indicate the median, the lower and upper sides of the box represent the first and third quantile, and the individual data points out of the whiskers are the outliers (more than 1.5 inter-quantile range from the median). 
+
+ - **Figure 3:** This is an unsupervised sample clustering used all genes in the data set. The location of their lowest common node of two samples on the clustering tree represents the similarity of their global gene expression patterns. Since the sample grouping information is not used by an unsupervised analysis, the separation of the groups into two subclusters will indicate that the two groups have distinctive gene expression patterns, or that gene expression pattern can be used to predict which group a given sample belongs to.
+
+ - **Figure 4:** PCA, or Principal Components Analysis, is another type of unsupervised analysis that converts a large number of correlated variables (genes) into a smaller set of uncorrelated variables (principal components). Each principal component accounts for certain percentage of the variability of the whole data set and the one having the highest percentage is ordered first. This plot shows the top two principal components and their share of total variability (in parentheses). In general, samples close to each other on this plot have similar global expression patterns. PCA is often used to identify confounding factor(s) during analysis of microarray data while each principal component may or may not corresponds to a real life variable (age, treatment, disease state, etc.)
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 2: </span>
+  
+![](`r fn.png[[2]]`)
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 3: </span>
+  
+![](`r fn.png[[3]]`)
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 4: </span>
+  
+![](`r fn.png[[4]]`)
+  
+
+***
+***
+# Differential gene expression
+  
+This section evaluates the differential expression of each each between two sample groups. A compiled version of differential expression results can be downloaded as an Excel file [here](`r paste(path, paste(path0, '.xlsx', sep=''), sep='/')`). 
+  
+***
+## Differential expression of single genes
+  
+By default, [Rank Product](http://www.ncbi.nlm.nih.gov/pubmed/15327980) (RP), a non-paramatric statistical test based on ranks of fold changes, is used for the statistical analysis. The outputs of RP include:
+  
+ - **RP-ranked differential expression towards both directions:** The method works in a way that each gene gets two ranks for increased and decreased expression in a sample group.
+
+ - **Fold change, percentage change, ratio, or log2-ratio:** These variables indicate the magnitude of the difference of group averages. They are the same values in different scale and can be easily converted to each other (see **Appendix 1**). Given the data has been log2-transformed, the difference of group averages is equivalent to the log2-ratio of unlogged data as _log2(A/B)==log2(A)-log2(B)_. So, group difference will be referred as log2-ratio throughout this report. 
+ 
+ - **p value, q value, or FDR:** These variables indicates the statistical significance of group difference.  P value refers to type I error of statistical test, or the chance to mistakenly conclude the differential expression of a gene while the gene is actually unchanged. RP estimates both p values and FDR based on a permutation procedure during which the ranked gene lists were shuffled to generate a background distribution of rank products.
+  
+### Summary 
+  
+The full table of single gene differential expression can be seen [here](./DEG/all_genes.html).
+
+We use the following visualization methods to get an overview of all `r nrow(expr)` genes:
+  
+ - **Figure 5A: M-A Plot.** This plot visualizes global pattern of group difference (as log2-ratio). **M** (Y axis) is the log2-ratio and **A** (X axis) is the average measurements of the two groups. Each dot represents a gene and the green line is generated by LOWESS smoothing. The location and shape of the LOWESS line indicate whether there is an overall skewness of differential expression or expression level-dependent differential expression.
+  
+ - **Figure 5B: Volcano Plot.** This plot puts together both types of variables (usually **p value** and **log2-ratio**) used to represent differential expression and their association. A common strategy is to only consider genes with both small p values and large log2-ratios as GOI (genes of interest). Each dot represents a gene and its size is proportional to its distance from the [0, 1] point. The horizontal line corresponds to a p value of 0.05 and the vertical lines correspond to 2.0 fold change on both sides. 
+  
+ - **Figure 5C: P Value Distribution.** This plot shows the counts of genes whose Rank Product p values are located in each 0.01 interval. So, the leftmost bar indicates the number of genes having p values less than 0.01. If the data is completely random and there are enough samples, the p values will have a uniform distribution, with approximately the same number of genes in each interval. If there are indeed a number of genes differentially expressed between the compared groups and the microarray experiments are properly designed and executed, we expect that the p values have a distribution with the highest density on the left side. If the highest density of the distribution is in the middle or on the right side, we will suspect a confounding factor that has a bigger influence on the data than the factor distinguishing the two compared groups. 
+  
+ - **Figure 5D: FDR.** This plots traces the number of genes corresponding to each FDR (false discovery rate) cutoff. The table below lists the number of genes corresponding to commonly used FDR cutoffs. 
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 5: </span>
+  
+![](`r fn.png[[5]]`)
+  
+  
+<span style="color:red; font-family:Georgia; font-size:1em;">Table: Gene counts by FDR cutoffs. </span>
+  
+```{r fdr_table, eval=TRUE, include=TRUE}
+pander::pander(fdr.table);
+``` 
+
+### Top genes
+
+**Figure 6:** Top-ranked genes on both sides (**left:** higher in `r g2.name`; **right:** lower in `r g2.name`)
+
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 6: </span>
+  
+![](`r fn.png[[6]]`)
+  
+### DEGs (differentially expressed genes)
+
+Click link to get full list of DEGs:
+  
+ > [Higher in `r g2.name`](./DEG/`r names(degs)[1]`/index.html)
+  
+ > [Lower in `r g2.name`](./DEG/`r names(degs)[1]`/index.html)
+ 
+  
+DEGs were selected using the following rules:
+  
+ - If there are more than `r num.top` genes with **p values** less than `r cutoff.p` and **FDR** less than `r cutoff.fdr`, select **ALL** of them for further analysis; apply the next rule otherwise;
+ - Select all genes with **p values** less than `r cutoff.p`; if the number of selected genes is greater than `r num.top`, select only the top-ranked `r num.top` genes otherwise. If **Rank Product** was not used as the statistical test of differential expression, rank the genes by their fold change (**LogFC**). 
+  
+  **Figure 7:** A heatmap using all DEGs. Expression measurements of each gene are normalized across samples for plotting; redder means higher expression level. The color of column sidebar indicates which group each sample belongs to.
+  
+  <span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 7: </span>
+  
+  ![](`r fn.png[[7]]`)
+  
+***
+## Differential expression of gene sets
+  
+In this section, the unit of analysis is predefined gene sets. It is based on the assumption that if genes of the same gene set, such as those in the same signaling pathway or coregulated group, are more likely to have differential expression, the gene set is important to the biological difference between the two sample groups.
+
+### Over-representation analysis (ORA)
+
+ORA evaluates whether the genes of any predefined gene sets, such as a KEGG pathway or GO term, are over-represented in DEGs. We uses hypergeometric test to evaluate whether ***N/Nt*** is significantly greater than ***M0/Mt***, where ***Mt*** is the total number of genes in the data set, ***M*** is the total number of genes in both of the data set and a gene set, ***Nt*** is the total number of DEGs previously selected, and ***N*** is the overlapping of ***M*** and ***Nt***. 
+
+We have archived a large collection of gene sets from multiple sources. By default, a subset of these gene sets, each including at least `r min(geneset[[1]][, 'Size'])`, are used to test over-representation of DEGs in them. Click [here](./ORA/geneset.html) to see a summary of these genesets. 
+
+Click link to get full ORA results:
+  
+ > [Higher in `r g2.name`](./ORA/`r names(degs)[1]`/term.html)
+  
+ > [Lower in `r g2.name`](./ORA/`r names(degs)[2]`/term.html)
+  
+### Gene-gene set biclustering
+  
+This analysis performs biclustering DEGs and up to top 250 gene sets identified from the ORA. Its goal is to reduce redundant information in the ORA results by identifying "modules" of genes and gene sets likely to be grouped together. The bicluster was done with **[Iterative Signature Algorithm](http://www.ncbi.nlm.nih.gov/pubmed/12689096)**. **Figure 8A and 8B** are two examples of biclusters.
+  
+Click link to get full biclustering results:
+  
+ > [Higher in `r g2.name`](./ORA/`r names(degs)[1]`/bicluster.html)
+  
+ > [Lower in `r g2.name`](./ORA/`r names(degs)[2]`/bicluster.html)
+  
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 8A: A bicluster module based on DEGs with higher expression in `r g2.name`</span>
+  
+![](`r fn.png[[8]][1]`)
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 8B: A bicluster module based on DEGs with lower expression in `r g2.name`</span>
+  
+![](`r fn.png[[8]][2]`)
+  
+  
+### Gene set enrichment analysis (GSEA) of KEGG pathways
+
+GSEA is a different category of analyses applied to gene sets. Instead of using selected top DEGs like **ORA**, GSEA takes into account all genes in the data set after they were ranked by a statistical test such as **Rank Product** test. The original [GSEA](http://www.broadinstitute.org/gsea/index.jsp) was developed by Broad Institute that is usually run as a stand-alone program. We used a similar method call [GAGE](http://www.biomedcentral.com/1471-2105/10/161) in this analysis. By default, the normalized rand products of all genes were used to make colored pathway plots. 
+
+[KEGG pathways](http://www.genome.jp/kegg/pathway.html) are mostly canonical metabolic pathways conserved across species. Each pathway can include both genes(proteins) and chemical compounds. The goal of this analysis is to identify pathways that were up- or down-regulated in `r g2.name` by examing the general pattern of gene differential expression. Each element in the pathways were colored to represent its differential expression (**red:** hiher in `r g2.name`). **Figure 9A and 9B** are two examples of colored KEGG pathways.
+
+Click link to get full GSEA results of KEGG pathways:
+  
+ > [Higher in `r g2.name`](./KEGG/`r names(degs)[1]`/index.html)
+
+ > [Lower in `r g2.name`](./KEGG/`r names(degs)[2]`/index.html)
+
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 9A: A KEGG pathway with higher expression in `r g2.name`</span>
+  
+![](`r fn.png[[9]][1]`)
+  
+<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 9A: A KEGG pathway with lower expression in `r g2.name`</span>
+  
+![](`r fn.png[[9]][2]`)
+  
+***
+***
+# Appendix
+  
+Supplementary information about this report
+
+***
+## Fold change vs. log(fold change)
+
+In this report, **fold change** refers the ratio of two group means in their unlogged form. So a fold change of 2.0 means the average of the second group is increased to twice of the average of the first group; similarly, a fold change of 0.5 means the average is reduced to half. Log(fold change) equals to the log2-transformation of the fold change. The table below gives a few examples of the conversion of these 2 variables.
+  
+```{r fold_change, eval=TRUE, include=TRUE}
+c<-c(1.25, 1.5, 2, 4, 8);
+fc<-c(1/rev(c), 1, c);
+lg<-log2(fc);
+pct<-100*(fc-1);
+t<-round(cbind(fc, lg, pct), 3);
+colnames(t)<-c('Fold change', 'Log2(fold change)', 'Percentage change (%)');
+pander::pander(t); 
+```
+  
+***
+## R/Biocondcutor packages and functions
+  
+The table below lists the core R/Bioconductor packages and functions used to generate this report while in-house functions are used to customize their outputs.
+  
+```{r bioconductor, eval=TRUE, include=TRUE}
+t<-strsplit("Create this report\tknitr\tknit2html
+Hierarchical clustering\tstats\thclust 
+PCA\tstats\tprcomp
+Differential expression\tRankProd\tRP
+Heatmap\tstats\theatmap
+Gene ontology analysis\tRDAVIDWebService\tDAVIDWebService
+Biclustering analysis\tisa2\tisa
+Gene set enrichment analysis of KEGG pathways\tgage\tgage
+Plot color-coded KEGG pathways\tpathview\tpathview
+Write data to Excel\txlsx\tcreateWorkbook
+Misc. custom functions\tawsomics\t ", '\n')[[1]]; 
+t<-do.call('rbind', strsplit(t, '\t'));
+colnames(t)<-c('Task', 'R package', 'R function');
+pander::pander(t);
+```
+  
+The .Rmd template file is within the [DEGandMore](https://github.com/zhezhangsh/DEGandMore) package and can be found [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport.Rmd).
+  
+An example of input data can be download from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport_Inputs.rds?raw=true)
+  
+***
+##References
+
+ - **R:** R Development Core Team, 2011. _R: A Language and Environment for Statistical Computing._ ISBN 3-900051-07-0. [Home page](http://www.R-project.org).
+  
+ - **Bioconductor:** Gentleman RC et al., 2004. _Bioconductor: open software development for computational biology and bioinformatics._ Genome Biology. [ Home page](http://www.bioconductor.org).
+  
+ - **Rank Product:** _Rank products: a simple, yet powerful, new method to detect differentially regulated genes in replicated microarray experiments._ FEBS Lett. 2004 Aug 27;573(1-3):83-92. [Home page](http://www.bioconductor.org/packages/2.12/bioc/html/RankProd.html).
+  
+ - **Biclustering:** Ihmels J, Bergmann S, Barkai N, 2004 _Defining transcription modules using large-scale gene expression data._ Bioinformatics. [Home page](http://www2.unil.ch/cbg/index.php?title=ISA). 
+  
+ - **GAGE:** Luo, W., Friedman, M., Shedden K., Hankenson, K. and Woolf, P _GAGE: Generally Applicable Gene Set Enrichment for Pathways Analysis._ BMC Bioinformatics 2009, 10:161. [Home page](https://www.bioconductor.org/packages/release/bioc/html/gage.html)
+  
+ - **Awsomics & Rchive:** [Home page](awsomics.org)
+
+
+***
+**END OF DOCUMENT**
