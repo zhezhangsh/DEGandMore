@@ -11,7 +11,7 @@ CreateDeReport<-function(inputs, is.url=TRUE, dir.temp='.',
   lb<-lb[!(lb %in% pkgs)];
   if (length(lb) > 0) stop("Required packages not installed: ", paste(lb, collapse='; '));
   
-  if (is.url) {
+  if (!is.url) {
     if (!RCurl::url.exists(rmd)) stop("Rmd file not exists: ", rmd);
   } else {
     ln<-RCurl::getURL(rmd)[[1]];
