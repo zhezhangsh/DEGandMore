@@ -828,7 +828,7 @@ pander::pander(t);
   
 The .Rmd template file is within the [DEGandMore](https://github.com/zhezhangsh/DEGandMore) package and can be found [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport.Rmd).
   
-An example of input data can be download from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport_Inputs.rds?raw=true)
+An example of input data can be download from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/DeReport_Inputs.rds?raw=true)
   
 ***
 ##References
