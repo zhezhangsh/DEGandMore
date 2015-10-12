@@ -1,5 +1,6 @@
 
 export("AddAPCluster");
+export("CreateDeReport");
 export("DeDeSeq2");
 export("DeEdgeR");
 export("DegHeatmap");
