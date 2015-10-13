@@ -60,14 +60,14 @@ devtools::install_github("zhezhangsh/DEGandMore");
 library(DEGandMore);
 
 # Prepare the inputs following this example: https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/inputs.rds?raw=true
-# To use this example, download it to your working folder and call:
+# To load this example, download it to your working folder and call:
 inputs<-readRDS('./inputs.rds');
 
 # Create report by calling, where _inputs_ is the variable containing all the input data
 CreateDeReport(inputs); 
 
 # This version currently requires a collection of gene sets, as in this example: https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true
-# To use this example, download it to your working folder and call:
+# To load this example, download it to your working folder and call:
 geneset<-readRDS('./default_set_human_5-1000.rds');
 ```
 
