@@ -50,3 +50,20 @@ GSEAviaJava('GSEA_example.yaml');
 ```
 
 - Open the index.html file to view results
+
+
+#### Run pairwise comparison using the _DeReport_ template
+
+```
+# Install and load the DEGandMore package
+devtools::install_github("zhezhangsh/DEGandMore");
+library(DEGandMore);
+
+# Prepare the inputs following this example: https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/inputs.rds?raw=true
+
+# Create report by calling, where _inputs_ is the variable containing all the input data
+CreateDeReport(inputs); 
+
+# This version currently requires a collection of gene sets, as in this example: https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true
+
+```
