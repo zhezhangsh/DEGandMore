@@ -13,7 +13,8 @@ DeDeSeq2<-function(mtrx, grps, ...) {
   
   m1<-rowMeans(e1, na.rm=TRUE);
   m2<-rowMeans(e2, na.rm=TRUE);
-  stat<-cbind(e1, e2, e2-e1, res[,2], res[, 5], res[, 6]);
+  stat<-cbind(m1, m2, m2-m1, res[,2], res[, 5], res[, 6]);
+  stat[is.na(stat[,4]), 4]<-0;
   stat[is.na(stat[,5]), 5]<-1;
   stat[is.na(stat[,6]), 6]<-1;
   colnames(stat)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
