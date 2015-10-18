@@ -68,7 +68,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
         ############################################################################################################
         ############################################################################################################
         if(ranking.penalty>0) {
-            if (penalty>1) penalty<-1;
+            if (ranking.penalty>1) ranking.penalty<-1;
             means<-cbind(rowMeans(e[, g1.ind]), rowMeans(e[, g2.ind]));
             l2r<-means[,2]-means[,1];
             fc<-exp(l2r*log(2));
