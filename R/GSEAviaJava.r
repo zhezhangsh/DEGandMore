@@ -3,6 +3,8 @@ GSEAviaJava<-function(fn.yaml, execute=TRUE) {
   # fn.yaml   Config file specifying inputs
   # execute   Whether to make the GSEA run or just save the command lines
   
+  library(DEGandMore);
+  
   library(yaml);
   yaml<-yaml.load_file(fn.yaml);
   prefix<-yaml$name;

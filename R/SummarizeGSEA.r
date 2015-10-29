@@ -1,18 +1,13 @@
 # Generate a GSEA report in HTML format, with hyperlinks to subfolders
-SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACollection=TRUE) {
+SummarizeGSEA<-function(name1, name2, fn.index='index.html', path='.', GSEACollection=TRUE) {
     # name1, name2          Column names
     # title                 Title of the HTML file
-    # sep                   The separator used to split folder name to get analysis name
     # fn                    Name of the HTML file
-    # wd                    Working directory, where all the GSEA results locate
+    # path                  Working directory, where all the GSEA results locate
     # GSEACollection        Whether the GSEA gene set collections themseleves were used for analysis
     
-    library(methods);
-    library(googleVis);
-    library(R2HTML);
-    
     wd0<-getwd();
-    setwd(wd);
+    setwd(path);
   
     # Top level collections
     collections<-c(
@@ -28,6 +23,7 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
     
     # Second level collections
     collections2<-c(
+       "h.all" = "Collection 0: Hallmark gene sets",
        "CGP" = "Collection 2: Chemical and genetic perturbations",
        "CP" = "Collection 2: All canonical pathways",
        "BIOCARTA" = "Collection 2: BioCarta pathways",
@@ -44,43 +40,43 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
  
     f<-dir();
     f<-f[file.info(f)[,'isdir']];
+    #f<-f[grep('.Gsea.', f)];
     
     # Original summarization file
     pos<-sapply(f, function(f) {
       fn<-dir(f); 
-      fn[grepl('^gsea_report_for_', fn) & grepl('.html$', fn) & (grepl('_na_pos_', fn) | grepl(name1, fn))];
+      fn[grepl('^gsea_report_for_', fn) & grepl('.html$', fn) & (grepl('_na_pos_', fn) | grepl(paste('_', name1, '_', sep=''), fn))][1];
     })
     neg<-sapply(f, function(f) {
       fn<-dir(f); 
-      fn[grepl('^gsea_report_for_', fn) & grepl('.html$', fn) & (grepl('_na_neg_', fn) | grepl(name2, fn))];
+      fn[grepl('^gsea_report_for_', fn) & grepl('.html$', fn) & (grepl('_na_neg_', fn) | grepl(paste('_', name2, '_', sep=''), fn))][1];
     })
-    pos<-sapply(names(pos), function(x) paste(x, pos[x], sep='/')); 
-    neg<-sapply(names(neg), function(x) paste(x, neg[x], sep='/'));
+
+    flg<-!is.na(pos) | !is.na(neg);
+    pos<-pos[flg];
+    neg<-neg[flg];
+    f<-f[flg];
     
     # create the index.html file
     if (length(pos)>0 & length(pos)==length(neg)) {
-      f<-f[file.exists(pos)&file.exists(neg)];
-      pos<-pos[f];
-      neg<-neg[f];
-      
-      nm<-sapply(strsplit(f, sep), function(x) x[1]);    
+      nm<-sapply(strsplit(f, '.Gsea.'), function(x) x[1]);    
+      file.rename(f, nm); 
+      pos<-paste(nm, pos, sep='/');
+      neg<-paste(nm, neg, sep='/');
       if (GSEACollection) {
         for (i in 1:length(collections2)) nm[grepl(names(collections2)[i], nm, ignore=TRUE)][1]<-collections2[i];       
         for (i in 1:length(collections)) nm[grepl(toupper(names(collections)[i]), toupper(nm))][1]<-collections[i];
       }
-      
+          
       urls<-cbind(pos, neg);
       rownames(urls)<-nm; 
-      
-      tb<-data.frame(Name=rownames(urls), name1=rep('Full list', nrow(urls)), name2=rep('Full list', nrow(urls)));
-      
-      tb<-transform(tb, name1=paste('<a href = ', shQuote(urls[,1]), '>', 'Full list', '</a>'))
-      tb<-transform(tb, name2=paste('<a href = ', shQuote(urls[,2]), '>', 'Full list', '</a>'))
-      colnames(tb)<-c('Gene set collection', paste(name1, name2, sep='>'), paste(name2, name1, sep='>'));
-      tb<-tb[order(tb[[1]]), ];
-      
-      print(gvisTable(tb, options = list(allowHTML = TRUE)), file=fn);
-      
+      urls<-urls[order(rownames(urls)), , drop=FALSE]; 
+      urls[, 1]<-awsomics::AddHref('List', urls[, 1]);
+      urls[, 2]<-awsomics::AddHref('List', urls[, 2]);
+      urls<-cbind(rownames(urls), urls);
+      colnames(urls)<-c('Gene set collection', paste(name1, name2, sep=' > '), paste(name2, name1, sep=' > '));
+      awsomics::CreateDatatable(urls, fn.index, rownames = FALSE, caption = paste('GSEA Result Index:', name1, 'vs.', name2));
+       
       # Files with full table of results
       fn1<-sub('.html$', '.xls', c(pos, neg));
       nm1<-rep(sub('Collection ', '', nm), 2);
@@ -94,11 +90,9 @@ SummarizeGSEA<-function(name1, name2, sep='\\.', fn='index.html', wd='.', GSEACo
       di[tbl$NES<0]<-'Yes';
       tbl<-data.frame(tbl, di, stringsAsFactors=FALSE);
       names(tbl)[ncol(tbl)]<-paste(name2, name1, sep='>');
-      
-      library(DT);
-      library(htmlwidgets);
-      saveWidget(datatable(tbl), 'full_list.html', selfcontained=FALSE);
-      saveRDS(tbl, file='full_list.rds');
+      saveRDS(tbl, file='full_table.rds');
+      tbl$Gene_set<-awsomics::AddHref(tbl$Gene_set, paste("http://www.broadinstitute.org/gsea/msigdb/cards", tbl$Gene_set, sep='/'));
+      awsomics::CreateDatatable(tbl, "full_table.html", rownames = FALSE, caption = paste('GSEA Result Table:', name1, 'vs.', name2));
     }
     
     setwd(wd0);
