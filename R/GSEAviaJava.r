@@ -63,7 +63,7 @@ GSEAviaJava<-function(fn.yaml, execute=TRUE) {
       run<-sapply(cmmd, system);
     }
 
-    SummarizeGSEA(yaml$groups[[1]], yaml$groups[[2]]);
+    SummarizeGSEA(yaml$groups[[1]][1], yaml$groups[[2]][1], path=yaml$out);
   }
  
   # save shell command lines
