@@ -67,7 +67,8 @@ SummarizeGSEA<-function(name1, name2, fn.index='index.html', path='.', GSEAColle
         for (i in 1:length(collections2)) nm[grepl(names(collections2)[i], nm, ignore=TRUE)][1]<-collections2[i];       
         for (i in 1:length(collections)) nm[grepl(toupper(names(collections)[i]), toupper(nm))][1]<-collections[i];
       }
-          
+      
+      # Create index table
       urls<-cbind(pos, neg);
       rownames(urls)<-nm; 
       urls<-urls[order(rownames(urls)), , drop=FALSE]; 
