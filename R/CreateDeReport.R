@@ -6,7 +6,7 @@ CreateDeReport<-function(inputs, is.url=TRUE, dir.temp='.',
   
   if (is.character(inputs)) inputs<-readRDS(inputs);
   
-  lb<-strsplit("org.Hs.eg.db; RCurl; formatR; GenomeInfoDb; XVector; methods; bitops; utils; tools; grDevices; zlibbioc; digest; biclust; jsonlite; evaluate; DEGandMore; RSQLite; gage; lattice; png; pathview; graph; KEGGgraph; rstudioapi; DBI; Rgraphviz; curl; yaml; parallel; rJava; knitr; httr; stringr; htmlwidgets; xlsxjars; Biostrings; S4Vectors; graphics; gtools; datasets; stats; caTools; IRanges; DT; stats4; grid; base; Biobase; R6; snow; AnnotationDbi; XML; rmarkdown; gdata; isa2; magrittr; htmltools; gplots; awsomics; modeltools; MASS; BiocGenerics; RankProd; KEGGREST; flexclust; colorspace; xlsx; KernSmooth; stringi; rstudio", '; ')[[1]];
+  lb<-strsplit("org.Hs.eg.db; RCurl; formatR; GenomeInfoDb; XVector; methods; bitops; utils; tools; grDevices; zlibbioc; digest; biclust; jsonlite; evaluate; DEGandMore; RSQLite; gage; lattice; png; pathview; graph; KEGGgraph; rstudioapi; DBI; Rgraphviz; curl; yaml; parallel; rJava; knitr; httr; stringr; htmlwidgets; xlsxjars; Biostrings; S4Vectors; graphics; gtools; datasets; stats; caTools; IRanges; DT; stats4; grid; base; Biobase; R6; snow; AnnotationDbi; XML; rmarkdown; gdata; isa2; magrittr; htmltools; gplots; awsomics; modeltools; MASS; BiocGenerics; RankProd; KEGGREST; flexclust; colorspace; xlsx; KernSmooth; stringi", '; ')[[1]];
   pkgs<-rownames(installed.packages());
   lb<-lb[!(lb %in% pkgs)];
   if (length(lb) > 0) stop("Required packages not installed: ", paste(lb, collapse='; '));
