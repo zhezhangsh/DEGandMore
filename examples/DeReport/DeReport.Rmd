@@ -560,8 +560,8 @@ knitr::kable(t);
 ```
 
  - An online version of differential expression of all genes can be found [here](./DEG/all_genes.html)
- - An Excel file of statistical results can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`). 
- - A zip file of the all results can be downloaded from [here](./`r paste(path0, '.zip', sep='')`);
+ - An Excel file of statistical results can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`)
+ - A zip file of the all results can be downloaded from [here](./`r paste(path0, '.zip', sep='')`)
 
 ***
 ***
