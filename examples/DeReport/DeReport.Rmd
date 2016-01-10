@@ -539,8 +539,8 @@ res$ora<-gse;
 res$kegg<-kegg;
 saveRDS(res, file=paste(path, 'result.rds', sep='/'));
 #file.copy(path.input, paste(path, 'input.rds', sep='/'));
-zip(path, path, zip='zip');
-file.rename(paste(path, '.zip', sep=''), paste(path, '/', path0, '.zip', sep=''));
+#zip(path, path, zip='zip');
+#file.rename(paste(path, '.zip', sep=''), paste(path, '/', path0, '.zip', sep=''));
 ```
 
 ***
