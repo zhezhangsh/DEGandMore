@@ -544,10 +544,12 @@ file.rename(paste(path, '.zip', sep=''), paste(path, '/', path0, '.zip', sep='')
 ```
 
 ***
-# Results at a glance
-  
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Click on numbers to browse:</span>
- 
+# <span style="color:red; font-family:Georgia; font-size:1.5em;">`r g1.name` vs. `r g2.name`</span>
+
+## Results at a glance
+
+#### Click on a number to view full table, or read the rest of this page for details  
+
 ```{r sig_count, eval=TRUE, include=TRUE}
 t<-cbind(c(nrow(up), nrow(dn)), sapply(ora.table, nrow),  sapply(bic, function(x) nrow(x[[1]])), sapply(kegg$Formatted, function(x) nrow(x[x[, 'P_Value']<=0.05, , drop=FALSE])));
 rownames(t)<-paste(c('Higher', 'Lower'), 'in', g2.name);
