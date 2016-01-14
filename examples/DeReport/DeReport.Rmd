@@ -544,9 +544,10 @@ file.rename(paste(path, '.zip', sep=''), paste(path, '/', path0, '.zip', sep='')
 ```
 
 ***
-# <span style="color:red; font-family:Georgia; font-size:1.5em;">`r g1.name` vs. `r g2.name`</span>
 
-## Results at a glance
+# Results at a glance
+
+#### <span style="color:red; font-family:Georgia; font-size:2em;"> - `r g1.name` vs. `r g2.name` - </span>
 
 #### Click on a number to view full table, or read the rest of this page for details  
 
