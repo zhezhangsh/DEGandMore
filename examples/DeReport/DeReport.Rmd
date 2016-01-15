@@ -30,7 +30,7 @@ res$inputs<-inputs;
 
 # All input variables
 anno<-inputs$anno;
-expr<-inputs$expr;
+expr<-as.matrix(inputs$expr);
 g1.ind<-inputs$indexes[[1]];
 g2.ind<-inputs$indexes[[2]];
 g1.name<-inputs$names[1];
