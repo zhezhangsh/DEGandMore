@@ -332,7 +332,7 @@ GseaHeatmap<-function(d, rnk, g1.ind, g2.ind, title='', file.name=NA) {
     sapply(1:length(col), function(i) rect(i-1, nrow(dn), i, H/0.2-1, border=NA, col=col[i]))->x;
 
     # blue-pinkogram colors. The first and last are the colors to indicate the class vector (phenotype). This is the 1998-vintage, pre-gene cluster, original pinkogram color map
-    col<-c("#0000FF", "#0000FF", "#4040FF", "#7070FF", "#8888FF", "#A9A9FF", "#D5D5FF", "#EEE5EE", "#FFAADA", "#FF9DB0", "#FF7080", "#FF5A5A", "#FF4040", "#FF0D1D", "#FF0000");
+    col<-c("#0000FF", "#2020FF", "#4040FF", "#7070FF", "#8888FF", "#A9A9FF", "#D5D5FF", "#EEE5EE", "#FFAADA", "#FF9DB0", "#FF7080", "#FF5A5A", "#FF4040", "#FF0D1D", "#FF0000");
 
     image(0:ncol(dn), 0:nrow(dn), t(dn[nrow(dn):1,]), col=col, add=TRUE);
     text(W/0.2-1.5, (1:nrow(dn))-0.5, offset=0, pos=2, label=rownames(dn)[nrow(dn):1]);
