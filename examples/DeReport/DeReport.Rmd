@@ -719,7 +719,7 @@ Click link to get full list of DEGs:
   
  > [Higher in `r g2.name`](./DEG/`r names(degs)[1]`/index.html)
   
- > [Lower in `r g2.name`](./DEG/`r names(degs)[1]`/index.html)
+ > [Lower in `r g2.name`](./DEG/`r names(degs)[2]`/index.html)
  
   
 DEGs were selected using the following rules:
