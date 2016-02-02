@@ -305,7 +305,7 @@ GseaKegg<-function(e, g1.ind, g2.ind, groups=c('A', 'B'), paired=FALSE, genome='
 
 
 # plot a GSEA style heatmap of genes in a specific pathway
-GseaHeatmap<-function(d, rnk, g1.ind, g2.ind, title='', file.name=NA) {
+GseaHeatmap<-function(d, rnk, g1.ind, g2.ind, title='', file.name=NA, plot.new=FALSE) {
     # d                 The data matrix
     # rnk               Rank of genes to order the matrix, must have the same length the number of rows of "d"
     # g1.ind, g2.ind    Sample index
