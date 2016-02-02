@@ -337,7 +337,7 @@ GseaHeatmap<-function(d, rnk, g1.ind, g2.ind, title='', file.name=NA, plot.new=F
     image(0:ncol(dn), 0:nrow(dn), t(dn[nrow(dn):1,]), col=col, add=TRUE);
     text(W/0.2-1.5, (1:nrow(dn))-0.5, offset=0, pos=2, label=rownames(dn)[nrow(dn):1]);
     text((1:ncol(dn))-0.5, H/0.2-1.5, pos=2, offset=0, srt=90, label=colnames(dn));
-    title(main=title, cex.main=0.8*(W-0.2)/strwidth(title, unit='in'), outer=TRUE);
+    title(main=title, cex.main=min(3, 0.8*(W-0.2)/strwidth(title, unit='in')), outer=TRUE);
 
     abline(v=0:ncol(dn), h=0:nrow(dn), lwd=0.5);
     box();
