@@ -1,0 +1,310 @@
+---
+title: "Gene clustering across multiple sample groups"
+author: "Jim Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    toc: yes
+---
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+library(awsomics);
+library(gplots);
+library(knitr);
+
+fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+
+# Loading inputs from yaml file
+if (!exists('fn.yaml')) stop('Input file not found\n'); 
+# writeLines(yaml::as.yaml(yml), fn.yaml);
+yml <- yaml::yaml.load_file(fn.yaml);  
+
+expr<-readRDS(yml$input$data); 
+anno<-readRDS(yml$input$annotation);
+smpl<-readRDS(yml$input$sample);
+
+if (!setequal(rownames(expr), rownames(anno))) stop("Data matrix and gene annotation have different row names.\n");
+if (!setequal(colnames(expr), rownames(smpl))) stop("Data matrix and sample metadata have different names.\n");
+expr<-expr[rownames(anno), rownames(smpl)]; 
+
+prms<-yml$parameter;
+```
+
+# Analysis and results
+
+## ANOVA analysis of each gene across sample
+
+```{r anova, include=FALSE}
+f<-as.factor(smpl[, prms$term[1]]); 
+l<-unique(smpl[, prms$term[1]]);
+grp<-split(rownames(smpl), as.vector(f))[l];
+m<-sapply(grp, function(s) rowMeans(expr[, s, drop=FALSE])); 
+mn<-apply(expr, 1, min);
+mx<-apply(expr, 1, max); 
+
+p<-apply(expr, 1, function(d) summary(aov(d ~ f))[[1]][1, 5]); 
+q<-p.adjust(p, method='BH');
+stat<-cbind(m, Min=mn, Max=mx, Range=mx-mn, pANOVA=p, FDR=q); 
+
+CreateDatatable(cbind(anno, FormatNumeric(stat)), paste(yml$output, 'anova.html', sep='/'), caption="ANOVA results")
+```
+
+We applied ANOVA analysis on each gene to test its differential expression across samples of different groups.
+
+  - There are `r nrow(expr)` total genes
+  - There are `r ncol(expr)` total samples
+  - There are `r length(l)` sample groups: `r paste(l, collapse=', ')`
+
+Click [here](anova.html) to view full ANOVA result table. 
+
+## Gene clustering
+
+### Select genes differentially expressed across groups
+
+Select genes using the following steps:
+
+  1. Select genes with FDR less than `r prms$selection$fdr`
+  2. Stop if less than `r prms$selection$min` genes were left; otherwise, select those with ANOVA p values less than `r prms$selection$p`
+  3. Stop if less than `r prms$selection$min` genes were left; otherwise, select those with range (_max-min_) greater than `r prms$selection$range`
+  4. If there are still more than `r prms$selection$max` genes left, select the top `r prms$selection$max` with the biggest ranges
+  
+```{r selection, include=FALSE}
+e<-expr[q<=prms$selection$fdr, , drop=FALSE]; 
+if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum
+  s<-stat[rownames(e), , drop=FALSE];
+  s<-s[order(s[, 'pANOVA']), , drop=FALSE];
+  e<-e[rownames(s), , drop=FALSE]; 
+  e<-e[1:max(prms$selection$min, max(which(s[, 'pANOVA']<=prms$selection$p))), , drop=FALSE]; 
+  
+  if (nrow(e) > prms$selection$min) { # continue if there are more selected genes than minimum 
+    s<-stat[rownames(e), , drop=FALSE];
+    s<-s[rev(order(s[, 'Range'])), , drop=FALSE];
+    e<-e[rownames(s), , drop=FALSE]; 
+    e<-e[1:max(prms$selection$min, max(which(s[, 'Range']>=prms$selection$range))), , drop=FALSE]; 
+  }
+  
+  if (nrow(e) > prms$selection$max) e<-e[1:prms$selection$max, , drop=FALSE]; # trim if more selected genes than maximum
+}
+
+```
+
+A total of `r nrow(e)` genes were selected. The genes were used for the next step to identify gene clusters
+
+### Cluster selected genes
+
+`r nrow(e)` genes selected by the last step were clustering using the following steps:
+
+  - Create a hierchical tree based on gene-gene correlation
+  - Cut the tree at height `r prms$cluster$height`, which will classify genes into clusters. Then apply the following steps to refine the clusters
+    - Calculate correlation of each gene to the centroid (median) of its cluster. Remove the genes if the correlation is less than `r prms$cluster$corr`
+    - Remove clusters with size less than `r 100*prms$cluster$size`% of the expected size (the expected size is 50 if there are 500 genes and 10 clusters)
+    - If there are less than `r length(grp)` (the number of sample groups) clusters left, reduce the height cutoff by 0.05 and repeat this step until there are enough clusters
+  - Merge the 2 most similar clusters if the correlation of their centroids is greater than or equal to `r prms$cluster$corr`. Repeat this step until no 2 clusters are that similar
+
+```{r cluster_seeding, include=FALSE}
+h<-prms$cluster$height;
+sz<-prms$cluster$size; # minimal size of a cluster, ratio against expected size (ex. if size=0.2, minimal cluster size is 0.2*500/10 when there are 500 genes and 10 clusters in total)
+
+# Hierarchical clustering
+hc<-hclust(as.dist(1-cor(t(e)))); 
+ct<-cutree(hc, h=h);
+cl<-split(names(ct), ct); 
+cl<-sapply(cl, function(c) {
+  x<-e[c, ]; 
+  md<-apply(x, 2, median); 
+  r<-as.vector(cor(md, t(x))[1, ]); # remove outliers 
+  c[r>=prms$cluster$corr]
+}); 
+cl<-cl[sapply(cl, length)>=sz*nrow(e)/length(cl)];
+
+# Reduce cutoff if number of clusters is less than number of groups
+while(length(cl) < length(grp)) {
+    h<-h-0.05;
+    ct<-cutree(hc, h=h);
+    cl<-split(names(ct), ct); 
+    cl<-sapply(cl, function(c) {
+    x<-e[c, ]; 
+    md<-apply(x, 2, median); 
+    r<-as.vector(cor(md, t(x))[1, ]); # remove outliers 
+    c[r>=prms$cluster$corr]
+  }); 
+  cl<-cl[sapply(cl, length)>=sz*nrow(e)/length(cl)];
+}
+
+# merge similar clusters
+flag<-TRUE;
+while(flag) {
+  cat('Number of clusters ', length(cl), '\n'); 
+  ms<-sapply(cl, function(cl) colMeans(expr[cl, ])); 
+  tr<-cutree(hclust(as.dist(1-cor(ms))), k=length(cl)-1); # find the 2 most similar clusters
+  i<-tr[duplicated(tr)];
+  c<-ms[, tr==i]; 
+  r<-cor(c[, 1], c[, 2]); 
+  p<-cor.test(c[, 1], c[, 2])$p.value[[1]]; 
+  if (r>prms$cluster$merge$corr & p<prms$cluster$merge$p & length(cl)>length(grp)) {
+    cl[tr==i][[1]]<-as.vector(unlist(cl[tr==i]));
+    cl<-cl[names(cl)!=names(i)]; 
+  } else flag<-FALSE;
+}
+
+# Sort clusters
+m<-sapply(cl, function(cl) colMeans(expr[cl, ])); 
+#m<-sapply(grp, function(g) colMeans(m[g, ])); 
+ind<-apply(m, 2, function(x) which(x==max(x)));  
+cl<-cl[order(ind)]; 
+names(cl)<-paste('Cluster', 1:length(cl), sep='_'); 
+
+# preparing for the next blocks
+ms<-sapply(cl, function(cl) colMeans(expr[cl, ])); 
+ms<-data.frame(t(ms));
+colnames(ms)<-colnames(e); 
+rownames(ms)<-paste(rownames(ms), ' (n=', sapply(cl, length),  ')', sep=''); 
+
+sortColumn<-function(ms, g) {
+  corr<-as.vector(cor(rowMeans(ms[, g[[2]], drop=FALSE]), ms[, g[[1]], drop=FALSE]));
+  g[[1]]<-g[[1]][order(corr)];
+  for (i in 2:length(g)) {
+    corr<-as.vector(cor(rowMeans(ms[, g[[i-1]], drop=FALSE]), ms[, grp[[i]], drop=FALSE]));
+    g[[i]]<-g[[i]][rev(order(corr))]; 
+  }
+  ms[, as.vector(unlist(g))]; 
+}
+
+n<-sapply(cl, length); 
+d<-expr[stat[, 'pANOVA']<=prms$recluster$p, , drop=FALSE]; 
+```
+
+The initial analysis identified `r length(cl)` gene clusters using just selected significant genes. The sizes of the clusters ranged between `r min(n)` and `r max(n)`. 
+
+**Figure** This plot shows below the average expression levels of each cluster. Values indicate number of standard deviation from mean of all samples. 
+
+```{r plot_cluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms)[1], fig.height=CalculateColoredBlockSize(ms)[2], out.width='600px'}
+PlotColoredBlock(sortColumn(ms, grp), key='Average expression', groups=grp); 
+```
+
+### Refine clusters
+
+We further refine the gene clusters with the following steps: 
+
+  - Select all `r nrow(d)` genes with p values less than `r prms$recluster$p` to continue
+  - Assign selected genes to clusters:
+    - Calculate centroid (median expression level of all genes in the cluster) of each cluster
+    - Calculate correlation coefficient of each gene to centroid of each cluster to get a `r nrow(d)` X `r length(cl)` matrix
+    - Assign a gene to a cluster if its correlation coefficient to the cluster is greater than `r prms$recluster$r`, and the correlation coefficient to any other cluster is at least `r prms$recluster$diff` less
+    - Repeat this reclustering steps for `r prms$recluster$times` times unless the reclustering converged
+
+```{r cluster_refine, include=FALSE}
+reCl<-function(d, cl, r, dif) {
+  md<-sapply(cl, function(cl) apply(d[cl[cl %in% rownames(d)], , drop=FALSE], 2, median));
+  corr<-cor(t(d), md); 
+  c<-lapply(1:ncol(corr), function(i) {
+    mx<-apply(corr[, -i, drop=FALSE], 1, max);
+    rownames(corr)[corr[, i]>=r & (corr[, i]-mx)>dif]; 
+  });
+  c;
+}
+
+cls<-list(cl, reCl(d, cl, prms$recluster$r, prms$recluster$diff)); 
+
+while (!identical(cls[[length(cls)]], cls[[length(cls)-1]]) & length(cls)<=prms$recluster$times) {
+  cls[[length(cls)+1]]<-reCl(d, cls[[length(cls)]], prms$recluster$r, prms$recluster$diff); 
+  cat("Reclustering #", length(cls)-1, '\n'); 
+}
+
+cl<-cls[[length(cls)]]; 
+names(cl)<-paste('Cluster', 1:length(cl), sep='_'); 
+
+# summary cluster sizes
+n<-sapply(cls, function(c) sapply(c, length)); 
+n<-data.frame(n); 
+colnames(n)<-paste('Cycle #', 0:(ncol(n)-1), sep=''); 
+
+ms<-sapply(cl, function(cl) colMeans(expr[cl, ])); 
+ms<-data.frame(t(ms));
+colnames(ms)<-colnames(expr); 
+rownames(ms)<-paste(rownames(ms), ' (n=', sapply(cl, length),  ')', sep=''); 
+
+if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The reclustering converged after", length(cls)-1, 'cycles.') else msg<-paste("The reclustering didn't converge after", length(cls)-1, 'cycles.')
+```
+
+`r msg`. A total of `r sum(sapply(cls[[length(cls)]], length))` genes were clustered. 
+
+**Figure** This plot shows below the average expression levels of each cluster after `r ncol(n)-1` cycles of reclustering. Values indicate number of standard deviation from mean of all samples. 
+
+```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
+PlotColoredBlock(sortColumn(ms, grp), key='Average expression', groups=grp); 
+```
+
+#### Trace the change of cluster sizes during reclustering
+
+**Figure** This plot shows the change of cluster sizes after each reclustering cycle. 
+
+```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
+rownames(n)<-paste(rownames(n), ' (n=', n[, ncol(n)], ')', sep='')
+PlotColoredBlock(n, key='Cluster size'); 
+```
+
+```{r summary_clusters, include=FALSE}
+ids<-as.vector(unlist(cls[[length(cls)]])); 
+c<-rep(names(cl), sapply(cl, length)); 
+tbl1<-cbind(Cluster=c, FormatNumeric(expr[ids, ]), anno[ids, ]); 
+tbl2<-cbind(Cluster=c, FormatNumeric(stat[ids, ]), anno[ids, ]); 
+
+fn1<-CreateDatatable(tbl1, paste(yml$output, 'clustered_data.html', sep='/'), caption="Expression data of clustered genes");
+fn2<-CreateDatatable(tbl2, paste(yml$output, 'clustered_stat.html', sep='/'), caption="ANOVA statistical results of clustered genes"); 
+
+write.csv2(tbl1, paste(yml$output, 'clustered_data.csv', sep='/')); 
+write.csv2(tbl2, paste(yml$output, 'clustered_stat.csv', sep='/')); 
+write.csv2(cbind(expr, anno), paste(yml$output, 'all_genes_data.csv', sep='/')); 
+write.csv2(cbind(stat, anno), paste(yml$output, 'all_genes_stat.csv', sep='/')); 
+```
+
+Result tables:
+
+  - Normalized expressiond data of clustered genes
+    - Click [here](`r paste(yml$output, 'clustered_data.html', sep='/')`) to view online
+    - Click [here](`r paste(yml$output, 'clustered_data.csv', sep='/')`) to download table
+  - Statistical results of clustered genes
+    - Click [here](`r paste(yml$output, 'clustered_stat.html', sep='/')`) to view online
+    - Click [here](`r paste(yml$output, 'clustered_stat.csv', sep='/')`) to download table
+
+## Plot clusters
+
+**Figure** Plot the group means and standard errors of all cluster together. 
+
+```{r plot_means, include=TRUE, out.width='800px'}
+ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
+m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
+se<-sapply(grp, function(g) apply(ms[g, , drop=FALSE],  2, function(x) sd(x)/sqrt(length(x)))); 
+if (prms$plot$zero) m<-m-m[, 1];
+PlotSeries(m, se, c('Average expression', '')); 
+```
+
+**Figure** Heatmap of all clustered genes
+
+```{r heatmap, include=TRUE, out.width='900px', out.height='1200px'}
+d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
+d<-sortColumn(d, grp); 
+rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
+PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
+abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
+```
+
+## More details about individual clusters
+
+```{r cluster_link, include=FALSE}
+lnk<-paste(names(cl), paste(names(cl), '.html', sep=''), sep='/'); 
+lns<-paste('  - [', names(cl), '](', lnk, ')', sep='');
+lns<-paste(lns, collapse='\n'); 
+```
+
+Click names to see more detaied information about each cluster
+
+`r lns`
+
+
+***
+_END OF DOCUMENT_
