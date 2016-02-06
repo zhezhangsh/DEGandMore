@@ -8,6 +8,7 @@ input:
   data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_adj.rds
   annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds
   sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds
+  template: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClDetail.Rmd
 parameter:
   term: Group
   selection:
@@ -29,6 +30,8 @@ parameter:
     diff: 0.2
     times: 20.0
   plot:
+    rescale: no
     zero: yes
+    ylab: Average expression (# of SD)
 output: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury
 
