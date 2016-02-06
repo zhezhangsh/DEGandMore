@@ -5,10 +5,11 @@ project:
     5 time points after injury from 6 hours to 2 weeks. The goal of this analysis
     is to identify gene clusters that were signficantly different across time points.
 input:
-  data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_adj.rds
+  data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_rescaled.rds
   annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds
   sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds
   template: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClDetail.Rmd
+  remote: no
 parameter:
   term: Group
   selection:

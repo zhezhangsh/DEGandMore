@@ -265,6 +265,11 @@ write.csv2(tbl1, paste(yml$output, 'clustered_data.csv', sep='/'));
 write.csv2(tbl2, paste(yml$output, 'clustered_stat.csv', sep='/')); 
 write.csv2(cbind(expr, anno), paste(yml$output, 'all_genes_data.csv', sep='/')); 
 write.csv2(cbind(stat, anno), paste(yml$output, 'all_genes_stat.csv', sep='/')); 
+
+saveRDS(tbl1, paste(yml$output, 'clustered_data.rds', sep='/')); 
+saveRDS(tbl2, paste(yml$output, 'clustered_stat.rds', sep='/')); 
+saveRDS(cbind(expr, anno), paste(yml$output, 'all_genes_data.rds', sep='/')); 
+saveRDS(cbind(stat, anno), paste(yml$output, 'all_genes_stat.rds', sep='/')); 
 ```
 
 Result tables:
@@ -292,11 +297,22 @@ fns<-sapply(1:length(cl), function(i) {
   grps<-grp;
   path<-paste(yml$output, name, sep='/'); 
   
-  if (!file.exists(path)) dir.create(path, recursive = TRUE); 
+  if (prms$plot$zero) mtrx<-mtrx-rowMeans(mtrx[, grp[[1]], drop=FALSE]); 
   
-  fn<-knitr::knit(yml$input$template); 
-  knit2html(fn, name); 
+  if (!file.exists(path)) dir.create(path, recursive = TRUE); 
+  setwd(path); 
+  
+  fn<-paste(name, '.html', sep=''); 
+  if (yml$input$remote) {
+    md<-knit(text=yml$input$template); 
+    writeLines(knit2html(text=md), fn)
+  } else {
+    md<-knit(yml$input$template); 
+    knit2html(md, fn); 
+  } 
+  paste(path, fn, sep='/'); 
 }); 
+
 setwd(wd); 
 ```
 
@@ -328,7 +344,7 @@ abline(v=c(0, cumsum(sapply(grp, length))), lwd=1);
 
 **Figure** Plot the group means and standard errors of all cluster together. 
 
-```{r plot_means, include=TRUE, out.width='750px'}
+```{r plot_series, include=TRUE, out.width='750px'}
 ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
 if (prms$plot$rescale) ms<-t(scale(t(ms))); 
 m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));

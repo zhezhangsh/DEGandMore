@@ -1,5 +1,5 @@
 ---
-title: "Detailed description of one gene cluster"
+title: "Detailed analysis of one gene cluster"
 subtitle: "A subroutine of the gene clustering procedure"
 author: "Jim Zhang"
 date: "`r Sys.Date()`"
@@ -9,7 +9,7 @@ output:
     toc: yes
 ---
 
-```{r global_setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
@@ -32,13 +32,13 @@ if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corr
 
 **Figure** Hierarchical clustering of samples using all genes of the cluster
 
-```{r clustering, include=TRUE, out.width="600px",}
+```{r clustering_1, include=TRUE, out.width="600px",}
 plot(hclust(as.dist(1-cor(mtrx))), main=name, xlab='Sample', sub=''); 
 ```
 
 **Figure** Heatmap using all genes and samples
 
-```{r heatmap, include=TRUE, out.width="800px", fig.height=8, fig.width=max(6, 0.05*nrow(mtrx))}
+```{r heatmap_1, include=TRUE, out.width="800px", fig.height=8, fig.width=max(6, 0.05*nrow(mtrx))}
 sortColumn<-function(ms, g) {
   corr<-as.vector(cor(rowMeans(ms[, g[[2]], drop=FALSE]), ms[, g[[1]], drop=FALSE]));
   g[[1]]<-g[[1]][order(corr)];
@@ -53,6 +53,19 @@ rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':');
 PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
+
+**Figure** Mean and standard errors across groups
+
+```{r series_1, include=TRUE, out.width='750px'}
+ms<-colMeans(mtrx); 
+m<-sapply(grps, function(g) mean(ms[g])); 
+se<-sapply(grps, function(g) sd(ms[g])/sqrt(length(g))); 
+m<-matrix(m, nr=1); 
+se<-matrix(se, nr=1); 
+colnames(m)<-names(grps); 
+PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FALSE); 
+```
+
 
 ***
 _END OF DOCUMENT_
