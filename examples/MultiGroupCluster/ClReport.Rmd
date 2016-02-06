@@ -15,7 +15,7 @@ library(awsomics);
 library(gplots);
 library(knitr);
 
-fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+#fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
 
 # Loading inputs from yaml file
 if (!exists('fn.yaml')) stop('Input file not found\n'); 
