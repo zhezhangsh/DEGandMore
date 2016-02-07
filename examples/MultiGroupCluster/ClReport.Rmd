@@ -15,7 +15,8 @@ library(awsomics);
 library(gplots);
 library(knitr);
 
-fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+# fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
 if (!exists('fn.yaml')) stop('Input file not found\n'); 
@@ -25,6 +26,7 @@ yml <- yaml::yaml.load_file(fn.yaml);
 expr<-readRDS(yml$input$data); 
 anno<-readRDS(yml$input$annotation);
 smpl<-readRDS(yml$input$sample);
+gset<-readRDS(yml$input$geneset); 
 
 if (!setequal(rownames(expr), rownames(anno))) stop("Data matrix and gene annotation have different row names.\n");
 if (!setequal(colnames(expr), rownames(smpl))) stop("Data matrix and sample metadata have different names.\n");
@@ -32,6 +34,36 @@ expr<-expr[rownames(anno), rownames(smpl)];
 
 prms<-yml$parameter;
 ```
+
+
+# Project background
+
+```{r project, include=FALSE}
+lns<-lapply(names(yml$project), function(nm) {
+  c(paste('##', nm), '\n', yml$project[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+`r lns`
+
+
+# Samples and methods
+
+```{r methods, include=FALSE}
+CreateDatatable(smpl, paste(yml$output, 'samples.html', sep='/'));
+lns<-lapply(names(yml$methods), function(nm) {
+  c(paste('##', nm), '\n', yml$methods[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+## Samples
+
+There are a total of `r ncol(expr)` samples. Click [here](samples.html) to view full table of samples
+
+`r lns`
+
 
 # Analysis and results
 
@@ -88,7 +120,6 @@ if (nrow(e) > prms$selection$min) { # continue if there are more selected genes 
   
   if (nrow(e) > prms$selection$max) e<-e[1:prms$selection$max, , drop=FALSE]; # trim if more selected genes than maximum
 }
-
 ```
 
 A total of **`r nrow(e)`** genes were selected. The genes were used for the next step to identify gene clusters
@@ -270,24 +301,20 @@ saveRDS(tbl1, paste(yml$output, 'clustered_data.rds', sep='/'));
 saveRDS(tbl2, paste(yml$output, 'clustered_stat.rds', sep='/')); 
 saveRDS(cbind(expr, anno), paste(yml$output, 'all_genes_data.rds', sep='/')); 
 saveRDS(cbind(stat, anno), paste(yml$output, 'all_genes_stat.rds', sep='/')); 
+
+saveRDS(gset, paste(yml$output, 'all_genesets.rds', sep='/')); 
 ```
 
 Result tables:
 
   - Normalized expressiond data of clustered genes
-    - Click [here](`r paste(yml$output, 'clustered_data.html', sep='/')`) to view online
-    - Click [here](`r paste(yml$output, 'clustered_data.csv', sep='/')`) to download table
+    - Click [here]('clustered_data.html') to view online
+    - Click [here]('clustered_data.csv') to download table
   - Statistical results of clustered genes
-    - Click [here](`r paste(yml$output, 'clustered_stat.html', sep='/')`) to view online
-    - Click [here](`r paste(yml$output, 'clustered_stat.csv', sep='/')`) to download table
+    - Click [here]('clustered_stat.html') to view online
+    - Click [here]('clustered_stat.csv') to download table
 
-```{r cluster_link, include=FALSE}
-lnk<-paste(names(cl), paste(names(cl), '.html', sep=''), sep='/'); 
-lns<-paste('  - [', names(cl), '](', lnk, ')', sep='');
-lns<-paste(lns, collapse='\n'); 
-```
-
-### More about individual clusters
+### Analysis of individual clusters
 
 ```{r cluster_detail, include=FALSE}
 wd<-getwd(); 
@@ -295,6 +322,7 @@ fns<-sapply(1:length(cl), function(i) {
   mtrx<-expr[cl[[i]], , drop=FALSE]; 
   name<-names(cl)[i]; 
   grps<-grp;
+  univ<-rownames(anno); 
   path<-paste(yml$output, name, sep='/'); 
   
   if (prms$plot$zero) mtrx<-mtrx-rowMeans(mtrx[, grp[[1]], drop=FALSE]); 
@@ -302,21 +330,27 @@ fns<-sapply(1:length(cl), function(i) {
   if (!file.exists(path)) dir.create(path, recursive = TRUE); 
   setwd(path); 
   
-  fn<-paste(name, '.html', sep=''); 
+  fn.html<-paste(name, '.html', sep=''); 
   if (yml$input$remote) {
-    md<-knit(text=yml$input$template); 
+    md<-knit(text=yml$input$subtemplate); 
     writeLines(knit2html(text=md), fn)
   } else {
-    md<-knit(yml$input$template); 
-    knit2html(md, fn); 
+    md<-knit(yml$input$subtemplate); 
+    knit2html(md, fn.html); 
   } 
-  paste(path, fn, sep='/'); 
+  paste(path, fn.html, sep='/'); 
 }); 
 
 setwd(wd); 
 ```
 
-Click names to see more detaied information about individual clusters
+```{r cluster_link, include=FALSE}
+lnk<-paste(names(cl), paste(names(cl), '.html', sep=''), sep='/'); 
+lns<-paste('  - [', names(cl), '](', lnk, ')', sep='');
+lns<-paste(lns, collapse='\n'); 
+```
+
+Click cluster names to see more detaied information about individual clusters
 
 `r lns`
 
@@ -353,6 +387,28 @@ if (prms$plot$zero) m<-m-m[, 1];
 PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
+```{r wrap_up, eval=FALSE, include=FALSE}
+wd<-getwd();
+
+fn.index<-paste(getwd(), 'ClReport.html', sep='/');
+fn.out<-paste(yml$output, 'index.html', sep='/');
+if(file.exists(fn.index)) file.copy(fn.index, fn.out); 
+
+x<-strsplit(yml$output, '/')[[1]]; 
+fn.zip<-x[length(x)];
+fn.zip.fn<-paste(fn.zip, paste(fn.zip, '.zip', sep=''), sep='/');
+setwd(paste(x[-length(x)], collapse='/')); 
+zip(paste(fn.zip, '.zip', sep=''), fn.zip, zip='zip'); 
+if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
+file.rename(paste(fn.zip, '.zip', sep=''), fn.zip.fn); 
+
+setwd(wd); 
+```
+
+
+# Download all
+
+Click [here](paste(fn.zip, '.zip', sep='')) download all results as a .zip file
 
 
 ***

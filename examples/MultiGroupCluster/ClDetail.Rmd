@@ -1,6 +1,5 @@
 ---
-title: "Detailed analysis of one gene cluster"
-subtitle: "A subroutine of the gene clustering procedure"
+title: "Visualization and gene set enrichment analysis of a gene cluster"
 author: "Jim Zhang"
 date: "`r Sys.Date()`"
 output:
@@ -12,23 +11,31 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
 
+library(DEGandMore);
 library(awsomics);
 library(gplots);
 library(knitr);
 
 if (!exists('name')) stop("cluster name not given\n"); # the name of the cluster
-#if (!exists('path')) stop("output file path not given\n"); # the path to output files
+if (!exists('path')) stop("output file path not given\n"); # the path to output files
 if (!exists('mtrx')) stop("data matrix not given\n"); # the data matrix of gene clusters
 if (!exists('anno')) stop("gene annotation not given\n"); # the annotation of each row in the data matrix
 if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corresponding to the data matrix columns
+if (!exists('univ')) stop("background genes not given\n"); # the background genes for enrichment analysis
 
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
 
-# Cluster `r name`
+# Visualization and gene set enrichment analysis of cluster `r name`
 
+_This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 
-## Data visualization
+  - Total number of genes **`r length(univ)`**
+  - Number of genes in cluster **`r ncol(mtrx)`**
+  - Total number of samples **`r ncol(mtrx)`**
+  - Number of sample groups **`r length(grps)`**
+
+## Visualization
 
 **Figure** Hierarchical clustering of samples using all genes of the cluster
 
@@ -65,6 +72,33 @@ se<-matrix(se, nr=1);
 colnames(m)<-names(grps); 
 PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FALSE); 
 ```
+
+## Gene set enrichment analysis
+
+Find predefined gene sets enriched in gene cluster comparing to the background. 
+
+```{r gse_1, include=FALSE}
+gse<- TestGSE(rownames(mtrx), univ, gset[[2]])[[1]]; 
+gse<-gse[, c(2, 4, 5, 6)]; 
+colnames(gse)<-c('N', 'Enrichment', 'P', 'FDR'); 
+gse<-cbind(gset[[1]][rownames(gse), ], gse); 
+saveRDS(gse, file=paste(path, 'GSE.rds', sep='/')); 
+write.csv(gse, file=paste(path, 'GSE.csv', sep='/')); 
+gse$Name<- AddHref(gse$Name, gse$URL); 
+gse<-gse[, colnames(gse)!='URL'];  
+
+gse<-split(gse[, -1], gse[, 1]); 
+fn<-sapply(names(gse), function(nm) CreateDatatable(gse[[nm]], paste(path, paste('GSE_', nm, '.html', sep=''), sep='/'), caption=nm)); 
+
+lns<-paste('  - [', names(gse), '](', paste('GSE_', names(gse), '.html', sep=''), ')', sep=''); 
+lns<-paste(lns, collapse='\n'); 
+```
+
+Click links to view full tabls of gene sets from different sources.
+
+`r lns`
+
+! Please note that the FDR values in the result tables are overly conservative, as they were estimated based on `r nrow(gset[[1]])` gene sets from all sources. 
 
 
 ***
