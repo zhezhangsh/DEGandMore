@@ -110,6 +110,24 @@ geneset<-readRDS('./default_set_human_5-1000.rds');
    - **URL:** link to the source of the gene set
  - **list:** list of gene sets named by the row names of **meta**, each element corresponds to a row in **meta** and include unique Entrez IDs of genes belonging to the gene set
 
-## Run gene clustering analysis using the _ClReport_ template
+#### Run gene clustering analysis using the _ClReport_ template
+
+The gene clustering analysis can be used to identify gene subsets co-expressed across multiple sample groups. It can be run very easily with a single function call _CreateClReport(fn.yaml)_. 
+
+```
+library(DEGandMore);
+CreateClReport(fn.yaml);
+```
+
+The function will download a couple of _knitr_ templates from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) and [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd) and run the templates based on the information in the yaml file _fn.yaml_. This file defines all inputs of the analysis and can be downloaded from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.yml). Major elements of the yaml file include:
+
+  - Preprocessed gene expression matrix, which is usually rescaled to make mean and SD of each gene equal to 0 and 1.0
+  - Text description of the project and the analysis methods (please edit for each project)
+  - A collection of predefined gene sets. Click [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true) to download an example
+  - All parameters to run the analysis (see the example for details), such as
+      - How to select significant genes for initiating clusters
+      - How to cluster genes and select clusters
+      - How to refine clusters
+      - How to analyze individual clusters
 
 
