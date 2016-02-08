@@ -18,7 +18,7 @@ library(knitr);
 
 if (!exists('name')) stop("cluster name not given\n"); # the name of the cluster
 if (!exists('path')) stop("output file path not given\n"); # the path to output files
-if (!exists('home')) stop("path to project home not given\n"); # the path to project home page
+if (!exists('home')) stop("path to report home not given\n"); # the path to report home page
 if (!exists('mtrx')) stop("data matrix not given\n"); # the data matrix of gene clusters
 if (!exists('anno')) stop("gene annotation not given\n"); # the annotation of each row in the data matrix
 if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corresponding to the data matrix columns
@@ -30,7 +30,7 @@ if (!exists('univ')) stop("background genes not given\n"); # the background gene
 
 # `r name`
 
-**_Go back to [home](`r home`)_**
+**_[Go back](`r home`)_**
 
 _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 
@@ -41,7 +41,7 @@ _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.git
 
 ## Visualization
 
-**_Go back to [home](`r home`)_**
+**_[Go back](`r home`)_**
 
 **Figure** Hierarchical clustering of samples using all genes of the cluster
 
@@ -81,7 +81,7 @@ PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FA
 
 ## Gene set enrichment analysis
 
-**_Go back to [home](`r home`)_**
+**_[Go back](`r home`)_**
 
 Find predefined gene sets enriched in gene cluster comparing to the background. 
 

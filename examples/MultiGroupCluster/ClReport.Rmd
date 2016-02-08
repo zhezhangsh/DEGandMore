@@ -36,6 +36,7 @@ expr<-expr[rownames(anno), rownames(smpl)];
 prms<-yml$parameter;
 ```
 
+**_[Go back to project home](yml$project$Home)_**
 
 # Project background
 
@@ -48,6 +49,7 @@ lns<-paste(do.call('c', lns), collapse='\n');
 
 `r lns`
 
+**_[Go back to project home](yml$project$Home)_**
 
 # Samples and methods
 
@@ -67,6 +69,9 @@ There are a total of `r ncol(expr)` samples. Click [here](samples.html) to view 
 
 
 # Analysis and results
+
+
+**_[Go back to project home](yml$project$Home)_**
 
 ## ANOVA analysis of each gene across sample
 
@@ -92,6 +97,8 @@ We applied ANOVA analysis on each gene to test its differential expression acros
   - There are `r length(l)` sample groups: `r paste(l, collapse=', ')`
 
 Click [here](anova.html) to view full ANOVA result table. 
+
+**_[Go back to project home](yml$project$Home)_**
 
 ## Gene clustering
 
@@ -315,6 +322,8 @@ Result tables:
     - Click [here]('clustered_stat.html') to view online
     - Click [here]('clustered_stat.csv') to download table
 
+**_[Go back to project home](yml$project$Home)_**
+
 ## Analysis of individual clusters
 
 ```{r cluster_detail, include=FALSE}
@@ -355,6 +364,7 @@ Click cluster names to see more detaied information about individual clusters
 
 `r lns`
 
+**_[Go back to project home](yml$project$Home)_**
 
 ## Extra plots
 
@@ -396,6 +406,8 @@ if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn);
 zip(fn.zip, yml$output, "-rj9X", zip='zip'); 
 file.rename(fn.zip, fn.zip.fn); 
 ```
+
+**_[Go back to project home](yml$project$Home)_**
 
 ***
 _END OF DOCUMENT_
