@@ -16,13 +16,13 @@ library(gplots);
 library(knitr);
 library(rmarkdown); 
 
- fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+# fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
 # fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
- yml <- yaml::yaml.load_file(fn.yaml);  
+# yml <- yaml::yaml.load_file(fn.yaml);  
 
 expr<-readRDS(yml$input$data); 
 anno<-readRDS(yml$input$annotation);
