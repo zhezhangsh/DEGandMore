@@ -339,8 +339,9 @@ fns<-sapply(1:length(cl), function(i) {
 
   fn.html<-paste(yml$output, name, paste(name, '.html', sep=''), sep='/'); 
   
-  rmarkdown::render(fn.temp, output_file=fn.html);
-
+  writeLines(rmarkdown::render(fn.temp, output_file=fn.html), "render_wrapper.R");
+  devtools::clean_source("render_wrapper.R", quiet = TRUE); # Nested render confuses RStudio, use this trick to clean it up
+  file.remove("render_wrapper.R"); 
 }); 
 
 ```
@@ -388,24 +389,17 @@ if (prms$plot$zero) m<-m-m[, 1];
 PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
-```{r wrap_up, eval=FALSE, include=FALSE}
-wd<-getwd();
-
-#x<-strsplit(yml$output, '/')[[1]]; 
-#fn.zip<-x[length(x)];
-#fn.zip.fn<-paste(fn.zip, paste(fn.zip, '.zip', sep=''), sep='/');
-#setwd(paste(x[-length(x)], collapse='/')); 
-#zip(paste(fn.zip, '.zip', sep=''), fn.zip, zip='zip'); 
-#if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
-#file.rename(paste(fn.zip, '.zip', sep=''), fn.zip.fn); 
-
-setwd(wd); 
+```{r wrap_up, include=FALSE}
+x<-strsplit(yml$output, '/')[[1]]; 
+fn.zip<-paste(x[length(x)], '.zip', sep='');
+if (file.exists(paste(yml$output, fn.zip, sep='/'))) file.remove(paste(yml$output, fn.zip, sep='/')); 
+zip(fn.zip, yml$output, zip='zip'); 
+file.rename(fn.zip, paste(yml$output, fn.zip, sep='/')); 
 ```
-
 
 # Download all
 
-Click [here](paste(fn.zip, '.zip', sep='')) download all results as a .zip file
+Click [here](fn.zip) download all results as a .zip file
 
 
 ***

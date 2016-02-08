@@ -19,9 +19,12 @@ CreateClReport<-function(fn.yaml) {
     file.copy(yml$input$template, fn.temp); 
   }
   
+  if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE);
+  
   fn.html<-paste(yml$output, 'index.html', sep='/'); 
   
-  rmarkdown::render(fn.temp, output_format="html_document", output_file=fn.html);
+  rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
+                    quiet=TRUE, envir=new.env());
   
   fn.html;
 }
