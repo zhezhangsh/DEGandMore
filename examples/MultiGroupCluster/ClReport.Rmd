@@ -315,7 +315,7 @@ Result tables:
     - Click [here]('clustered_stat.html') to view online
     - Click [here]('clustered_stat.csv') to download table
 
-### Analysis of individual clusters
+## Analysis of individual clusters
 
 ```{r cluster_detail, include=FALSE}
 fn.temp<-paste(yml$output, 'ClDetail.Rmd', sep='/'); 
@@ -355,7 +355,7 @@ Click cluster names to see more detaied information about individual clusters
 `r lns`
 
 
-### Extra plots
+## Extra plots
 
 **Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
 
