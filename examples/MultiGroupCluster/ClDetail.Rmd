@@ -26,7 +26,7 @@ if (!exists('univ')) stop("background genes not given\n"); # the background gene
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
 
-# Visualization and gene set enrichment analysis of cluster `r name`
+# `r name`
 
 _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 

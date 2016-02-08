@@ -391,13 +391,13 @@ PlotSeries(m, se, c('', prms$plot$ylab));
 ```{r wrap_up, eval=FALSE, include=FALSE}
 wd<-getwd();
 
-x<-strsplit(yml$output, '/')[[1]]; 
-fn.zip<-x[length(x)];
-fn.zip.fn<-paste(fn.zip, paste(fn.zip, '.zip', sep=''), sep='/');
-setwd(paste(x[-length(x)], collapse='/')); 
-zip(paste(fn.zip, '.zip', sep=''), fn.zip, zip='zip'); 
-if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
-file.rename(paste(fn.zip, '.zip', sep=''), fn.zip.fn); 
+#x<-strsplit(yml$output, '/')[[1]]; 
+#fn.zip<-x[length(x)];
+#fn.zip.fn<-paste(fn.zip, paste(fn.zip, '.zip', sep=''), sep='/');
+#setwd(paste(x[-length(x)], collapse='/')); 
+#zip(paste(fn.zip, '.zip', sep=''), fn.zip, zip='zip'); 
+#if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
+#file.rename(paste(fn.zip, '.zip', sep=''), fn.zip.fn); 
 
 setwd(wd); 
 ```
