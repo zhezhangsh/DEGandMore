@@ -339,7 +339,7 @@ fns<-sapply(1:length(cl), function(i) {
 
   fn.html<-paste(name, '.html', sep=''); 
   
-  rmarkdown::render(fn.temp, output_file=fn.html, output_dir=paste(yml$output, name, sep='/'), envir=new.env()); 
+  rmarkdown::render(fn.temp, output_file=fn.html, output_dir=paste(yml$output, name, sep='/'), quiet=TRUE); 
 }); 
 
 ```
