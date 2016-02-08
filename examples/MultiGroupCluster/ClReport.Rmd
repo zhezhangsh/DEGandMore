@@ -332,6 +332,7 @@ fns<-sapply(1:length(cl), function(i) {
   grps<-grp;
   univ<-rownames(anno); 
   path<-paste(yml$output, name, sep='/'); 
+  home<-"../index.html";
   
   if (prms$plot$zero) mtrx<-mtrx-rowMeans(mtrx[, grp[[1]], drop=FALSE]); 
   
@@ -392,7 +393,7 @@ x<-strsplit(yml$output, '/')[[1]];
 fn.zip<-paste(x[length(x)], '.zip', sep='');
 fn.zip.fn<-paste(yml$output, fn.zip, sep='/');
 if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
-zip(fn.zip, yml$output, "-r9X", zip='zip'); 
+zip(fn.zip, yml$output, "-rj9X", zip='zip'); 
 file.rename(fn.zip, fn.zip.fn); 
 ```
 

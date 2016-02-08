@@ -18,6 +18,7 @@ library(knitr);
 
 if (!exists('name')) stop("cluster name not given\n"); # the name of the cluster
 if (!exists('path')) stop("output file path not given\n"); # the path to output files
+if (!exists('home')) stop("path to project home not given\n"); # the path to project home page
 if (!exists('mtrx')) stop("data matrix not given\n"); # the data matrix of gene clusters
 if (!exists('anno')) stop("gene annotation not given\n"); # the annotation of each row in the data matrix
 if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corresponding to the data matrix columns
@@ -25,6 +26,8 @@ if (!exists('univ')) stop("background genes not given\n"); # the background gene
 
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
+
+Go back to [home](`r home`)
 
 # `r name`
 
@@ -34,6 +37,8 @@ _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.git
   - Number of genes in cluster **`r nrow(mtrx)`**
   - Total number of samples **`r ncol(mtrx)`**
   - Number of sample groups **`r length(grps)`**
+
+Go back to [home](`r home`)
 
 ## Visualization
 
@@ -73,6 +78,8 @@ colnames(m)<-names(grps);
 PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FALSE); 
 ```
 
+Go back to [home](`r home`)
+
 ## Gene set enrichment analysis
 
 Find predefined gene sets enriched in gene cluster comparing to the background. 
@@ -100,6 +107,7 @@ Click links to view full tabls of gene sets from different sources.
 
 ! Please note that the FDR values in the result tables are overly conservative, as they were estimated based on `r nrow(gset[[1]])` gene sets from all sources. 
 
+Go back to [home](`r home`)
 
 ***
 _END OF DOCUMENT_
