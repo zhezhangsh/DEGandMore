@@ -392,8 +392,8 @@ x<-strsplit(yml$output, '/')[[1]];
 fn.zip<-paste(x[length(x)], '.zip', sep='');
 fn.zip.fn<-paste(yml$output, fn.zip, sep='/');
 if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn); 
-zip(fn.zip.fn, yml$output, "-rj9X", zip='zip'); 
-file.rename(fn.zip.fn, paste(yml$output, fn.zip, sep='/')); 
+zip(fn.zip, yml$output, "-r9X", zip='zip'); 
+file.rename(fn.zip, fn.zip.fn); 
 ```
 
 # Download all
