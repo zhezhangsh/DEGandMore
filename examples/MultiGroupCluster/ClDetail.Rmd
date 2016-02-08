@@ -27,9 +27,10 @@ if (!exists('univ')) stop("background genes not given\n"); # the background gene
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
 
-Go back to [home](`r home`)
 
 # `r name`
+
+**_Go back to [home](`r home`)_**
 
 _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 
@@ -38,9 +39,9 @@ _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.git
   - Total number of samples **`r ncol(mtrx)`**
   - Number of sample groups **`r length(grps)`**
 
-Go back to [home](`r home`)
-
 ## Visualization
+
+**_Go back to [home](`r home`)_**
 
 **Figure** Hierarchical clustering of samples using all genes of the cluster
 
@@ -78,9 +79,9 @@ colnames(m)<-names(grps);
 PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FALSE); 
 ```
 
-Go back to [home](`r home`)
-
 ## Gene set enrichment analysis
+
+**_Go back to [home](`r home`)_**
 
 Find predefined gene sets enriched in gene cluster comparing to the background. 
 

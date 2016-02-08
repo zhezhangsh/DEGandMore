@@ -388,7 +388,7 @@ if (prms$plot$zero) m<-m-m[, 1];
 PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
-```{r wrap_up, include=FALSE}
+```{r wrap_up, eval=FALSE, include=FALSE}
 x<-strsplit(yml$output, '/')[[1]]; 
 fn.zip<-paste(x[length(x)], '.zip', sep='');
 fn.zip.fn<-paste(yml$output, fn.zip, sep='/');
@@ -396,11 +396,6 @@ if (file.exists(fn.zip.fn)) file.remove(fn.zip.fn);
 zip(fn.zip, yml$output, "-rj9X", zip='zip'); 
 file.rename(fn.zip, fn.zip.fn); 
 ```
-
-# Download all
-
-Click [here](`r fn.zip`) download all results as a .zip file
-
 
 ***
 _END OF DOCUMENT_
