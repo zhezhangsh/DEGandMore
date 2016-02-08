@@ -397,7 +397,7 @@ file.rename(fn.zip, paste(yml$output, fn.zip, sep='/'));
 
 # Download all
 
-Click [here](fn.zip) download all results as a .zip file
+Click [here](`r fn.zip`) download all results as a .zip file
 
 
 ***
