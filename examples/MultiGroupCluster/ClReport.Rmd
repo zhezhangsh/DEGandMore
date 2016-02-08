@@ -195,7 +195,7 @@ while(flag) {
   c<-ms[, tr==i]; 
   r<-cor(c[, 1], c[, 2]); 
   p<-cor.test(c[, 1], c[, 2])$p.value[[1]]; 
-  if (r>prms$cluster$merge$corr & p<prms$cluster$merge$p & length(cl)>length(grp)) {
+  if (r>prms$cluster$merge$corr & p<prms$cluster$merge$p) {
     cl[tr==i][[1]]<-as.vector(unlist(cl[tr==i]));
     cl<-cl[names(cl)!=names(i)]; 
   } else flag<-FALSE;
