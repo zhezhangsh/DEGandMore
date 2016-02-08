@@ -119,7 +119,7 @@ library(DEGandMore);
 CreateClReport(fn.yaml);
 ```
 
-The function will download a couple of _knitr_ templates from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) and [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd) and run the templates based on the information in the yaml file _fn.yaml_. This file defines all inputs of the analysis and can be downloaded from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.yml). Major elements of the yaml file include:
+The function will download a couple of _knitr_ templates from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) and [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd) and run the templates based on the information in the yaml file _fn.yaml_. This file defines all inputs of the analysis and can be downloaded from [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.yml). Please download this example to your local directory and edit it before making a run. Main elements of the yaml file include:
 
   - Preprocessed gene expression matrix, which is usually rescaled to make mean and SD of each gene equal to 0 and 1.0
   - Text description of the project and the analysis methods (please edit for each project)
