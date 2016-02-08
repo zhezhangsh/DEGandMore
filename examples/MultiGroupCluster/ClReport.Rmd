@@ -391,7 +391,7 @@ PlotSeries(m, se, c('', prms$plot$ylab));
 x<-strsplit(yml$output, '/')[[1]]; 
 fn.zip<-paste(x[length(x)], '.zip', sep='');
 if (file.exists(paste(yml$output, fn.zip, sep='/'))) file.remove(paste(yml$output, fn.zip, sep='/')); 
-zip(fn.zip, yml$output, zip='zip'); 
+zip(fn.zip, yml$output, "-rj9X", zip='zip'); 
 file.rename(fn.zip, paste(yml$output, fn.zip, sep='/')); 
 ```
 

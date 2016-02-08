@@ -24,7 +24,7 @@ CreateClReport<-function(fn.yaml) {
   fn.html<-paste(yml$output, 'index.html', sep='/'); 
   
   try(rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
-                    quiet=TRUE, envir=new.env()));
+                    quiet=TRUE, envir=new.env()), silent=TRUE);
   
   fn.html;
 }
