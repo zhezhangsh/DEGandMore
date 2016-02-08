@@ -110,4 +110,6 @@ geneset<-readRDS('./default_set_human_5-1000.rds');
    - **URL:** link to the source of the gene set
  - **list:** list of gene sets named by the row names of **meta**, each element corresponds to a row in **meta** and include unique Entrez IDs of genes belonging to the gene set
 
+## Run gene clustering analysis using the _ClReport_ template
+
 
