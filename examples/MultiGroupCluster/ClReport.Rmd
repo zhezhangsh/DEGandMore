@@ -14,14 +14,15 @@ knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('pn
 library(awsomics);
 library(gplots);
 library(knitr);
+library(rmarkdown); 
 
 # fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
-fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
+# fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
-if (!exists('fn.yaml')) stop('Input file not found\n'); 
+# if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
-yml <- yaml::yaml.load_file(fn.yaml);  
+# yml <- yaml::yaml.load_file(fn.yaml);  
 
 expr<-readRDS(yml$input$data); 
 anno<-readRDS(yml$input$annotation);
@@ -317,7 +318,14 @@ Result tables:
 ### Analysis of individual clusters
 
 ```{r cluster_detail, include=FALSE}
-wd<-getwd(); 
+fn.temp<-paste(yml$output, 'ClDetail.Rmd', sep='/'); 
+if (yml$input$remote) {
+  if (!RCurl::url.exists(yml$input$subtemplate)) stop("Template Rmd file ', yml$input$subtemplate, ' not exists\n");
+  writeLines(RCurl::getURL(yml$input$subtemplate)[[1]], fn.temp);
+} else {
+  file.copy(yml$input$subtemplate, fn.temp); 
+}
+
 fns<-sapply(1:length(cl), function(i) {
   mtrx<-expr[cl[[i]], , drop=FALSE]; 
   name<-names(cl)[i]; 
@@ -328,20 +336,13 @@ fns<-sapply(1:length(cl), function(i) {
   if (prms$plot$zero) mtrx<-mtrx-rowMeans(mtrx[, grp[[1]], drop=FALSE]); 
   
   if (!file.exists(path)) dir.create(path, recursive = TRUE); 
-  setwd(path); 
+
+  fn.html<-paste(yml$output, name, paste(name, '.html', sep=''), sep='/'); 
   
-  fn.html<-paste(name, '.html', sep=''); 
-  if (yml$input$remote) {
-    md<-knit(text=yml$input$subtemplate); 
-    writeLines(knit2html(text=md), fn)
-  } else {
-    md<-knit(yml$input$subtemplate); 
-    knit2html(md, fn.html); 
-  } 
-  paste(path, fn.html, sep='/'); 
+  rmarkdown::render(fn.temp, output_file=fn.html);
+
 }); 
 
-setwd(wd); 
 ```
 
 ```{r cluster_link, include=FALSE}

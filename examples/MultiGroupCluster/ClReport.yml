@@ -5,6 +5,45 @@ project: # Project background
     5 time points after injury from 6 hours to 2 weeks. The goal of this analysis
     is to identify gene clusters that were signficantly different across time points. ## Full description
 methods: # Data processing and analysis methods
+  Processing of microarray data: All [Affymetrix](http://www.affymetrix.com) probes
+    were re-grouped into unique Entrez gene IDs using custom library file downloaded
+    from [BRAINARRAY](http://brainarray.mbni.med.umich.edu) database. The raw data
+    in .CEL files were normalized and summarized by [RMA](http://www.ncbi.nlm.nih.gov/pubmed/12925520)
+    (Robust Multichip Averaging) method to generate an N by M matrix, where N is the
+    number of unique Entrez genes and M is the number of samples. The normalized data
+    were log2-transformed to get final measurements mostly ranging between 1 and 16,
+    so every increase or decrease of the measurements by 1.0 corresponds to a 2-fold
+    difference. All data processing steps were performed within the [R](https://www.r-project.org)
+    environment. The following customized code can be applied to any types of [Affymetrix](http://www.affymetrix.com/estore/browse/level_three_category_and_children.jsp?category=35868&categoryIdClicked=35868&expand=true&parent=35617)
+    platforms (3'IVT, Exon, Gene, etc.) as long as the raw data were stored in [CEL](http://media.affymetrix.com/support/developer/powertools/changelog/gcos-agcc/cel.html)
+    format and [BRAINARRAY](http://brainarray.mbni.med.umich.edu/Brainarray/Database/CustomCDF/CDF_download.asp)
+    provides the custom library file in CDF format.
+  Preparation of data for gene clustering: Processed microarray data set were re-scaled
+    to make the mean and standard deviation of each gene equal to 0 and 1.0. Control
+    samples were not included for this analysis because they are very different from
+    all the injuried samples, and the difference will dominate the analysis.
+  Selection of differentially expressed gene: ANOVA was applied to give each gene
+    a p value for its differential expression across sample groups. Corresponding
+    false discovery rate was calculated using the p values. Genes for clustering analysis
+    were sequentially selected by FDR, p value, and range (difference between maximum
+    and minimum). The selection would be stopped if the number of qualifying genes
+    was already smaller than a given minimal number.
+  Gene clustering analysis: The _hclust{stat}_ function was applied to selected genes
+    to generate  hierchical clustering tree was first made by  The tree was cut at
+    a given height to get a number of initial clusters. The cutting height was adjusted
+    to lower value to generate more clusters if the number of clusters was less than
+    the number of sample groups. The initial clusters were then filtered by removing
+    clusters that are too small and genes not close enough to the cluster centroid.
+    Two initial clusters could also be merged if their centroids were significantly
+    similar to each other. Next, the clusters were refined recursively by including
+    more less differentially expressed genes across groups. The genes were classified
+    into a cluster if it was similar enough to the cluster centroid. The re-clustering
+    procedure was repeated for given number of times or until the clusters were stabalized.
+  Gene set enrichment analysis: We made a comprehensive collection of predefined gene
+    sets from difference resources such as [KEGG](http://www.genome.jp/kegg/) and
+    [BioSystems](http://www.ncbi.nlm.nih.gov/biosystems). The collection was precompiled
+    into an R data object. An example of such of an object can be downloaded from
+    [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true).
 input: # Location of input files
   data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_rescaled.rds ## a matrix of data, row=gene, column=sample 
     # The order of the samples in the matrix matters, order them based on the order of the groups
@@ -13,8 +52,9 @@ input: # Location of input files
   annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds ## a data frame of gene annotation, match row names
   sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds ## a data frame of sample manifest
   geneset: /nas/is1/rchive/data/gene.set/r/default_set_rat_5-1000.rds ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
-  subtemplate: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClDetail.Rmd ## the location of template file for analyzing individual clusters
-  remote: no ## whether the templates are located remotely (as URL) or locally (as file name)
+  template: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.Rmd
+  subtemplate: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClDetail.Rmd
+  remote: no
 parameter: # All parameters
   term: Group ## Corresponding to a column name in sample; based on which samples will be grouped
   selection: ## How significant genes will be selected as seeds for initiating clusters
