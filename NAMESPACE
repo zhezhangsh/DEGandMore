@@ -1,5 +1,6 @@
 
 export("AddAPCluster");
+export("CreateClReport");
 export("CreateDeReport");
 export("DeDeSeq2");
 export("DeEdgeR");
