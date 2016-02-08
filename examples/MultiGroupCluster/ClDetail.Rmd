@@ -31,7 +31,7 @@ if (!exists('univ')) stop("background genes not given\n"); # the background gene
 _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 
   - Total number of genes **`r length(univ)`**
-  - Number of genes in cluster **`r ncol(mtrx)`**
+  - Number of genes in cluster **`r nrow(mtrx)`**
   - Total number of samples **`r ncol(mtrx)`**
   - Number of sample groups **`r length(grps)`**
 
