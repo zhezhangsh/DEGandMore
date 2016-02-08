@@ -52,9 +52,9 @@ input: # Location of input files
   annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds ## a data frame of gene annotation, match row names
   sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds ## a data frame of sample manifest
   geneset: /nas/is1/rchive/data/gene.set/r/default_set_rat_5-1000.rds ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
-  template: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.Rmd
-  subtemplate: ~/R/source/DEGandMore/examples/MultiGroupCluster/ClDetail.Rmd
-  remote: no
+  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd
+  subtemplate: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd
+  remote: yes
 parameter: # All parameters
   term: Group ## Corresponding to a column name in sample; based on which samples will be grouped
   selection: ## How significant genes will be selected as seeds for initiating clusters

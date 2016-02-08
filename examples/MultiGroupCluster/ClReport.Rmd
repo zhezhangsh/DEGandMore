@@ -391,10 +391,6 @@ PlotSeries(m, se, c('', prms$plot$ylab));
 ```{r wrap_up, eval=FALSE, include=FALSE}
 wd<-getwd();
 
-fn.index<-paste(getwd(), 'ClReport.html', sep='/');
-fn.out<-paste(yml$output, 'index.html', sep='/');
-if(file.exists(fn.index)) file.copy(fn.index, fn.out); 
-
 x<-strsplit(yml$output, '/')[[1]]; 
 fn.zip<-x[length(x)];
 fn.zip.fn<-paste(fn.zip, paste(fn.zip, '.zip', sep=''), sep='/');
