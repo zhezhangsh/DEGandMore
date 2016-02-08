@@ -16,13 +16,13 @@ library(gplots);
 library(knitr);
 library(rmarkdown); 
 
-# fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
+ fn.yaml<-"~/R/source/DEGandMore/examples/MultiGroupCluster/ClReport.yml"; # comment it out if running through knitr::knit function
 # fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
-# yml <- yaml::yaml.load_file(fn.yaml);  
+ yml <- yaml::yaml.load_file(fn.yaml);  
 
 expr<-readRDS(yml$input$data); 
 anno<-readRDS(yml$input$annotation);
@@ -337,11 +337,9 @@ fns<-sapply(1:length(cl), function(i) {
   
   if (!file.exists(path)) dir.create(path, recursive = TRUE); 
 
-  fn.html<-paste(yml$output, name, paste(name, '.html', sep=''), sep='/'); 
+  fn.html<-paste(name, '.html', sep=''); 
   
-  writeLines(rmarkdown::render(fn.temp, output_file=fn.html), "render_wrapper.R");
-  devtools::clean_source("render_wrapper.R", quiet = TRUE); # Nested render confuses RStudio, use this trick to clean it up
-  file.remove("render_wrapper.R"); 
+  rmarkdown::render(fn.temp, output_file=fn.html, output_dir=paste(yml$output, name, sep='/'), envir=new.env()); 
 }); 
 
 ```
