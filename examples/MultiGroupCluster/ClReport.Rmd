@@ -386,7 +386,7 @@ if (prms$plot$rescale) ms<-t(scale(t(ms)));
 m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
 colnames(m)<-names(grp);
 rownames(m)<-names(cl); 
-PlotColoredBlock(m, key='Cluster average'); 
+PlotColoredBlock(m, key='Cluster average', groups=split(colnames(m), colnames(m))); 
 ```
 
 **Figure** Group means of all clustered genes
@@ -406,7 +406,7 @@ d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sortColumn(d, grp); 
 rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
 if (prms$plot$rescale) d<-t(scale(t(d))); 
-PlotColoredBlock(d, num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Expression level'); 
+PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
