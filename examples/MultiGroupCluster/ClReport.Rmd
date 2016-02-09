@@ -16,13 +16,13 @@ library(gplots);
 library(knitr);
 library(rmarkdown); 
 
-# fn.yaml<-"ClReport_Gas1_vs_control.yml"; # comment it out if running through knitr::knit function
+ fn.yaml<-"ClReport_Gas1_vs_control.yml"; # comment it out if running through knitr::knit function
 # fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
-# yml <- yaml::yaml.load_file(fn.yaml);  
+ yml <- yaml::yaml.load_file(fn.yaml);  
 
 expr<-readRDS(yml$input$data); 
 anno<-readRDS(yml$input$annotation);
@@ -233,8 +233,8 @@ The initial analysis identified `r length(cl)` gene clusters using just selected
 
 ```{r plot_cluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms)[1], fig.height=CalculateColoredBlockSize(ms)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
-d<-sortColumn(x, grp);
-PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), key='Average expression', groups=grp); 
+x<-sortColumn(x, grp);
+PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE), key='Average expression', groups=grp); 
 ```
 
 ### Refine clusters
@@ -288,8 +288,8 @@ if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The recluste
 
 ```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
-d<-sortColumn(x, grp);
-PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), key='Average expression', groups=grp);
+x<-sortColumn(x, grp);
+PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE), key='Average expression', groups=grp);
 ```
 
 ```{r summary_clusters, include=FALSE}
