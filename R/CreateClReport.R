@@ -25,7 +25,7 @@ CreateClReport<-function(fn.yaml) {
   
   fn.html<-paste(yml$output, 'index.html', sep='/'); 
   
-  try(rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
+  errors<-try(rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
                     quiet=TRUE, envir=new.env()), silent=TRUE);
   
   fn<-strsplit(fn.yaml, '/')[[1]];
@@ -34,5 +34,5 @@ CreateClReport<-function(fn.yaml) {
   file.copy(fn, paste(yml$output, fn, sep='/')); 
   zip(paste(yml$output, '.zip', sep=''), yml$output, "-rJ9X", zip='zip'); 
   
-  list(index=fn.html, zip=paste(yml$output, '.zip', sep=''));
+  list(index=fn.html, zip=paste(yml$output, '.zip', sep=''), error=errors);
 }

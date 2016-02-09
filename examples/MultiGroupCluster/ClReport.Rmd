@@ -378,7 +378,7 @@ if (prms$plot$zero) m<-m-m[, 1];
 PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
-**Figure** Just plot the group means 
+**Figure** Heatmap of group and cluster means
 
 ```{r plot_means, include=TRUE, out.width='600px'}
 ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
@@ -387,6 +387,28 @@ m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
 colnames(m)<-names(grp);
 rownames(m)<-names(cl); 
 PlotColoredBlock(m, key='Cluster average'); 
+```
+
+**Figure** Group means of all clustered genes
+
+```{r plot_group_means, include=TRUE, out.width='600px'}
+d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
+d<-sapply(grp, function(g) rowMeans(d[, g, drop=FALSE])); 
+colnames(d)<-names(grp); 
+PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Group average'); 
+abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
+```
+
+**Figure** All samples and all clustered genes
+
+```{r plot_heatmap, include=TRUE, out.width='900px', out.height='1200px'}
+d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
+d<-sortColumn(d, grp); 
+rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
+if (prms$plot$rescale) d<-t(scale(t(d))); 
+PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
+abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
+abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
 
 **Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
