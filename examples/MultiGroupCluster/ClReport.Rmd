@@ -36,7 +36,7 @@ expr<-expr[rownames(anno), rownames(smpl)];
 prms<-yml$parameter;
 ```
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 # Project background
 
@@ -49,7 +49,7 @@ lns<-paste(do.call('c', lns), collapse='\n');
 
 `r lns`
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 # Samples and methods
 
@@ -70,7 +70,7 @@ There are a total of `r ncol(expr)` samples. Click [here](samples.html) to view 
 
 # Analysis and results
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ## ANOVA analysis of each gene across sample
 
@@ -97,7 +97,7 @@ We applied ANOVA analysis on each gene to test its differential expression acros
 
 Click [here](anova.html) to view full ANOVA result table. 
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ## Gene clustering
 
@@ -131,17 +131,17 @@ if (nrow(e) > prms$selection$min) { # continue if there are more selected genes 
 
 A total of **`r nrow(e)`** genes were selected. The genes were used for the next step to identify gene clusters
 
-**Figure** Hierarchical clustering of samples using all genes.
-
 ```{r hc_all, include=TRUE, out.width='800px'}
 plot(hclust(as.dist(1-cor(expr))), main='Sample clustering using all genes', xlab='Sample', sub='');
 ```
 
-**Figure** Hierarchical clustering of samples using just selected genes.
+**Figure 1** Hierarchical clustering of samples using all genes.
 
 ```{r hc_clustered, include=TRUE, out.width='800px'}
 plot(hclust(as.dist(1-cor(e))), main='Sample clustering using selected significant genes', xlab='Sample', sub='');
 ```
+
+**Figure 2** Hierarchical clustering of samples using just selected genes.
 
 ### Cluster selected genes
 
@@ -229,13 +229,13 @@ d<-expr[stat[, 'pANOVA']<=prms$recluster$p, , drop=FALSE];
 
 The initial analysis identified `r length(cl)` gene clusters using just selected significant genes. A total of **`r sum(n)`** genes were clustered. 
 
-**Figure** This plot shows below the average expression levels of each cluster. Values indicate number of standard deviation from mean of all samples. 
-
 ```{r plot_cluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms)[1], fig.height=CalculateColoredBlockSize(ms)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
 x<-sortColumn(x, grp);
 PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE), key='Average expression', groups=grp); 
 ```
+
+**Figure 3** This plot shows below the average expression levels of each cluster. Values indicate number of standard deviation from mean of all samples. 
 
 ### Refine clusters
 
@@ -284,13 +284,13 @@ if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The recluste
 
 `r msg`. A total of **`r sum(sapply(cls[[length(cls)]], length))`** genes were clustered. 
 
-**Figure** This plot shows below the average expression levels of each cluster after `r ncol(n)-1` cycles of reclustering. Values indicate number of standard deviation from mean of all samples. 
-
 ```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
 x<-sortColumn(x, grp);
 PlotColoredBlock(x, min=-1*max(abs(x), na.rm=TRUE), max=max(abs(x), na.rm=TRUE), key='Average expression', groups=grp);
 ```
+
+**Figure 4** This plot shows below the average expression levels of each cluster after `r ncol(n)-1` cycles of reclustering. Values indicate number of standard deviation from mean of all samples. 
 
 ```{r summary_clusters, include=FALSE}
 ids<-as.vector(unlist(cls[[length(cls)]])); 
@@ -323,7 +323,7 @@ Result tables:
     - Click [here](clustered_stat.html) to view online
     - Click [here](clustered_stat.csv) to download table
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ## Analysis of individual clusters
 
@@ -369,8 +369,6 @@ Click cluster names to see more detaied information about individual clusters
 
 ## Extra plots
 
-**Figure** Plot the group means and standard errors of all cluster as data series 
-
 ```{r plot_series, include=TRUE, out.width='750px'}
 ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
 if (prms$plot$rescale) ms<-t(scale(t(ms))); 
@@ -380,7 +378,7 @@ if (prms$plot$zero) m<-m-m[, 1];
 PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
-**Figure** Heatmap of group and cluster means
+**Figure 5** Plot the group means and standard errors of all cluster as data series 
 
 ```{r plot_means, include=TRUE, out.width='600px'}
 ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
@@ -391,7 +389,7 @@ rownames(m)<-names(cl);
 PlotColoredBlock(m, min=-1*max(abs(m), na.rm=TRUE), max=max(abs(m), na.rm=TRUE), key='Cluster average', groups=split(colnames(m), colnames(m))); 
 ```
 
-**Figure** Group means of all clustered genes
+**Figure 6** Heatmap of group and cluster means
 
 ```{r plot_group_means, include=TRUE, out.width='600px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
@@ -401,7 +399,7 @@ PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE),
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 ```
 
-**Figure** All samples and all clustered genes
+**Figure 7** Group means of all clustered genes
 
 ```{r plot_heatmap, include=TRUE, out.width='900px', out.height='1200px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
@@ -413,12 +411,14 @@ abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1));
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
 
-**Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
+**Figure 8** All samples and all clustered genes
 
 ```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
 rownames(n)<-paste(rownames(n), ' (n=', n[, 1], ' to ', n[, ncol(n)], ')', sep='')
 PlotColoredBlock(n, key='Cluster size'); 
 ```
+
+**Figure 9** This plot traces the change of cluster sizes after each reclustering cycle. 
 
 ```{r wrap_up, eval=FALSE, include=FALSE}
 x<-strsplit(yml$output, '/')[[1]]; 
@@ -429,7 +429,7 @@ zip(fn.zip, yml$output, "-rj9X", zip='zip');
 file.rename(fn.zip, fn.zip.fn); 
 ```
 
-**_[Go back to project home](`r yml$project$Home`)_**
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ***
 _END OF DOCUMENT_
