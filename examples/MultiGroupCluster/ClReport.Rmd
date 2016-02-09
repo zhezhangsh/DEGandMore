@@ -16,7 +16,7 @@ library(gplots);
 library(knitr);
 library(rmarkdown); 
 
-#fn.yaml<-"ClReport_WormAntioxidant.yml"; # comment it out if running through knitr::knit function
+# fn.yaml<-"ClReport_Gas1_vs_control.yml"; # comment it out if running through knitr::knit function
 # fn.yaml<-"/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury/ClReport.yml"; 
 
 # Loading inputs from yaml file
@@ -397,7 +397,7 @@ PlotColoredBlock(m, min=-1*max(abs(m), na.rm=TRUE), max=max(abs(m), na.rm=TRUE),
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sapply(grp, function(g) rowMeans(d[, g, drop=FALSE])); 
 colnames(d)<-names(grp); 
-PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE) num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 ```
 
