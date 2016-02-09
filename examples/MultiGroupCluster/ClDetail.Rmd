@@ -47,13 +47,11 @@ Click [here](data.html) to view gene list and data of the cluster.
 
 <div align="right">**_[Go back to parent page](`r home`)_**</div>
 
-**Figure** Hierarchical clustering of samples using all genes of the cluster
-
 ```{r clustering_1, include=TRUE, out.width="600px",}
 plot(hclust(as.dist(1-cor(mtrx))), main=name, xlab='Sample', sub=''); 
 ```
 
-**Figure** Heatmap using all genes and samples
+**Figure 1** Hierarchical clustering of samples using all genes of the cluster
 
 ```{r heatmap_1, include=TRUE, out.width="800px", fig.height=8, fig.width=max(6, 0.05*nrow(mtrx))}
 sortColumn<-function(ms, g) {
@@ -71,7 +69,7 @@ PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE),
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
 
-**Figure** Mean and standard errors across groups
+**Figure 2** Heatmap using all genes and samples
 
 ```{r series_1, include=TRUE, out.width='750px'}
 ms<-colMeans(mtrx); 
@@ -82,6 +80,8 @@ se<-matrix(se, nr=1);
 colnames(m)<-names(grps); 
 PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FALSE); 
 ```
+
+**Figure 3** Mean and standard errors across groups
 
 ## Gene set enrichment analysis
 
