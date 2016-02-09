@@ -24,6 +24,9 @@ if (!exists('anno')) stop("gene annotation not given\n"); # the annotation of ea
 if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corresponding to the data matrix columns
 if (!exists('univ')) stop("background genes not given\n"); # the background genes for enrichment analysis
 
+tbl<-cbind(anno[rownames(mtrx), , drop=FALSE], mtrx); 
+CreateDatatable(tbl, paste(path, 'data.html', sep='/')); 
+
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
 
@@ -38,6 +41,8 @@ _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.git
   - Number of genes in cluster **`r nrow(mtrx)`**
   - Total number of samples **`r ncol(mtrx)`**
   - Number of sample groups **`r length(grps)`**
+
+Click [here](data.html) to view gene list and data of the cluster.
 
 ## Visualization
 
