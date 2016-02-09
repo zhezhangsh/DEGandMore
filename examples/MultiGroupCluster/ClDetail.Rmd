@@ -24,12 +24,11 @@ if (!exists('anno')) stop("gene annotation not given\n"); # the annotation of ea
 if (!exists('grps')) stop("sample groups not given\n"); # the sample groups corresponding to the data matrix columns
 if (!exists('univ')) stop("background genes not given\n"); # the background genes for enrichment analysis
 
-tbl<-cbind(anno[rownames(mtrx), , drop=FALSE], mtrx); 
+tbl<-cbind(anno[rownames(mtrx), , drop=FALSE], round(mtrx, 4)); 
 CreateDatatable(tbl, paste(path, 'data.html', sep='/')); 
 
 #if (!file.exists(path)) dir.create(path, recursive = TRUE);
 ```
-
 
 # `r name`
 

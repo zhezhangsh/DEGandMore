@@ -367,14 +367,40 @@ Click cluster names to see more detaied information about individual clusters
 
 ## Extra plots
 
-**Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
+**Figure** Plot the group means and standard errors of all cluster as data series 
 
-```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
-rownames(n)<-paste(rownames(n), ' (n=', n[, ncol(n)], ')', sep='')
-PlotColoredBlock(n, key='Cluster size'); 
+```{r plot_series, include=TRUE, out.width='750px'}
+ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
+if (prms$plot$rescale) ms<-t(scale(t(ms))); 
+m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
+se<-sapply(grp, function(g) apply(ms[g, , drop=FALSE],  2, function(x) sd(x)/sqrt(length(x)))); 
+if (prms$plot$zero) m<-m-m[, 1];
+PlotSeries(m, se, c('', prms$plot$ylab)); 
 ```
 
-**Figure** Heatmap of all clustered genes
+**Figure** Alternative way to plot the group means 
+
+```{r plot_means, include=TRUE, out.width='600px'}
+ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
+if (prms$plot$rescale) ms<-t(scale(t(ms))); 
+m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
+colnames(m)<-names(grp);
+rownames(m)<-names(cl); 
+PlotColoredBlock(m, key='Cluster average'); 
+```
+
+**Figure** Group means of all clustered genes
+
+
+```{r plot_group_means, include=TRUE, out.width='600px'}
+d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
+d<-sapply(grps, function(g) rowMeans(d[, g, drop=FALSE])); 
+colnames(d)<-names(grp); 
+PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Group average'); 
+abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
+```
+
+**Figure** All samples and all clustered genes
 
 ```{r plot_heatmap, include=TRUE, out.width='900px', out.height='1200px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
@@ -386,15 +412,12 @@ abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1));
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
 
-**Figure** Plot the group means and standard errors of all cluster together. 
 
-```{r plot_series, include=TRUE, out.width='750px'}
-ms<-sapply(cl, function(cl) colMeans(expr[cl, ]));
-if (prms$plot$rescale) ms<-t(scale(t(ms))); 
-m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
-se<-sapply(grp, function(g) apply(ms[g, , drop=FALSE],  2, function(x) sd(x)/sqrt(length(x)))); 
-if (prms$plot$zero) m<-m-m[, 1];
-PlotSeries(m, se, c('', prms$plot$ylab)); 
+**Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
+
+```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
+rownames(n)<-paste(rownames(n), ' (n=', n[, ncol(n)], ')', sep='')
+PlotColoredBlock(n, key='Cluster size'); 
 ```
 
 ```{r wrap_up, eval=FALSE, include=FALSE}
