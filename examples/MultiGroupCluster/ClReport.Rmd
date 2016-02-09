@@ -396,7 +396,7 @@ PlotColoredBlock(m, key='Cluster average');
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sapply(grp, function(g) rowMeans(d[, g, drop=FALSE])); 
 colnames(d)<-names(grp); 
-PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Group average'); 
+PlotColoredBlock(d, num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 ```
 
@@ -407,7 +407,7 @@ d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sortColumn(d, grp); 
 rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
 if (prms$plot$rescale) d<-t(scale(t(d))); 
-PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
+PlotColoredBlock(d, num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Expression level'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
