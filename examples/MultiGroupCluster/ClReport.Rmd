@@ -404,7 +404,7 @@ abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1));
 ```{r plot_heatmap, include=TRUE, out.width='900px', out.height='1200px'}
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sortColumn(d, grp); 
-rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
+#rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
 if (prms$plot$rescale) d<-t(scale(t(d))); 
 PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
@@ -414,7 +414,7 @@ abline(v=c(0, cumsum(sapply(grp, length))), lwd=1);
 **Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
 
 ```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
-rownames(n)<-paste(rownames(n), ' (n=', n[, ncol(n)], ')', sep='')
+rownames(n)<-paste(rownames(n), ' (n:', n[, 1], 'to', n[, ncol(n)], ')', sep='')
 PlotColoredBlock(n, key='Cluster size'); 
 ```
 
