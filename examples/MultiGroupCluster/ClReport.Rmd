@@ -36,7 +36,7 @@ expr<-expr[rownames(anno), rownames(smpl)];
 prms<-yml$parameter;
 ```
 
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 # Project background
 
@@ -49,7 +49,7 @@ lns<-paste(do.call('c', lns), collapse='\n');
 
 `r lns`
 
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 # Samples and methods
 
@@ -70,8 +70,7 @@ There are a total of `r ncol(expr)` samples. Click [here](samples.html) to view 
 
 # Analysis and results
 
-
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 ## ANOVA analysis of each gene across sample
 
@@ -98,7 +97,7 @@ We applied ANOVA analysis on each gene to test its differential expression acros
 
 Click [here](anova.html) to view full ANOVA result table. 
 
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 ## Gene clustering
 
@@ -316,13 +315,13 @@ saveRDS(gset, paste(yml$output, 'all_genesets.rds', sep='/'));
 Result tables:
 
   - Normalized expressiond data of clustered genes
-    - Click [here]('clustered_data.html') to view online
-    - Click [here]('clustered_data.csv') to download table
+    - Click [here](clustered_data.html) to view online
+    - Click [here](clustered_data.csv) to download table
   - Statistical results of clustered genes
-    - Click [here]('clustered_stat.html') to view online
-    - Click [here]('clustered_stat.csv') to download table
+    - Click [here](clustered_stat.html) to view online
+    - Click [here](clustered_stat.csv) to download table
 
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 ## Analysis of individual clusters
 
@@ -407,7 +406,7 @@ zip(fn.zip, yml$output, "-rj9X", zip='zip');
 file.rename(fn.zip, fn.zip.fn); 
 ```
 
-**_[Go back to project home](yml$project$Home)_**
+**_[Go back to project home](`r yml$project$Home`)_**
 
 ***
 _END OF DOCUMENT_
