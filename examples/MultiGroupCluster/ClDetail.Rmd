@@ -67,7 +67,7 @@ sortColumn<-function(ms, g) {
 }
 d<-sortColumn(mtrx, grps); 
 #rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
-PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), num.breaks = 127, groups=grp, key='Expression level'); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
 

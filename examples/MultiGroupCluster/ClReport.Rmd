@@ -233,7 +233,8 @@ The initial analysis identified `r length(cl)` gene clusters using just selected
 
 ```{r plot_cluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms)[1], fig.height=CalculateColoredBlockSize(ms)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
-PlotColoredBlock(sortColumn(x, grp), key='Average expression', groups=grp); 
+d<-sortColumn(x, grp);
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), key='Average expression', groups=grp); 
 ```
 
 ### Refine clusters
@@ -278,7 +279,7 @@ ms<-data.frame(t(ms));
 colnames(ms)<-colnames(expr); 
 rownames(ms)<-paste(rownames(ms), ' (n=', sapply(cl, length),  ')', sep=''); 
 
-if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The reclustering converged after", length(cls)-1, 'cycles.') else msg<-paste("The reclustering didn't converge after", length(cls)-1, 'cycles.')
+if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The reclustering converged after", length(cls)-1, 'cycles') else msg<-paste("The reclustering didn't converge after", length(cls)-1, 'cycles')
 ```
 
 `r msg`. A total of **`r sum(sapply(cls[[length(cls)]], length))`** genes were clustered. 
@@ -287,7 +288,8 @@ if(identical(cls[[length(cls)]], cls[[length(cls)-1]])) msg<-paste("The recluste
 
 ```{r plot_recluster_mean, include=TRUE, fig.width=CalculateColoredBlockSize(ms, 1, 6)[1], fig.height=CalculateColoredBlockSize(ms, 1, 6)[2], out.width='600px'}
 if (prms$plot$rescale) x<-t(scale(t(ms))) else x<-ms;
-PlotColoredBlock(sortColumn(x, grp), key='Average expression', groups=grp); 
+d<-sortColumn(x, grp);
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), key='Average expression', groups=grp);
 ```
 
 ```{r summary_clusters, include=FALSE}
@@ -386,7 +388,7 @@ if (prms$plot$rescale) ms<-t(scale(t(ms)));
 m<-sapply(grp, function(g) colMeans(ms[g, , drop=FALSE]));
 colnames(m)<-names(grp);
 rownames(m)<-names(cl); 
-PlotColoredBlock(m, key='Cluster average', groups=split(colnames(m), colnames(m))); 
+PlotColoredBlock(m, min=-1*max(abs(m), na.rm=TRUE), max=max(abs(m), na.rm=TRUE), key='Cluster average', groups=split(colnames(m), colnames(m))); 
 ```
 
 **Figure** Group means of all clustered genes
@@ -395,7 +397,7 @@ PlotColoredBlock(m, key='Cluster average', groups=split(colnames(m), colnames(m)
 d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sapply(grp, function(g) rowMeans(d[, g, drop=FALSE])); 
 colnames(d)<-names(grp); 
-PlotColoredBlock(d, num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE) num.breaks = 127, groups=split(colnames(d), colnames(d)), key='Group average'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 ```
 
@@ -406,7 +408,7 @@ d<-expr[unlist(cl, use.names = FALSE), , drop=FALSE];
 d<-sortColumn(d, grp); 
 #rownames(d)<-paste(rownames(d), anno[rownames(d), 1], sep=':'); 
 if (prms$plot$rescale) d<-t(scale(t(d))); 
-PlotColoredBlock(d, num.breaks = 127, groups=grp, key='Expression level'); 
+PlotColoredBlock(d, min=-1*max(abs(d), na.rm=TRUE), max=max(abs(d), na.rm=TRUE), num.breaks = 127, groups=grp, key='Expression level'); 
 abline(h=c(nrow(d), nrow(d)-cumsum(sapply(cl, length)), lwd=1)); 
 abline(v=c(0, cumsum(sapply(grp, length))), lwd=1); 
 ```
@@ -414,7 +416,7 @@ abline(v=c(0, cumsum(sapply(grp, length))), lwd=1);
 **Figure** This plot traces the change of cluster sizes after each reclustering cycle. 
 
 ```{r plot_recluster_size, include=TRUE, fig.width=CalculateColoredBlockSize(n, 1, 6)[1], fig.height=CalculateColoredBlockSize(n, 1, 6)[2], out.width='750px'}
-rownames(n)<-paste(rownames(n), ' (n:', n[, 1], 'to', n[, ncol(n)], ')', sep='')
+rownames(n)<-paste(rownames(n), ' (n=', n[, 1], ' to ', n[, ncol(n)], ')', sep='')
 PlotColoredBlock(n, key='Cluster size'); 
 ```
 
