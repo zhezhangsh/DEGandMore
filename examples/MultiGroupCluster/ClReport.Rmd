@@ -293,8 +293,8 @@ PlotColoredBlock(sortColumn(x, grp), key='Average expression', groups=grp);
 ```{r summary_clusters, include=FALSE}
 ids<-as.vector(unlist(cls[[length(cls)]])); 
 c<-rep(names(cl), sapply(cl, length)); 
-tbl1<-cbind(Cluster=c, FormatNumeric(expr[ids, ]), anno[ids, ]); 
-tbl2<-cbind(Cluster=c, FormatNumeric(stat[ids, ]), anno[ids, ]); 
+tbl1<-cbind(anno[ids, ], Cluster=c, FormatNumeric(expr[ids, ])); 
+tbl2<-cbind(anno[ids, ], Cluster=c, FormatNumeric(stat[ids, ])); 
 
 fn1<-CreateDatatable(tbl1, paste(yml$output, 'clustered_data.html', sep='/'), caption="Expression data of clustered genes");
 fn2<-CreateDatatable(tbl2, paste(yml$output, 'clustered_stat.html', sep='/'), caption="ANOVA statistical results of clustered genes"); 
