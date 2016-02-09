@@ -110,8 +110,6 @@ Click links to view full tabls of gene sets from different sources.
 
 `r lns`
 
-! Please note that the FDR values in the result tables are overly conservative, as they were estimated based on `r nrow(gset[[1]])` gene sets from all sources. 
-
 <div align="right">**_[Go back to parent page](`r home`)_**</div>
 
 ***
