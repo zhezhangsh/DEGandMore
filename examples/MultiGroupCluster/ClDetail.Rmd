@@ -32,7 +32,7 @@ CreateDatatable(tbl, paste(path, 'data.html', sep='/'));
 
 # `r name`
 
-**_[Go back](`r home`)_**
+<div align="right">**_[Go back to parent page](`r home`)_**</div>
 
 _This procedure is usually run as a subroutine of [ClReport.Rmd](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd) procedure._
 
@@ -45,7 +45,7 @@ Click [here](data.html) to view gene list and data of the cluster.
 
 ## Visualization
 
-**_[Go back](`r home`)_**
+<div align="right">**_[Go back to parent page](`r home`)_**</div>
 
 **Figure** Hierarchical clustering of samples using all genes of the cluster
 
@@ -85,7 +85,7 @@ PlotSeries(m, se, labs=c('', 'Average expression'), title=name, draw.legend = FA
 
 ## Gene set enrichment analysis
 
-**_[Go back](`r home`)_**
+<div align="right">**_[Go back to parent page](`r home`)_**</div>
 
 Find predefined gene sets enriched in gene cluster comparing to the background. 
 
@@ -112,7 +112,7 @@ Click links to view full tabls of gene sets from different sources.
 
 ! Please note that the FDR values in the result tables are overly conservative, as they were estimated based on `r nrow(gset[[1]])` gene sets from all sources. 
 
-Go back to [home](`r home`)
+<div align="right">**_[Go back to parent page](`r home`)_**</div>
 
 ***
 _END OF DOCUMENT_
