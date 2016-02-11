@@ -21,10 +21,13 @@ knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('pn
 expr<-readRDS(yml$input$data);
 anno<-readRDS(yml$input$annotation);
 grps<-readRDS(yml$input$group); 
+gset<-readRDS(yml$input$geneset); 
 prms<-yml$parameter;
 
 smp2grp<-rep(names(grps), sapply(grps, length)); 
 names(smp2grp)<-unlist(grps, use.names=FALSE); 
+
+gset.src<-sort(unique(gset[[1]]$Source)); 
 
 library(awsomics);
 library(DEGandMore); 
@@ -191,7 +194,7 @@ Click on sample ID to view scatterplots that compare the global differential exp
 The differential expression of each outlier vs. its corresponding non-outliers was compared to each other. High correlation of differential expression between 2 samples suggests that the 2 outliers could be caused by the same reason.
 
 ```{r diff, include=TRUE, out.width='600px'}
-if (nrow(outliers)>=3) {
+if (nrow(outlier) == 0) lns<-'No outliers found' else if (nrow(outlier) < 3) lns<-'No enough outliers for clustering analysis' else {
   dff<-sapply(1:nrow(outliers), function(i) d1[[i]]-rowMeans(d0[[i]]));
   colnames(dff)<-outliers$Sample;
   hc<-hclust(as.dist(1-cor(dff)));
@@ -205,7 +208,7 @@ if (nrow(outliers)>=3) {
     lns<-paste('  -', lns);
     lns<-paste(lns, collapse='\n'); 
   }
-} else lns<-'No enough outliers for clustering analysis'
+} 
 ```
 
 **Figure 2** Clustering of outliers based on their differential expression to corresponding non-outliers.
@@ -214,7 +217,7 @@ The following subset(s) of outliers had similar differential expression:
 
 `r lns`
 
-## Selection of differentially expressed genes (DEGs)
+### Selection of differentially expressed genes (DEGs)
 
 Functional categorization of genes differentially expressed between outliers and corresponding non-outliers could be very suggestive of the cause leading to the outlier. The following steps were used to select DEGs: 
 
@@ -228,6 +231,7 @@ Functional categorization of genes differentially expressed between outliers and
 path.deg<-paste(yml$output, 'deg', sep='/');
 if (!file.exists(path.deg)) dir.create(path.deg, recursive = TRUE);
 if (nrow(outliers) == 0) lns<-'No outliers found' else {
+  # select DEGs
   degs<-lapply(1:nrow(outliers), function(i) {
     dff<-d1[[i]]-rowMeans(d0[[i]]);
     nsd<-dff/apply(d0[[i]], 1, sd);
@@ -241,6 +245,9 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
       } else d;
     });
   }); 
+  names(degs)<-outliers$Sample;
+  
+  # Prepare HTML tables
   tbls<-lapply(1:length(degs), function(i) lapply(degs[[i]], function(d) {
     x0<-d0[[i]][names(d), , drop=FALSE]; 
     x1<-d1[[i]][names(d)];
@@ -250,13 +257,17 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
     colnames(stat)<-c(outliers$Sample[i], 'Non_Outliers', 'DE', 'NSD');
     cbind(stat, anno[rownames(stat), ]); 
   }));
-  names(tbls)<-outliers$Sample;
+  names(tbls)<-names(degs)<-outliers$Sample;
+  
+  # Write tables to HTML
   fn<-lapply(names(tbls), function(nm) {
     f<-paste(path.deg, paste(nm, '_', c('Higher', 'Lower'), '.html', sep=''), sep='/')
     CreateDatatable(tbls[[nm]][[1]], f[1], caption = nm); 
     CreateDatatable(tbls[[nm]][[2]], f[2], caption = nm); 
     f;
   });
+  
+  # Write summary table
   fn<-t(sapply(fn, function(f) sub(paste(yml$output, '/', sep=''), '', f)));
   n<-t(sapply(degs, function(x) sapply(x, length)));
   rownames(n)<-rownames(fn)<-outliers$Sample;
@@ -267,9 +278,44 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 } 
 
 ```
-The following numbers of DEGs were selected from each outlier. Click on numbers to view full lists:
+The numbers of DEGs selected from each outlier (click on numbers to view full lists):
 
 `r lns`
+
+### Gene set enrichment analysis of DEGs
+
+DEGs having higher or lower expression in each outliers were mapped to a collection of predefined geneset 
+
+```{r gse, include=FALSE}
+path.gse<-paste(yml$output, 'gse', sep='/');
+if (!file.exists(path.gse)) dir.create(path.gse, recursive = TRUE);
+if (nrow(outliers) == 0) lns<-'No outliers found' else {
+  gse<-lapply(names(degs), function(nm) {
+    cat(nm, '\n'); 
+    gse<-lapply(degs[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
+    hi<-WrapGSE(gse[[1]], gset[[1]], path.gse, paste(nm, 'Higher', sep='_')); 
+    lo<-WrapGSE(gse[[2]], gset[[1]], path.gse, paste(nm, 'Lower' , sep='_')); 
+    list(hi, lo); 
+  }); 
+  fn.hi<-sapply(gse, function(g) g[[1]]$file[[gset.src]]);
+  fn.lo<-sapply(gse, function(g) g[[2]]$file[[gset.src]]);
+  
+  fn.hi<-sub(paste(yml$output, '/', sep=''), '', fn.hi);
+  fn.lo<-sub(paste(yml$output, '/', sep=''), '', fn.lo);
+  
+  n.hi<-sapply(gse, function(g) sapply(g[[1]]$formatted[gset.src], nrow)); 
+  n.lo<-sapply(gse, function(g) sapply(g[[2]]$formatted[gset.sce], nrow)); 
+  
+  tbl.hi<-t(matrix(paste('[', n.hi, '](', fn.hi, ')', sep=''), nc=nrow(outliers)));
+  tbl.lo<-t(matrix(paste('[', n.lo, '](', fn.lo, ')', sep=''), nc=nrow(outliers))); 
+  dimnames(tbl.hi)<-dimnames(tbl.lo)<-list(outliers$Sample, gset.src); 
+
+  ln.hi<-kable(tbl.hi, align = rep('r', ncol(tbl.hi))); 
+  ln.lo<-kable(tbl.lo, align = rep('r', ncol(tbl.lo))); 
+}
+```
+
+
 
 ***
 _END OF DOCUMENT_
