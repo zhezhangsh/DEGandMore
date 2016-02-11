@@ -1,0 +1,22 @@
+output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/identify_outlers
+input:
+  data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
+  annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds
+  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds
+  geneset: ''
+parameter:
+  min.n: 4.0
+  max.corr: 0.99
+  n.sd: 3.0
+  cut.corr: 0.5
+  deg:
+    de: 2.0
+    nsd: 3.0
+    min: 50.0
+    max: 250.0
+project:
+  Title: Treatment of gas-1 mutated C. Elegans with antioxidant drugs
+  Home: http://mybic.chop.edu/labs/falkm/gas1_antioxidant_drugs
+  Description: This project uses gene expression microarray data to study effect of
+    antioxidant drugs on C. Elegans worms with gas-1 mutation.
+

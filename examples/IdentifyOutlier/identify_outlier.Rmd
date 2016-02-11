@@ -1,0 +1,275 @@
+---
+---
+title: "Identification and diagnosis of outlier samples"
+author: "Jim Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    fig_caption: yes
+    toc: yes
+---
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('png', 'pdf'), echo=FALSE, warning=FALSE, message=FALSE);
+
+
+# Loading inputs from yaml file
+ fn.yaml<-"~/R/source/DEGandMore/examples/IdentifyOutlier/identify_outlier.yml"; 
+ yml <- yaml::yaml.load_file(fn.yaml);  
+# writeLines(yaml::as.yaml(yml), '~/R/source/DEGandMore/examples/IdentifyOutlier/identify_outlier.yml')
+
+expr<-readRDS(yml$input$data);
+anno<-readRDS(yml$input$annotation);
+grps<-readRDS(yml$input$group); 
+prms<-yml$parameter;
+
+smp2grp<-rep(names(grps), sapply(grps, length)); 
+names(smp2grp)<-unlist(grps, use.names=FALSE); 
+
+library(awsomics);
+library(DEGandMore); 
+library(gplots);
+library(knitr);
+library(rmarkdown); 
+```
+
+The goal of this procedure is to identify potential outlier samples that have lower inter-sample correlation than expected. It is based on the assumption that the outliers have poorer correlation to other samples in the same group. This procedure includes the following steps:
+
+This procedure requires the following inputs: 
+
+  - A data matrix with genes or other variables as rows and samples as columns
+  - Samples (column names of the data matrix) were split into one to any number of groups, there should be at least 4 samples in each group for the outlier identification to work properly
+  - Specify the cutoff values of _NMN_ (minimal number of samples in each group) and _NSD_ (Number of standard deviations). 
+  - Optionally, gene annotation and a collection of predefined gene sets for functional categorization of genes responsible for the outliers
+
+# Project
+
+```{r project, include=FALSE}
+lns<-lapply(names(yml$project), function(nm) {
+  c(paste('##', nm), '\n', yml$project[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+`r lns`
+
+## Data set
+
+The data set includes **`r nrow(expr)`** genes and **`r ncol(expr)`** samples in **`r length(grps)`** groups.
+
+
+```{r}
+IdentifyOutlierByCorr<-function(d, RMX=0.99, NMN=4, NSD=3) {
+  # d     Data matrix, rows are genes or other variables and columns are samples
+  # RMX   Maximal mean correlation coefficient for a sample to be an outlier
+  # NMN   Minimal number of samples
+  # NSD   Number of standard deviation
+
+  if (NMN < 3) NMN<-3;
+
+  if (ncol(d) < NMN) NA else {
+    corr<-lapply(1:ncol(d), function(i) cor(d[, i], d[, -i], use='pair')); 
+    names(corr)<-colnames(d); 
+    ms<-sapply(corr, mean);
+    nsd<-sapply(1:length(ms), function(i) (ms[i]-mean(ms[-i]))/sd(ms[-i])); 
+    names(nsd)<-colnames(d); 
+    
+    out<-list(outlier=nsd[nsd<=-1*abs(NSD) & ms<RMX], nsd=nsd, mean=ms, corr=corr, 
+              parameters=c(RMX=RMX, NMN=NMN, NSD=NSD)); 
+  }
+}
+
+# Run IdentifyOutlierByCorr() function recursively until no more outliers were identified or there are no enough samples
+IdentifyOutlierByCorr.2<-function(d, RMX=0.99, NMN=4, NSD=3) {
+  # d     Data matrix, rows are genes or other variables and columns are samples
+  # RMX   Maximal mean correlation coefficient for a sample to be an outlier
+  # NMN   Minimal number of samples
+  # NSD   Number of standard deviation
+
+  if (ncol(d) < NMN) NA else {
+    out <- list(IdentifyOutlierByCorr(d, RMX, NMN, NSD)); 
+    d <- d[, !(colnames(d) %in% names(out[[1]][[1]]))]; 
+    
+    while (length(out[[length(out)]][[1]])>0 & ncol(d)>=NMN) { # outlier identified, is there more
+      out[[length(out)+1]]<-IdentifyOutlierByCorr(d, RMX, NMN, NSD); 
+      d <- d[, !(colnames(d) %in% names(out[[length(out)]][[1]]))]; 
+    }
+    
+    names(out)<-paste('Round', 1:length(out), sep=''); 
+    nsd<-lapply(out, function(x) x$nsd); 
+    mns<-lapply(out, function(x) x$mean);
+    summ<-cbind(Round=rep(1:length(nsd), sapply(nsd, length)), NSD=as.vector(unlist(nsd)), Mean=as.vector(unlist(mns)));
+    summ<-data.frame(Sample=as.vector(unlist(lapply(nsd, names))), round(summ, 6), stringsAsFactors = FALSE); 
+    summ$Outlier<-summ$NSD< -1*abs(NSD) & summ$Mean<RMX
+  
+    list(summary=summ, all=out); 
+  }
+}
+```
+
+# Analysis and results
+
+## Identification of outliers
+
+The following steps were applied to identify outlier samples: 
+
+  - Given a data matrix of genes and samples, split samples into predefined sample groups, so each group includes only biological or technical replicates
+  - Calculate the Pearson's correlation coeffecients between each pair of samples in the same group, and then the average correlation coefficients of each sample to all the other samples in the same group, _Ms_
+  - Calculate _NSDi_, or the number of standard deviations, for each sample _(Ms[i]-mean(Ms[-i]))/sd(Ms[-i])_, where _Ms[-i]_ is the vector of _Ms_ without the sample _i_
+  - Identify outliers with mean correlation coefficient _Ms[i]_ less than **`r prms$max.corr`** and **`r prms$n.sd`** standard deviations below mean(Ms[-i])
+
+
+```{r find_outlier, include=FALSE}
+out<-lapply(grps, function(g) IdentifyOutlierByCorr.2(expr[, g], RMX=prms$max.corr, NMN=prms$min.n, NSD=prms$n.sd));
+smm<-lapply(out, function(x) x$summary); 
+grp<-rep(names(smm), sapply(smm, nrow)); 
+smm<-data.frame(Group=grp, do.call('rbind', smm), stringsAsFactors = FALSE); 
+fn.stat<-CreateDatatable(smm, paste(yml$output, 'stat_table.html', sep='/'), rownames = FALSE); 
+
+outliers<-smm[smm$Outlier, , drop=FALSE]; 
+grps.filtered<-lapply(grps, function(g) g[!(g %in% outliers$Sample)]); 
+```
+
+As a result, **_`r nrow(outliers)`_** outliers were identified
+
+  - Click [here](fn.stat) to view result table
+  - Outlier IDs: **_`r paste(unique(outliers$Sample), collapse=', ')`_**
+
+
+```{r plot_nsd_mean, include=TRUE, fig.wid=6, fig.height=6, out.width='800px'}
+par(mar=c(5,5,2,2)); 
+plot(smm$Mean, smm$NSD, pch=19, col=c('#0000FF88', '#FF000088')[smm$Outlier+1], cex=2, cex.lab=1.5, 
+     xlab="Mean correlation coefficient to other samples", ylab="Number of standard deviations"); 
+abline(v=prms$max.corr, h=-1*abs(prms$n.sd), lty=2, lwd=2, col='darkgrey');
+points(smm$Mean, smm$NSD, cex=.2);
+```
+
+**Figure 1** There were **`r length(unique(outliers$Sample))`** outliers identified from **`r length(unique(outliers$Group))`** groups (highlighted in red) based on inter-sample correlation.
+
+
+## Differential expression between outliers and non-outliers
+
+Each outlier was compared to non-outlier samples in the same group to calculate differential expression. 
+
+```{r diff_outlier, include=FALSE}
+if (nrow(outliers) > 0) {
+  d0<-lapply(outliers$Sample, function(s) expr[, grps.filtered[[smp2grp[s]]], drop=FALSE]);
+  d1<-lapply(outliers$Sample, function(s) expr[, s]);
+  names(d0)<-names(d1)<-outliers$Sample; 
+  path.fig<-paste(yml$output, 'scatterplot', sep='/'); 
+  if (!file.exists(path.fig)) dir.create(path.fig, recursive = TRUE); 
+  fn<-sapply(1:nrow(outliers), function(i) {
+    id<-outliers$Sample[i];
+    fn<-paste(path.fig, '/', id, '.pdf', sep=''); 
+    pdf(fn, w=8, h=4);
+    par(mar=c(5,5,2,2), mfrow=c(1, 2));
+    r<-sapply(1:ncol(d0[[i]]), function(j) cor(d0[[i]][, j], rowMeans(d0[[i]][, -j, drop=FALSE])));
+    ind<-which(r==max(r))[1]; 
+    x<-cbind(rowMeans(d0[[i]]), d1[[i]]); 
+    y<-cbind(rowMeans(d0[[i]][, -ind]), d0[[i]][, ind]);
+    plot(x, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), xlab='Others', ylab=id, cex.lab=1.5); 
+    abline(0, 1, col=4);
+    plot(y, pch=19, cex=0.5, col='#88888888', xlim=c(min(x), max(x)), ylim=c(min(x), max(x)), xlab='Others', ylab=colnames(d0[[i]])[ind], cex.lab=1.5); 
+    abline(0, 1, col=4);
+    dev.off();
+    fn<-ConvertPdf2Png(fn); 
+    fn; 
+  });
+  fn<-sub(yml$output, '', fn); 
+  fn<-sub('^/', '', fn);
+  lns<-paste('  - [', outliers$Sample, '](', fn, ')', sep=''); 
+  lns<-paste(lns, collapse='\n'); 
+} else {
+  lns<-'  - No outliers were identified'
+}
+```
+
+Click on sample ID to view scatterplots that compare the global differential expression of an outlier vs. non-outliers (_left_) and a non-outliers vs. other non-outliers (_right_). 
+
+`r lns`
+
+The differential expression of each outlier vs. its corresponding non-outliers was compared to each other. High correlation of differential expression between 2 samples suggests that the 2 outliers could be caused by the same reason.
+
+```{r diff, include=TRUE, out.width='600px'}
+if (nrow(outliers)>=3) {
+  dff<-sapply(1:nrow(outliers), function(i) d1[[i]]-rowMeans(d0[[i]]));
+  colnames(dff)<-outliers$Sample;
+  hc<-hclust(as.dist(1-cor(dff)));
+  plot(hc, main='Differential expression: outlier vs. non-outlier', xlab='Outlier', sub='');
+  abline(h=1-prms$cut.corr, lty=2, col='#0000FF88'); 
+  ct<-cutree(hc, h=1-prms$cut.corr);
+  g<-split(names(ct), ct);
+  g<-g[sapply(g, length)>1];
+  if (length(g) == 0) lns<-'No outliers have similar differential expression' else {
+    lns<-as.vector(sapply(g, function(g) paste(g, collapse='; ')));
+    lns<-paste('  -', lns);
+    lns<-paste(lns, collapse='\n'); 
+  }
+} else lns<-'No enough outliers for clustering analysis'
+```
+
+**Figure 2** Clustering of outliers based on their differential expression to corresponding non-outliers.
+
+The following subset(s) of outliers had similar differential expression: 
+
+`r lns`
+
+## Selection of differentially expressed genes (DEGs)
+
+Functional categorization of genes differentially expressed between outliers and corresponding non-outliers could be very suggestive of the cause leading to the outlier. The following steps were used to select DEGs: 
+
+  - Select two lists of DEGs with higher or lower expression in each outlier comparing to non-outliers in the same sample group
+    - The difference between the outlier and the mean of non-outliers is greater than `r prms$deg$nsd` standard deviations of the non-outliers
+    - From the remaining genes, pick the top `r prms$max` with the largest difference between the outlier and non-outliers 
+    - From the remaining genes, pick those with differential expression greater than `r prms$deg$de`, or the top `r prms$deg$min` genes having the largest differential expression, which ever gives more
+
+
+```{r deg, include=FALSE}
+path.deg<-paste(yml$output, 'deg', sep='/');
+if (!file.exists(path.deg)) dir.create(path.deg, recursive = TRUE);
+if (nrow(outliers) == 0) lns<-'No outliers found' else {
+  degs<-lapply(1:nrow(outliers), function(i) {
+    dff<-d1[[i]]-rowMeans(d0[[i]]);
+    nsd<-dff/apply(d0[[i]], 1, sd);
+    deg<-dff[abs(nsd)>=abs(prms$deg$nsd)];
+    deg<-list(hi=deg[deg>0], lo=deg[deg<0]);
+    deg<-lapply(deg, function(d) d[rev(order(abs(d)))]);
+    deg<-lapply(deg, function(d) {
+      if (length(d) > prms$deg$min) {
+        d<-d[1:min(prms$deg$max, length(d))]; 
+        if (abs(prms$deg$de > abs(d[prms$deg$min]))) d[1:prms$deg$min] else d[abs(d) > abs(prms$deg$de)]; 
+      } else d;
+    });
+  }); 
+  tbls<-lapply(1:length(degs), function(i) lapply(degs[[i]], function(d) {
+    x0<-d0[[i]][names(d), , drop=FALSE]; 
+    x1<-d1[[i]][names(d)];
+    dff<-x1-rowMeans(x0);
+    sd<-apply(x0, 1, sd);
+    stat<-round(cbind(x1, rowMeans(x0), dff, dff/sd), 4);
+    colnames(stat)<-c(outliers$Sample[i], 'Non_Outliers', 'DE', 'NSD');
+    cbind(stat, anno[rownames(stat), ]); 
+  }));
+  names(tbls)<-outliers$Sample;
+  fn<-lapply(names(tbls), function(nm) {
+    f<-paste(path.deg, paste(nm, '_', c('Higher', 'Lower'), '.html', sep=''), sep='/')
+    CreateDatatable(tbls[[nm]][[1]], f[1], caption = nm); 
+    CreateDatatable(tbls[[nm]][[2]], f[2], caption = nm); 
+    f;
+  });
+  fn<-t(sapply(fn, function(f) sub(paste(yml$output, '/', sep=''), '', f)));
+  n<-t(sapply(degs, function(x) sapply(x, length)));
+  rownames(n)<-rownames(fn)<-outliers$Sample;
+  colnames(n)<-colnames(fn)<-c('Higher in outlier', 'Low in outlier'); 
+  tbl<-t(sapply(rownames(n), function(nm) paste('[', n[nm, ], '](', fn[nm, ], ')', sep='')));
+  dimnames(tbl)<-dimnames(n);
+  lns<-kable(tbl, align=c('r', 'r'));
+} 
+
+```
+The following numbers of DEGs were selected from each outlier. Click on numbers to view full lists:
+
+`r lns`
+
+***
+_END OF DOCUMENT_
