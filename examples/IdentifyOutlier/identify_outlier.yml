@@ -2,7 +2,7 @@ output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/ide
 input:
   data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
   annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds
-  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds
+  group: sR/group2sample.rds
   geneset: ''
 parameter:
   min.n: 4.0

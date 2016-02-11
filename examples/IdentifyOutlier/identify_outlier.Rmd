@@ -284,27 +284,31 @@ The numbers of DEGs selected from each outlier (click on numbers to view full li
 
 ### Gene set enrichment analysis of DEGs
 
-DEGs having higher or lower expression in each outliers were mapped to a collection of predefined geneset 
+DEGs having higher or lower expression in each outliers were mapped to a collection of predefined genesets downloaded from: 
+
+`r paste(paste('  -', gset.src), collapse='\n')`
+
+Enrichment of DEGs in each gene set was tested by Hypergeometric test. Gene set collection of a few model animals can be downloaded from: https://github.com/zhezhangsh/DEGandMore/tree/master/examples/geneset_collections
 
 ```{r gse, include=FALSE}
 path.gse<-paste(yml$output, 'gse', sep='/');
 if (!file.exists(path.gse)) dir.create(path.gse, recursive = TRUE);
 if (nrow(outliers) == 0) lns<-'No outliers found' else {
-  gse<-lapply(names(degs), function(nm) {
+  gses<-lapply(names(degs), function(nm) {
     cat(nm, '\n'); 
     gse<-lapply(degs[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
     hi<-WrapGSE(gse[[1]], gset[[1]], path.gse, paste(nm, 'Higher', sep='_')); 
     lo<-WrapGSE(gse[[2]], gset[[1]], path.gse, paste(nm, 'Lower' , sep='_')); 
     list(hi, lo); 
   }); 
-  fn.hi<-sapply(gse, function(g) g[[1]]$file[[gset.src]]);
-  fn.lo<-sapply(gse, function(g) g[[2]]$file[[gset.src]]);
+  fn.hi<-sapply(gses, function(g) g[[1]]$file[[gset.src]]);
+  fn.lo<-sapply(gses, function(g) g[[2]]$file[[gset.src]]);
   
   fn.hi<-sub(paste(yml$output, '/', sep=''), '', fn.hi);
   fn.lo<-sub(paste(yml$output, '/', sep=''), '', fn.lo);
   
-  n.hi<-sapply(gse, function(g) sapply(g[[1]]$formatted[gset.src], nrow)); 
-  n.lo<-sapply(gse, function(g) sapply(g[[2]]$formatted[gset.sce], nrow)); 
+  n.hi<-sapply(gses, function(g) sapply(g[[1]]$formatted[gset.src], nrow)); 
+  n.lo<-sapply(gses, function(g) sapply(g[[2]]$formatted[gset.sce], nrow)); 
   
   tbl.hi<-t(matrix(paste('[', n.hi, '](', fn.hi, ')', sep=''), nc=nrow(outliers)));
   tbl.lo<-t(matrix(paste('[', n.lo, '](', fn.lo, ')', sep=''), nc=nrow(outliers))); 
@@ -315,7 +319,12 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 }
 ```
 
+```{r write_out, include=FALSE}
+fn<-paste(yml$output, 'outliers.rds', sep='/'); 
+saveRDS(list(stat=stat, deg=degs, gse=gses), fn);
+```
 
+Results were saved to `r fn`.
 
 ***
 _END OF DOCUMENT_
