@@ -76,8 +76,8 @@ methods: # Data processing and analysis methods
     into a cluster if it was similar enough to the cluster centroid. The re-clustering
     procedure was repeated for given number of times or until the clusters were stabalized.
   Gene set enrichment analysis: We made a comprehensive collection of predefined gene
-    sets from difference resources such as [KEGG](http://www.genome.jp/kegg/) and
+    sets from resources such as [KEGG](http://www.genome.jp/kegg/) and
     [BioSystems](http://www.ncbi.nlm.nih.gov/biosystems). The collection was precompiled
-    into an R data object. An example of such of an object can be downloaded from
-    [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true).
+    into an R data object. Gene set collections of a few model animals can be downloaded from: 
+    https://github.com/zhezhangsh/DEGandMore/tree/master/examples/geneset_collections
 
