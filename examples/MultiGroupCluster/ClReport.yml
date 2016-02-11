@@ -1,3 +1,39 @@
+output: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury # Location of output files
+input: # Location of input files
+  data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_rescaled.rds ## a matrix of data, row=gene, column=sample 
+    # The order of the samples in the matrix matters, order them based on the order of the groups
+    # It's preferrable to rescale the data matrix to make the mean and SD of each row 0 and 1.0 respectively
+    # No missing values allowed, remove rows with missing values or run imputation if estimate missing values
+  annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds ## a data frame of gene annotation, match row names
+  sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds ## a data frame of sample manifest
+  geneset: /nas/is1/rchive/data/gene.set/r/default_set_rat_5-1000.rds ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd
+  subtemplate: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd
+  remote: yes
+parameter: # All parameters
+  term: Group ## Corresponding to a column name in sample; based on which samples will be grouped
+  selection: ## How significant genes will be selected as seeds for initiating clusters
+    min: 500 ### Minimal number of genes for further selection (no further selection if number is lower than it)
+    max: 2000 ### Maximum number of genes to be selected
+    fdr: 0.2 ### First selection criteria, maximum FDR value (ANOVA p value adjusted by BH method)
+    p: 0.01 ### Second selection criteria, maximum ANOVA p value
+    range: 2.0 ### Third selection criteria, the difference of max and min values
+  cluster: ## How initial clusters will be generated
+    height: 1.6 ### The height to cut clustering tree. Lower value generates more clusters
+    size: 0.2 ### The minimum size of a cluster (relative ratio to expected size)
+    corr: 0.6 ### The minimum correlation coefficient to the cluster centroid for a gene to be kept in the cluster
+    merge: ### How to merge similar clusters
+      corr: 0.5 #### The minimum correlation coefficient between 2 centroids to merge two clusters
+      p: 0.05 #### The maximum p value between 2 centroids to merge two clusters
+  recluster: ## How to refine clusters via reclustering cycles
+    p: 0.02 ### Maximum ANOVA p value to include a gene
+    r: 0.6 ### Minimum correlation coefficient between a gene and centroid to inlude a gene in the cluster
+    diff: 0.2 ### Minimum correlation coefficient difference between and best and the second best
+    times: 20.0 ### Number of reclustering cycles
+  plot: ## How to plot results
+    rescale: no ### whether to rescale data matrix
+    zero: yes ### whether to use the first group as background and set its mean to 0 for all genes
+    ylab: Average expression (# of SD)  ### y-axis label in plots
 project: # Project background
   Title: Response of juvenile mice to spinal cord injury ## Project title
   Description: This project uses gene expression microarray data to track transcriptome
@@ -44,40 +80,4 @@ methods: # Data processing and analysis methods
     [BioSystems](http://www.ncbi.nlm.nih.gov/biosystems). The collection was precompiled
     into an R data object. An example of such of an object can be downloaded from
     [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/default_set_human_5-1000.rds?raw=true).
-input: # Location of input files
-  data: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr18_rescaled.rds ## a matrix of data, row=gene, column=sample 
-    # The order of the samples in the matrix matters, order them based on the order of the groups
-    # It's preferrable to rescale the data matrix to make the mean and SD of each row 0 and 1.0 respectively
-    # No missing values allowed, remove rows with missing values or run imputation if estimate missing values
-  annotation: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/anno.rds ## a data frame of gene annotation, match row names
-  sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl18.rds ## a data frame of sample manifest
-  geneset: /nas/is1/rchive/data/gene.set/r/default_set_rat_5-1000.rds ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
-  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClReport.Rmd
-  subtemplate: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/MultiGroupCluster/ClDetail.Rmd
-  remote: yes
-parameter: # All parameters
-  term: Group ## Corresponding to a column name in sample; based on which samples will be grouped
-  selection: ## How significant genes will be selected as seeds for initiating clusters
-    min: 500 ### Minimal number of genes for further selection (no further selection if number is lower than it)
-    max: 2000 ### Maximum number of genes to be selected
-    fdr: 0.2 ### First selection criteria, maximum FDR value (ANOVA p value adjusted by BH method)
-    p: 0.01 ### Second selection criteria, maximum ANOVA p value
-    range: 2.0 ### Third selection criteria, the difference of max and min values
-  cluster: ## How initial clusters will be generated
-    height: 1.6 ### The height to cut clustering tree. Lower value generates more clusters
-    size: 0.2 ### The minimum size of a cluster (relative ratio to expected size)
-    corr: 0.6 ### The minimum correlation coefficient to the cluster centroid for a gene to be kept in the cluster
-    merge: ### How to merge similar clusters
-      corr: 0.5 #### The minimum correlation coefficient between 2 centroids to merge two clusters
-      p: 0.05 #### The maximum p value between 2 centroids to merge two clusters
-  recluster: ## How to refine clusters via reclustering cycles
-    p: 0.02 ### Maximum ANOVA p value to include a gene
-    r: 0.6 ### Minimum correlation coefficient between a gene and centroid to inlude a gene in the cluster
-    diff: 0.2 ### Minimum correlation coefficient difference between and best and the second best
-    times: 20.0 ### Number of reclustering cycles
-  plot: ## How to plot results
-    rescale: no ### whether to rescale data matrix
-    zero: yes ### whether to use the first group as background and set its mean to 0 for all genes
-    ylab: Average expression (# of SD)  ### y-axis label in plots
-output: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/gene_clustering/Juvenile_SC_injury # Location of output files
 
