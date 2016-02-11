@@ -14,8 +14,8 @@ knitr::opts_chunk$set(dpi=300, fig.pos="H", fig.width=8, fig.height=6, dev=c('pn
 
 
 # Loading inputs from yaml file
- fn.yaml<-"~/R/source/DEGandMore/examples/IdentifyOutlier/identify_outlier.yml"; 
- yml <- yaml::yaml.load_file(fn.yaml);  
+# fn.yaml<-"~/R/source/DEGandMore/examples/IdentifyOutlier/identify_outlier.yml"; 
+# yml <- yaml::yaml.load_file(fn.yaml);  
 # writeLines(yaml::as.yaml(yml), '~/R/source/DEGandMore/examples/IdentifyOutlier/identify_outlier.yml')
 
 expr<-readRDS(yml$input$data);

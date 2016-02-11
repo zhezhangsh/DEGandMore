@@ -1,9 +1,11 @@
 output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/identify_outlers
 input:
-  data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds       ## Data matrix to be analyzed. Genes are rows and samples are columns
-  annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds           ## Gene annotation, match rows of the data matrix
-  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds        ## A list of group name to sample name matching. Sample names must match column names of data matrix
-  geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds                          ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+  data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds                                   ## Data matrix to be analyzed. Genes are rows and samples are columns
+  annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds                                       ## Gene annotation, match rows of the data matrix
+  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds                                    ## A list of group name to sample name matching. Sample names must match column names of data matrix
+  geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds                                                      ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
+  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/IdentifyOutlier/identify_outlier.Rmd    ## Location of knitr template file
+  remote: yes                                                                                                               ## Whether the template file if local or remote
 parameter: 
   min.n: 4.0        ## Minimal number of samples in each group for outlier detection
   max.corr: 0.99    ## Maximal mean correlation coefficient for a sample to be outlier
