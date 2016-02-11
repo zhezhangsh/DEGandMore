@@ -308,7 +308,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
   fn.lo<-sub(paste(yml$output, '/', sep=''), '', fn.lo);
   
   n.hi<-sapply(gses, function(g) sapply(g[[1]]$formatted[gset.src], nrow)); 
-  n.lo<-sapply(gses, function(g) sapply(g[[2]]$formatted[gset.sce], nrow)); 
+  n.lo<-sapply(gses, function(g) sapply(g[[2]]$formatted[gset.src], nrow)); 
   
   tbl.hi<-t(matrix(paste('[', n.hi, '](', fn.hi, ')', sep=''), nc=nrow(outliers)));
   tbl.lo<-t(matrix(paste('[', n.lo, '](', fn.lo, ')', sep=''), nc=nrow(outliers))); 
