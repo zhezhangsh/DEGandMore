@@ -2,6 +2,7 @@
 export("AddAPCluster");
 export("CreateClReport");
 export("CreateDeReport");
+export("CreateOiReport");
 export("DeDeSeq2");
 export("DeEdgeR");
 export("DegHeatmap");
