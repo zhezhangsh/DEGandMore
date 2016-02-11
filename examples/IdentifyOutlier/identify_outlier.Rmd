@@ -321,7 +321,7 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
 
 ```{r write_out, include=FALSE}
 fn<-paste(yml$output, 'outliers.rds', sep='/'); 
-saveRDS(list(stat=stat, deg=degs, gse=gses), fn);
+saveRDS(list(stat=outliers, deg=degs, gse=gses), fn);
 ```
 
 Results were saved to `r fn`.
