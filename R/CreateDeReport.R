@@ -1,3 +1,4 @@
+# Use this template to create a report of differential gene expression 
 CreateDeReport<-function(inputs, is.url=TRUE, dir.temp='.',
                          rmd="https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.Rmd") {
   # inputs    A list of input variables, or path to the file

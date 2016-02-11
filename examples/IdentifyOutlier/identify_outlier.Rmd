@@ -293,7 +293,7 @@ Enrichment of DEGs in each gene set was tested by Hypergeometric test. Gene set 
 ```{r gse, include=FALSE}
 path.gse<-paste(yml$output, 'gse', sep='/');
 if (!file.exists(path.gse)) dir.create(path.gse, recursive = TRUE);
-if (nrow(outliers) == 0) lns<-'No outliers found' else {
+if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
   gses<-lapply(names(degs), function(nm) {
     cat(nm, '\n'); 
     gse<-lapply(degs[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
@@ -318,6 +318,15 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
   ln.lo<-kable(tbl.lo, align = rep('r', ncol(tbl.lo))); 
 }
 ```
+
+Results from gene set enrichment analysis of genes having higher expression in outliers:
+
+`r ln.hi`
+
+Results from gene set enrichment analysis of genes having higher expression in outliers:
+
+`r ln.lo`
+
 
 ```{r write_out, include=FALSE}
 fn<-paste(yml$output, 'outliers.rds', sep='/'); 

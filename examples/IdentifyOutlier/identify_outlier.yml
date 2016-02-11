@@ -1,19 +1,19 @@
 output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/identify_outlers
 input:
-  data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
-  annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds
-  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds
+  data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds       ## Data matrix to be analyzed. Genes are rows and samples are columns
+  annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds           ## Gene annotation, match rows of the data matrix
+  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds        ## A list of group name to sample name matching. Sample names must match column names of data matrix
   geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds                          ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
-parameter:
-  min.n: 4.0
-  max.corr: 0.99
-  n.sd: 3.0
-  cut.corr: 0.5
-  deg:
-    de: 2.0
-    nsd: 3.0
-    min: 50.0
-    max: 250.0
+parameter: 
+  min.n: 4.0        ## Minimal number of samples in each group for outlier detection
+  max.corr: 0.99    ## Maximal mean correlation coefficient for a sample to be outlier
+  n.sd: 3.0         ## Number of standard deviations less than the mean of correlation coefficients of non-outlier samples
+  cut.corr: 0.5     ## Cutoff of correlation coefficent of outlier/non-outlier differential expression between a pair of outliers to determin they had similar quality issue
+  deg:              #  Criteria to select outlier/non-outlier DEGs
+    de: 2.0         ## Minimal difference between outlier and the mean of non-outliers
+    nsd: 3.0        ## Minimal number of standard deviations
+    min: 50.0       ## Minimal number of DEGs to be selected (the nsd requirement must also be met, so the final number could be smaller)
+    max: 250.0      ## Maximal number of DEGs to be selected
 project:
   Title: Treatment of gas-1 mutated C. Elegans with antioxidant drugs
   Home: http://mybic.chop.edu/labs/falkm/gas1_antioxidant_drugs
