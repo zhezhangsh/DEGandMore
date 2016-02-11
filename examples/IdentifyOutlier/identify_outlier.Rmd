@@ -140,7 +140,7 @@ grps.filtered<-lapply(grps, function(g) g[!(g %in% outliers$Sample)]);
 
 As a result, **_`r nrow(outliers)`_** outliers were identified
 
-  - Click [here](fn.stat) to view result table
+  - Click [here](`r fn.stat`) to view result table
   - Outlier IDs: **_`r paste(unique(outliers$Sample), collapse=', ')`_**
 
 
