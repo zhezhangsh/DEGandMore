@@ -319,6 +319,7 @@ if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
 }
 ```
 
+
 Results from gene set enrichment analysis of genes having higher expression in outliers:
 
 `r ln.hi`
