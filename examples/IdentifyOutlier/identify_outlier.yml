@@ -2,8 +2,8 @@ output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/ide
 input:
   data: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
   annotation: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno.rds
-  group: sR/group2sample.rds
-  geneset: ''
+  group: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/group2sample.rds
+  geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds                          ## a list of 2 members, the first is metadata of gene sets, the second is a list of gene set-gene mapping
 parameter:
   min.n: 4.0
   max.corr: 0.99

@@ -194,7 +194,7 @@ Click on sample ID to view scatterplots that compare the global differential exp
 The differential expression of each outlier vs. its corresponding non-outliers was compared to each other. High correlation of differential expression between 2 samples suggests that the 2 outliers could be caused by the same reason.
 
 ```{r diff, include=TRUE, out.width='600px'}
-if (nrow(outlier) == 0) lns<-'No outliers found' else if (nrow(outlier) < 3) lns<-'No enough outliers for clustering analysis' else {
+if (nrow(outliers) == 0) lns<-'No outliers found' else if (nrow(outliers) < 3) lns<-'No enough outliers for clustering analysis' else {
   dff<-sapply(1:nrow(outliers), function(i) d1[[i]]-rowMeans(d0[[i]]));
   colnames(dff)<-outliers$Sample;
   hc<-hclust(as.dist(1-cor(dff)));
@@ -301,8 +301,8 @@ if (nrow(outliers) == 0) lns<-'No outliers found' else {
     lo<-WrapGSE(gse[[2]], gset[[1]], path.gse, paste(nm, 'Lower' , sep='_')); 
     list(hi, lo); 
   }); 
-  fn.hi<-sapply(gses, function(g) g[[1]]$file[[gset.src]]);
-  fn.lo<-sapply(gses, function(g) g[[2]]$file[[gset.src]]);
+  fn.hi<-sapply(gses, function(g) g[[1]]$file[gset.src]);
+  fn.lo<-sapply(gses, function(g) g[[2]]$file[gset.src]);
   
   fn.hi<-sub(paste(yml$output, '/', sep=''), '', fn.hi);
   fn.lo<-sub(paste(yml$output, '/', sep=''), '', fn.lo);
