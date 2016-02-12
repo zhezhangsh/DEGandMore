@@ -1,15 +1,17 @@
 # Use the ClReport.Rmd template to create a report of gene clustering analysis
-CreateClReport<-function(fn.yaml) {
-  # fn.yaml     The .ymal file defines the inputs and parameters of the analysis
+CreateClReport<-function(yml) {
+  # yml     The yaml file of an yaml list defines the inputs and parameters of the analysis
 
-  if (!exists('fn.yaml')) stop('Input file not found\n'); 
+  if (class(yml) == 'character') {
+    if (!exists('fn.yaml')) stop('Input file', yml, 'not found\n'); 
+    yml <- yaml::yaml.load_file(fn.yaml);  
+  }
 
   library(awsomics);
   library(gplots);
   library(knitr);
   library(rmarkdown); 
   
-  yml <- yaml::yaml.load_file(fn.yaml);  
   
   if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE)
   
