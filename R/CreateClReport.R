@@ -1,6 +1,6 @@
 # Use the ClReport.Rmd template to create a report of gene clustering analysis
 CreateClReport<-function(yml) {
-  # yml     The yaml file of an yaml list defines the inputs and parameters of the analysis
+  # yml     The yaml file or an yaml list defines the inputs and parameters of the analysis
 
   if (class(yml) == 'character') {
     if (!exists('fn.yaml')) stop('Input file', yml, 'not found\n'); 
