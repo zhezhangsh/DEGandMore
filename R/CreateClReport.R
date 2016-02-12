@@ -29,12 +29,10 @@ CreateClReport<-function(yml) {
   
   errors<-try(rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
                     quiet=TRUE, envir=new.env()), silent=TRUE);
-  
-  fn<-strsplit(fn.yaml, '/')[[1]];
-  fn<-fn[length(fn)]; 
-  
-  file.copy(fn, paste(yml$output, fn, sep='/')); 
-  zip(paste(yml$output, '.zip', sep=''), yml$output, "-rJ9X", zip='zip'); 
+
+  writeLines(yaml::as.yaml(yml), paste(yml$output, 'ClReport.yml', sep='/'));   
+
+  zip(paste(yml$output, '.zip', sep=''), yml$output, "-rJ9X", zip='zip');
   
   list(index=fn.html, zip=paste(yml$output, '.zip', sep=''), error=errors);
 }
