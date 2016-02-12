@@ -1,8 +1,11 @@
 # Use the identify_outlier.Rmd template to create a report of gene clustering analysis
-CreateOiReport<-function(fn.yaml) {
-  # fn.yaml     The .ymal file defines the inputs and parameters of the analysis
+CreateOiReport<-function(yml) {
+  # yml     The .ymal file or a yaml list defines the inputs and parameters of the analysis
   
-  if (!exists('fn.yaml')) stop('Input file not found\n'); 
+  if (class(yml) == 'character') {
+    if (!exists('fn.yaml')) stop('Input file', yml, 'not found\n'); 
+    yml <- yaml::yaml.load_file(fn.yaml);  
+  }
   
   library(awsomics);
   library(gplots);
