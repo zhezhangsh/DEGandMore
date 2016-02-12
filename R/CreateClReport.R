@@ -3,8 +3,8 @@ CreateClReport<-function(yml) {
   # yml     The yaml file or an yaml list defines the inputs and parameters of the analysis
 
   if (class(yml) == 'character') {
-    if (!exists('fn.yaml')) stop('Input file', yml, 'not found\n'); 
-    yml <- yaml::yaml.load_file(fn.yaml);  
+    if (!file.exists(yml)) stop('Input file', yml, 'not found\n'); 
+    yml <- yaml::yaml.load_file(yml);  
   }
 
   library(awsomics);
