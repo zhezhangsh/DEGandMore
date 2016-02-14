@@ -10,37 +10,37 @@ output:
 ```{r global_setup, include=FALSE}
 knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
+##########################################################################
+if (!exists('inputs')) stop("Required variable <inputs> not loaded.\n");
+##########################################################################
+
 library(awsomics);
-library(gplots);
-library(knitr);
-library(rmarkdown); 
+library(DEGandMore);
 
- fn.yaml<-"~/R/source/DEGandMore/examples/DeReport/DeReport.yml"; # comment it out if running through knitr::knit function
+rerun.all<-TRUE;
 
-# Loading inputs from yaml file
-# if (!exists('fn.yaml')) stop('Input file not found\n'); 
-# writeLines(yaml::as.yaml(yml), fn.yaml);
- yml <- yaml::yaml.load_file(fn.yaml);  
+fn.fig<-c();
+res<-list();
+```
 
-inputs<-yml$input;
-if (class(inputs$anno) == 'character') inputs$anno<-readRDS(inputs$anno); 
-if (class(inputs$expr) == 'character') inputs$expr<-readRDS(inputs$expr); 
-if (class(inputs$geneset) == 'character') inputs$geneset<-readRDS(inputs$geneset); 
+```{r load_data, include=FALSE}
+#if (!file.exists(path.inputs)) stop("Error: No inputs to run pairwise comparison");
+#inputs<-readRDS(path.inputs);
+res$inputs<-inputs;
 
 # All input variables
 anno<-inputs$anno;
 expr<-as.matrix(inputs$expr);
-geneset<-inputs$geneset;
-genome<-inputs$genome;
-paired<-inputs$paired;
-penalty<-inputs$penalty;
-grps<-inputs$comparison;
-g1.ind<-grps[[1]];
-g2.ind<-grps[[2]];
-g1.name<-names(grps)[1]
-g2.name<-names(grps)[2];
+g1.ind<-inputs$indexes[[1]];
+g2.ind<-inputs$indexes[[2]];
+g1.name<-inputs$names[1];
+g2.name<-inputs$names[2];
 g1.name<-gsub('-', '_', g1.name);
 g2.name<-gsub('-', '_', g2.name);
+genome<-inputs$genome;
+paired<-inputs$paired;
+homolog<-inputs$homolog;
+penalty<-inputs$penalty;
 deg.method<-inputs$deg$method;
 cutoff.l2r<-inputs$deg$cutoff.l2r;
 cutoff.p<-inputs$deg$cutoff.p;
@@ -48,36 +48,35 @@ cutoff.fdr<-inputs$deg$cutoff.fdr;
 num.top<-inputs$deg$num.top;
 nperm<-inputs$deg$nperm;
 logged<-inputs$deg$logged;
+geneset<-readRDS(inputs$geneset); 
+path.output<-inputs$output;
 
-# Check validity of inputs
+if (!exists('expr')) expr<-eval(parse(text=load('expr.rdata')));
+if (!exists('anno')) anno<-eval(parse(text=load('anno.rdata')));
 if (!identical(rownames(expr), rownames(anno))) stop('Row names of annotation and gene expression data are not identical');
-if (is.null(paired)) paired<-FALSE; 
-if (is.null(g1.ind)) stop('Error: Index of samples in group 1 unknown');
-if (is.null(g2.ind)) stop('Error: Index of samples in group 2 unknown');
-if (is.null(g1.name)) stop('Error: Name of group 1 unknown');
-if (is.null(g2.name)) stop('Error: Name of group 2 unknown');
+if (!exists('paired')) paired<-FALSE; 
+if (!exists('g1.ind')) stop('Error: Index of samples in group 1 unknown');
+if (!exists('g2.ind')) stop('Error: Index of samples in group 2 unknown');
+if (!exists('g1.name')) stop('Error: Name of group 1 unknown');
+if (!exists('g2.name')) stop('Error: Name of group 2 unknown');
 if (length(g1.ind)<2) stop('Error: Not enough samples in group ', g1.name, ', minimum=2');
 if (length(g2.ind)<2) stop('Error: Not enough samples in group ', g2.name, ', minimum=2');
 if (paired & length(g1.ind)!=length(g2.ind)) stop('Error: Unequal sample sizes for paired comparison, ', length(g1.ind), ' vs. ', length(g2.ind));
+if (is.null(path.output)) path.output<-getwd();
+if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
 
-# path to output files 
-path.output<-yml$output;
 path0<-paste(g1.name, g2.name, sep='-vs-');
 path<-paste(path.output, path0, sep='/');
 path.figure<-paste(path, 'figure', sep='/');
-if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
 if (!file.exists(path)) dir.create(path, recursive = TRUE);
 if (!file.exists(path.figure)) dir.create(path.figure, recursive = TRUE);
 
-# Re-process gene expression matrix
 e1<-expr[, g1.ind, drop=FALSE];
 e2<-expr[, g2.ind, drop=FALSE];
 e1.2<-cbind(e1, e2); 
+grps<-list(g1.ind, g2.ind);
+names(grps)<-c(g1.name, g2.name);
 pctl<-apply(e1.2, 2, function(e) 100*rank(e)/length(e)); # percentile
-
-inputs$expr<-e1.2;
-fn.fig<-c();  # Figure file name and index
-res<-list(inputs=inputs);  # Result set
 ```
 
 ```{r analysis_variance, include=FALSE}
@@ -371,18 +370,20 @@ fn.barplot<-sapply(names(ids), function(nm) {
 });
 
 # Write index tables of DEGs
+if (exists('homolog')) extra.url<-homolog; # Add links to homolog column in annotation else extra.url=list();
+
 cnm<-c(colnames(anno), colnames(up), 'Samples');
 up.tbl<-data.frame(anno[rownames(up), , drop=FALSE], up, rep('Figure', nrow(up)));
 colnames(up.tbl)<-cnm;
 up.tbl$Samples<-awsomics::AddHref(up.tbl$Samples, paste('./bars/', rownames(up), '.pdf', sep='')); 
 up.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(up.tbl), paste(pth.deg1, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-                                             title=paste('Genes with higher expression in', g2.name));
+                                             title=paste('Genes with higher expression in', g2.name), extra.url=extra.url);
 
 dn.tbl<-data.frame(anno[rownames(dn), , drop=FALSE], dn, rep('Figure', nrow(dn)));
 colnames(dn.tbl)<-cnm;
 dn.tbl$Samples<-awsomics::AddHref(dn.tbl$Samples, paste('./bars/', rownames(dn), '.pdf', sep='')); 
 dn.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(dn.tbl), paste(pth.deg2, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-                                             title=paste('Genes with lower expression in', g2.name));
+                                             title=paste('Genes with lower expression in', g2.name), extra.url=extra.url);
 ```
 
 ```{r analysis_ora, include=FALSE}
@@ -455,7 +456,7 @@ ora.formatted<-lapply(names(ora.table), function(nm) {
     t1<-stat.slim[rownames(stat.slim) %in% g, , drop=FALSE];
     t1<-t1[order(t1[, paste('Rank', nm, sep='_')]), , drop=FALSE];
     fn<-paste(path.ora, nm, 'term', paste('term_', i, '.html', sep=''), sep='/');
-    GeneList2Datatable(t1, fn, genome = genome, title = rownames(t)[i]);
+    GeneList2Datatable(t1, fn, genome = genome, extra.url = extra.url, title = rownames(t)[i]);
   });
   
   t;
@@ -476,7 +477,7 @@ bic.formatted<-lapply(names(bic), function(nm) {
     awsomics::CreateDatatable(t1, fn[1], FALSE, caption=paste('Terms of', t[i,1]));
     t2<-stat.slim[colnames(bic[[nm]][[2]][[i]]), , drop=FALSE];
     t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
-    GeneList2Datatable(t2, fn[2], genome = genome, title=paste('Genes of', t[i,1])); 
+    GeneList2Datatable(t2, fn[2], genome = genome, extra.url = extra.url, title=paste('Genes of', t[i,1])); 
     t3<-bic[[nm]][[2]][[i]];
     rownames(t3)<-paste(ora.table[[nm]][rownames(t3), 2], ora.table[[nm]][rownames(t3), 3], sep=' - ');
     colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), anno[colnames(t3), 1], sep=' - ');
@@ -600,6 +601,8 @@ The following inputs are required to generate this report. You can download an e
  - **paired:** Boolean indicates if the samples in the 2 groups are paired. Default is **FALSE**. If **TRUE**, the samples will be paired by their order. 
   
  - **penalty:** Whether to give penalty to genes with high sample-sample variance within groups. No penalty if **0**; highest possible penalty if **1**.
+
+ - **homolog:** A list of species to species mapping, that match each gene in **anno** to a gene in another species.
 
  - **deg:** Options of statistic test to identifiy differentially expressed genes (DEGs).
  
