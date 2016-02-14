@@ -26,7 +26,7 @@ GSEAviaJava<-function(yml, execute=TRUE) {
   fn1<-sapply(strsplit(fn0, '/'), function(fn) fn[length(fn)]);
   fn1<-paste(prefix, fn1, sep='/'); 
   names(fn1)<-names(fn0); 
-  file.copy(fn0, fn1, overwrite = TRUE);
+  file.copy(fn0[fn0!=fn1], fn1[fn0!=fn1], overwrite = TRUE);
   
   # specify inputs
   if (yml$preranked) {

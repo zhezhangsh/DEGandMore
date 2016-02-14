@@ -1,3 +1,4 @@
+home: http://mybic.chop.edu/labs/falkm/gas1_antioxidant_drugs
 output: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/pairwise
 input:
   anno: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno_url.rds
@@ -6,7 +7,6 @@ input:
   genome: worm
   paired: no
   penalty: 0.6
-  homolog: []
   comparison:
     MS010_L1:
     - MS010_L1_49

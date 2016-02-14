@@ -14,13 +14,14 @@ library(awsomics);
 library(gplots);
 library(knitr);
 library(rmarkdown); 
+library(yaml); 
 
- fn.yaml<-"~/R/source/DEGandMore/examples/DeReport/DeReport.yml"; # comment it out if running through knitr::knit function
+ fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
- yml <- yaml::yaml.load_file(fn.yaml);  
+ yml <- yaml.load_file(fn.yaml);  
 
 inputs<-yml$input;
 if (class(inputs$anno) == 'character') inputs$anno<-readRDS(inputs$anno); 
@@ -41,6 +42,8 @@ g1.name<-names(grps)[1]
 g2.name<-names(grps)[2];
 g1.name<-gsub('-', '_', g1.name);
 g2.name<-gsub('-', '_', g2.name);
+
+# parameters of differential expression
 deg.method<-inputs$deg$method;
 cutoff.l2r<-inputs$deg$cutoff.l2r;
 cutoff.p<-inputs$deg$cutoff.p;
@@ -410,6 +413,7 @@ ora.table<-lapply(gse, function(gse) {
                 Rand=rand, Pvalue=g[, 'P_HyperGeo'], FDR=g[, 'FDR_BH']);
 }); 
 
+
 ########################################################################################################
 # Biclustering
 bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
@@ -417,6 +421,9 @@ bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFrom
 bic2gs<-lapply(bic, function(bic) lapply(bic[[2]], rownames));
 gs2bic<-lapply(bic2gs, function(b) lapply(split(rep(1:length(b), sapply(b, length)), unlist(b, use.names=FALSE)), function(x) sort(unique(x))));
 gs2bic<-lapply(gs2bic, function(b) sapply(b, function(b) paste(b, collapse=';')));
+
+########################################################################################################
+# Output tables
 ora.table<-lapply(names(ora.table), function(nm) {
   b<-gs2bic[[nm]];
   b<-b[rownames(ora.table[[nm]])];
@@ -430,6 +437,13 @@ names(ora.table)<-names(bic);
 ```{r write_ora, include=FALSE}
 path.ora<-paste(path, 'ORA', sep='/');
 if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
+
+ora.wrapped<-lapply(names(ora.table), function(nm) {
+  pth<-paste(path.ora, nm, 'table', sep='/');
+  if (!file.exists(pth)) dir.create(pth, recursive = TRUE); 
+  WrapGSE(ora.table[[nm]], geneset$meta, TRUE, pth); 
+});
+names(ora.wrapped)<-names(ora.table);
 
 gs.table<-lapply(split(geneset[[1]][, 'Collection'], geneset[[1]][, 'Source']), table);
 gs.table<-data.frame(stringsAsFactors = FALSE, Source=rep(names(gs.table), sapply(gs.table, length)), 
@@ -494,6 +508,40 @@ bic.formatted<-lapply(names(bic), function(nm) {
   
   t;
 });
+```
+
+```{r prepare_gsea, include=FALSE}
+path.gsea<-paste(path, 'GSEA', sep='/');
+if (file.exists(path.gsea)) unlink(path.gsea, recursive = TRUE); # Path must not exist
+
+tmp<-as.character(as.integer(Sys.time())); 
+if (file.exists(tmp)) unlist(tmp, recursive = TRUE); 
+dir.create(tmp, recursive = TRUE); 
+
+# loading template yaml
+input.gsea<-inputs$gsea;
+gsea.yml<-input.gsea$template;
+if (input.gsea$remote) gsea.yml<-yaml.load(RCurl::getURL(input.gsea$template)) else gsea.yml<-yaml.load_file(input.gsea$template)
+
+fn.gsea<-PrepareGSEA(e1.2, grps, paste(tmp, 'input', sep='/'), desc = anno[[1]]); 
+
+gsea.yml$jar<-input.gsea$jar;
+gsea.yml$preranked<-FALSE;
+gsea.yml$thread<-input.gsea$thread; 
+gsea.yml$name<-tmp;
+gsea.yml$groups$control<-g1.name;
+gsea.yml$groups$case<-g2.name;
+gsea.yml$out<-path;
+gsea.yml$input<-fn.gsea[1];
+gsea.yml$class<-fn.gsea[2];
+gsea.yml$chip<-c();
+gsea.yml$gmt<-input.gsea$gmt;
+
+
+```
+
+```{r analysis_gsea, include=FALSE}
+gsea.cmmd<-GSEAviaJava(gsea.yml); 
 ```
 
 ```{r kegg_gsea, include=FALSE}
