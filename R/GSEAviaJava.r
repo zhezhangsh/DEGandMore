@@ -1,75 +1,83 @@
 # Run GSEA by creating a Java shell command line
-GSEAviaJava<-function(fn.yaml, execute=TRUE) {
-  # fn.yaml   Config file specifying inputs
+GSEAviaJava<-function(yml, execute=TRUE) {
+  # yml      yml file specifying all inputs or a corresponding yml list
   # execute   Whether to make the GSEA run or just save the command lines
   
   library(DEGandMore);
-  
   library(yaml);
-  yaml<-yaml.load_file(fn.yaml);
-  prefix<-yaml$name;
+  
+  if (class(yml) == 'character') {
+    if (!file.exists(yml)) stop('Input file', yml, 'not found\n'); 
+    yml<-yaml.load_file(yml);
+  }
+  prefix<-yml$name;
+  if (!file.exists(prefix)) dir.create(prefix, recursive = TRUE);
   
   # build shell command line
-  cmmd<-paste('java -Xmx5G -cp', yaml$jar);
+  cmmd<-paste('java -Xmx5G -cp', yml$jar);
   
   # output folder
-  out<-yaml$out; # folder of run outputs
-  if (is.null(out)) out<-'./';
+  out<-yml$out; # folder of run outputs
+  if (is.null(out)) out<-prefix
   if (!file.exists(out)) dir.create(out, recursive=TRUE);
-   
+  
   # Copy input files to output folder
-  fn0<-unlist(yaml[c('input', 'class', 'chip', 'gmt')]);
+  fn0<-unlist(yml[c('input', 'class', 'chip', 'gmt', 'jar')]);
   fn1<-sapply(strsplit(fn0, '/'), function(fn) fn[length(fn)]);
-  file.copy(fn0, paste(out, fn1, sep='/'));
+  fn1<-paste(prefix, fn1, sep='/'); 
+  names(fn1)<-names(fn0); 
+  file.copy(fn0, fn1, overwrite = TRUE);
   
   # specify inputs
-  if (yaml$preranked) {
+  if (yml$preranked) {
     cmmd<-paste(cmmd, 'xtools.gsea.GseaPreranked', '-rnk', fn1['input']);
   } else {
     cmmd<-paste(cmmd, 'xtools.gsea.Gsea', '-res', fn1['input'], '-cls', fn1['class']);
   }
   
   # add chip annotation
-  if (!is.null(yaml$chip) & file.exists(yaml$chip)) {
-    cmmd<-paste(cmmd, '-chip', fn1['chip']);
-  } 
+  if (!is.null(yml$chip)) if (file.exists(yml$chip)) cmmd<-paste(cmmd, '-chip', fn1['chip']);
   
   # extra options
-  options<-yaml$options;
+  options<-yml$options;
   cmmd<-paste(cmmd, paste(sapply(names(options), function(nm) paste('-', nm, ' ', options[nm], sep='')), collapse=' '));  
   
   # add gmt files
-  gmts<-sapply(yaml$gmt, function(x) x[1]);
+  gmts<-sapply(yml$gmt, function(x) x[1]);
   gmts<-gmts[file.exists(gmts)];
   gmts<-sapply(strsplit(gmts, '/'), function(x) x[length(x)]);
+  gmts[1:length(gmts)]<-paste(prefix, gmts, sep='/'); 
   if (length(gmts) == 0) warning('No available .gmt files') else {
-    cmmd<-sapply(names(gmts), function(nm) paste(cmmd, '-gmx', gmts[nm], '-rpt_label', paste(prefix, nm, sep='_')));
+    cmmd<-sapply(names(gmts), function(nm) paste(cmmd, '-gmx', gmts[nm], '-rpt_label', nm));
   }
   
   # Output folder
-  cmmd<-paste(cmmd, '-out', './');
-  cur.wd<-getwd();
-  setwd(out);
-  
+  cmmd<-paste(cmmd, '-out', prefix);
+
   # Run GSEA
   if (execute) {
-    n<-round(yaml$thread[1]);
+    n<-round(yml$thread[1]);
     if (n>1) {
-      library(snow);
-      cl<-makeCluster(n, type='SOCK');
-      run<-clusterApplyLB(cl, cmmd, system);
-      stopCluster(cl);
+      run<- parallel::mclapply(cmmd, system, mc.cores = n); 
     } else {
       run<-sapply(cmmd, system);
     }
-
-    SummarizeGSEA(yaml$groups[[1]][1], yaml$groups[[2]][1], path=yaml$out);
-  }
- 
-  # save shell command lines
-  writeLines(paste(cmmd, '\n\n', sep=''), './RunGSEA.sh');
     
-  setwd(cur.wd);
+    #file.rename(fn1, paste(out, fn1, sep='/'));
+    #fn.out<-paste(prefix, '_', sub('.gmt', '', gmts), '.Gsea', sep='');
+    #fn.all<-dir();
+    #fn.out<-sapply(fn.out, function(f) fn.all[grep(paste('^', f, sep='')[1], fn.all)]);
+    #file.rename(fn.out, paste(out, fn.out, sep='/')); 
+    
+    SummarizeGSEA(yml$groups[[1]][1], yml$groups[[2]][1], path=prefix, GSEACollection = FALSE);
+    file.rename(prefix, paste(out, prefix, sep='/')); 
+  }
   
+
+  # save shell command lines
+  writeLines(paste(cmmd, '\n\n', sep=''), paste(out, prefix, 'RunGSEA.sh', sep='/'));
+  writeLines(yaml::as.yaml(yml), paste(out, prefix, paste(prefix, '.yml', sep=''), sep='/')); 
+
   cmmd;
+  
 }
