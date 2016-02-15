@@ -8,7 +8,7 @@ output:
 ---
 
 ```{r global_setup, include=FALSE}
-knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+knitr::opts_chunk$set(eval=TRUE, eval=FALSE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
 library(gplots);
@@ -438,13 +438,41 @@ names(ora.table)<-names(bic);
 path.ora<-paste(path, 'ORA', sep='/');
 if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
 
+# Split results into tables by collections
 ora.wrapped<-lapply(names(ora.table), function(nm) {
   pth<-paste(path.ora, nm, 'table', sep='/');
   if (!file.exists(pth)) dir.create(pth, recursive = TRUE); 
-  WrapGSE(ora.table[[nm]], geneset$meta, TRUE, pth); 
+  WrapGSE(ora.table[[nm]][, -(1:3)], geneset$meta, TRUE, pth); 
 });
 names(ora.wrapped)<-names(ora.table);
 
+# create index.html file
+ora.tbl<-lapply(ora.wrapped, function(o) {
+  n<-lapply(o$formatted, function(o) sapply(o, nrow)); 
+  fn<-unlist(o$file, use.names=FALSE); 
+  fn<-sub(paste(path.ora, '/', sep=''), '', fn); 
+  s<-rep(names(n), sapply(n, length));
+  c<-unlist(lapply(n, names), use.names=FALSE); 
+  n<-as.vector(unlist(n, use.names=FALSE)); 
+  tbl<-data.frame(Source=s, Collection=c, N=n, stringsAsFactors = FALSE);
+  tbl$N<- AddHref(tbl$N, fn);
+  rownames(tbl)<-paste(tbl[[1]], tbl[[2]], sep='_'); 
+  tbl
+});
+u<-sort(union(rownames(ora.tbl[[1]]), rownames(ora.tbl[[2]]))); 
+ora.tbl<-lapply(ora.tbl, function(t) {
+  t<-t[u, ];
+  t[is.na(t[,3]), 3]<-0; 
+  rownames(t)<-u; 
+  t;
+});
+ora.ind<-cbind(ora.tbl[[1]], N2=ora.tbl[[2]]$N); 
+ora.ind[is.na(ora.ind[,1]), 1]<-ora.tbl[[2]][is.na(ora.ind[,1]), 1]; 
+ora.ind[is.na(ora.ind[,2]), 2]<-ora.tbl[[2]][is.na(ora.ind[,2]), 2]; 
+names(ora.ind)<-c('Source', 'Collection', names(ora.wrapped)); 
+CreateDatatable(ora.ind, paste(path.ora, 'index.html', sep='/'), rownames = FALSE, caption = "Click on number to see list"); 
+
+# All tested gene sets
 gs.table<-lapply(split(geneset[[1]][, 'Collection'], geneset[[1]][, 'Source']), table);
 gs.table<-data.frame(stringsAsFactors = FALSE, Source=rep(names(gs.table), sapply(gs.table, length)), 
                      Collection=unlist(lapply(gs.table, names), use.names=FALSE), Geneset=as.numeric(unlist(gs.table)));
@@ -519,9 +547,9 @@ if (file.exists(tmp)) unlist(tmp, recursive = TRUE);
 dir.create(tmp, recursive = TRUE); 
 
 # loading template yaml
-input.gsea<-inputs$gsea;
+input.gsea<-yml$input$gsea;
 gsea.yml<-input.gsea$template;
-if (input.gsea$remote) gsea.yml<-yaml.load(RCurl::getURL(input.gsea$template)) else gsea.yml<-yaml.load_file(input.gsea$template)
+if (input.gsea$remote) gsea.yml<-yaml.load(RCurl::getURL(gsea.yml)) else gsea.yml<-yaml.load_file(gsea.yml)
 
 fn.gsea<-PrepareGSEA(e1.2, grps, paste(tmp, 'input', sep='/'), desc = anno[[1]]); 
 
@@ -536,29 +564,30 @@ gsea.yml$input<-fn.gsea[1];
 gsea.yml$class<-fn.gsea[2];
 gsea.yml$chip<-c();
 gsea.yml$gmt<-input.gsea$gmt;
-
-
 ```
 
 ```{r analysis_gsea, include=FALSE}
 gsea.cmmd<-GSEAviaJava(gsea.yml); 
+file.rename(paste(gsea.yml$out, tmp, sep='/'), path.gsea); 
+gsea.tbl<-readRDS(paste(path.gsea, 'full_table.rds', sep='/')); 
 ```
 
 ```{r kegg_gsea, include=FALSE}
-kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, 
-               path=paste(path, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
-               path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
+#kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, 
+#               path=paste(path, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
+#               path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
 ```
 
 ```{r write_excel, include=FALSE}
 # Excel spreadsheets
 xls<-list(stat.table, stat.table[rownames(up), , drop=FALSE], stat.table[rownames(dn), , drop=FALSE],
-          ora.table[[1]], ora.table[[2]]);
+          ora.table[[1]], ora.table[[2]], gsea.tbl);
 names(xls)<-c('Complete List', 
   paste('Top', nrow(up), ', higher in ', g2.name, sep=''), 
   paste('Top', nrow(dn), ', lower in ', g2.name, sep=''),
   paste('ORA, higher in ', g2.name, sep=''),
-  paste('ORA, lower in ', g2.name, sep='')
+  paste('ORA, lower in ', g2.name, sep=''),
+  "GSEA"
 );
 xls<-lapply(xls, awsomics::FormatNumeric);
 fn.xls<-paste(path, paste(g1.name, g2.name, sep='-vs-'), sep='/');
@@ -583,7 +612,7 @@ fn.png[[length(fn.png)+1]]<-sapply(kegg$Formatted, function(t) {
 ```{r zip, include=FALSE}
 res$de<-de;
 res$ora<-gse;
-res$kegg<-kegg;
+res$gsea<-gsea.tbl;
 saveRDS(res, file=paste(path, 'result.rds', sep='/'));
 
 fn.zip<-sapply(strsplit(path, '/'), function(x) x[length(x)]);
@@ -862,7 +891,7 @@ pander::pander(t);
   
 The table below lists the core R/Bioconductor packages and functions used to generate this report while in-house functions are used to customize their outputs.
   
-```{r bioconductor, eval=TRUE, include=TRUE}
+```{r biocondductor, eval=TRUE, include=TRUE}
 t<-strsplit("Create this report\tknitr\tknit2html
 Hierarchical clustering\tstats\thclust 
 PCA\tstats\tprcomp
