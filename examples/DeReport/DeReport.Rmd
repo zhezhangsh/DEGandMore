@@ -632,20 +632,12 @@ file.rename(fn.zip, fn.z);
 
 <span style="color:darkblue; font-family:Georgia; font-size:1.5em;"> Click a number to see table, or read the rest of this page for details: </span>
 
-```{r sig_count, eval=TRUE, include=TRUE}
-t<-cbind(c(nrow(up), nrow(dn)), sapply(ora.table, nrow),  sapply(bic, function(x) nrow(x[[1]])), sapply(kegg$Formatted, function(x) nrow(x[x[, 'P_Value']<=0.05, , drop=FALSE])));
-rownames(t)<-paste(c('Higher', 'Lower'), 'in', g2.name);
-colnames(t)<-c('DEG', 'ORA', 'Bicluster', 'KEGG_GSEA');
-t[, 1]<-awsomics::AddHref(t[,1], paste("./DEG", names(degs), 'index.html', sep='/'));
-t[, 2]<-awsomics::AddHref(t[,2], paste("./ORA", names(degs), 'term.html', sep='/'));
-t[, 3]<-awsomics::AddHref(t[,3], paste("./ORA", names(degs), 'bicluster.html', sep='/'));
-t[, 4]<-awsomics::AddHref(t[,4], paste("./KEGG", names(degs), 'index.html', sep='/'));
-knitr::kable(t);              
-```
-
- - An online version of differential expression of all genes can be found [here](./DEG/all_genes.html)
- - An Excel file of statistical results can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`)
- - A zip file of the all results can be downloaded from [here](./`r paste(path0, '.zip', sep='')`)
+ - Differential gene expression ([All genes](DEG/all_genes.html))
+   - [`r nrow(degs[[1]])` genes](`r paste('DEG', names(degs)[1], 'index.html', sep='/')`) with increased expression in `r g1.name`
+   - [`r nrow(degs[[2]])` genes](`r paste('DEG', names(degs)[2], 'index.html', sep='/')`) with decreased expression in `r g1.name`
+ - Download
+   - [Excel](`r paste(path0, '.xlsx', sep='')`) file with multiple statistical tables can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`)
+   - [Zip](`r paste(path0, '.zip', sep='')`) file with complete results.
 
 ***
 ***

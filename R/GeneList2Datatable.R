@@ -23,6 +23,8 @@ GeneList2Datatable<-function(d, fn='gene_list', col.entrez=0, col.symbol=1, geno
         col.symbol<-col.symbol+1;
     }
     
+    d[, col.symbol]<- rchive::CleanHtmlTags(d[, col.symbol], FALSE); 
+    
     # build UCSC url
     cn<-col.symbol;
     if (cn<0 | is.na(cn) | cn>ncol(d)) ucsc<-NA else {
