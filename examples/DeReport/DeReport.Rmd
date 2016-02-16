@@ -18,12 +18,12 @@ library(knitr);
 library(rmarkdown); 
 library(yaml); 
 
-fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
+#fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
-yml <- yaml.load_file(fn.yaml);  
+#yml <- yaml.load_file(fn.yaml);  
 
 inputs<-yml$input;
 if (class(inputs$anno) == 'character') inputs$anno<-readRDS(inputs$anno); 

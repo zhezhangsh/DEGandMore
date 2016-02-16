@@ -4,6 +4,8 @@ input:
   anno: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno_url.rds
   expr: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
   geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds
+  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.yml
+  remote: yes
   genome: worm
   paired: no
   penalty: 0.6
@@ -26,6 +28,33 @@ input:
     num.top: 250.0
     nperm: 100.0
     logged: yes
+  gsea:
+    jar: /nas/is1/rchive/data/gene.set/gmt/gsea2-2.2.0.jar
+    preranked: no
+    thread: 1
+    template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/gsea/GSEA_example.yaml
+    remote: yes
+    kegg: /nas/is1/rchive/data/pathway/public/kegg/src
+    gmt:
+      #GO_BP: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_BP.gmt
+      #GO_MF: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_MF.gmt
+      #GO_CC: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/GO_CC.gmt
+      #OMIM_gene: /nas/is1/rchive/data/gene.set/gmt/worm/OMIM/OMIM_gene.gmt
+      MSigDb_Hallmark: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C0_Hallmark.gmt
+      #MSigDb_Positional: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C1_Positional.gmt
+      #MsigDb_Chemical_and_genetic_perturbations: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C2_Chemical_and_genetic_perturbations.gmt
+      #MSigDb_MicroRNA_targets: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C3_MicroRNA_targets.gmt
+      #MSigDb_TF_targets: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C3_TF_targets.gmt
+      #MSigDb_Oncogenic_signatures: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C6_Oncogenic_signatures.gmt
+      #MSigDb_Immunologic_signatures: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C7_Immunologic_signatures.gmt
+      BioCarta_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/MSigDb/C2_BioCarta_Pathways.gmt
+      REACTOME_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/REACTOME.gmt                
+      Wiki_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/BioSystems/WikiPathways.gmt                 
+      KEGG_pathway: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_pathway.gmt
+      #KEGG_compound: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_compound.gmt
+      #KEGG_enzyme: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_enzyme.gmt
+      #KEGG_module: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_module.gmt
+      #KEGG_reaction: /nas/is1/rchive/data/gene.set/gmt/worm/KEGG/KEGG_reaction.gmt
 project: # Project background
   Title: Treatment of gas-1 mutated C. Elegans with antioxidant drugs ## Project title
   Home: http://mybic.chop.edu/labs/falkm/gas1_antioxidant_drugs ## Project home page
