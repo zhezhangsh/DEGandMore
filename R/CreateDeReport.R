@@ -24,7 +24,10 @@ CreateDeReport<-function(yml) {
   errors<-try(rmarkdown::render('DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir='.', 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
-  fn.html<-paste(yml$output, 'index.html', sep='/'); 
+  path<-paste(yml$output, paste(names(yml$input$comparison), collapse='-vs-'), sep='/');
 
-  paste(path, 'index.html', sep='/');
+  fn.html<-paste(path, 'index.html', sep='/'); 
+  file.copy('index.html', fn.html, overwrite = TRUE);
+
+  fn.html; 
 }
