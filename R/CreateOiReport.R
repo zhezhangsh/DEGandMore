@@ -12,8 +12,6 @@ CreateOiReport<-function(yml) {
   library(knitr);
   library(rmarkdown); 
   
-  yml <- yaml::yaml.load_file(fn.yaml);  
-  
   if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE)
   
   fn.temp<-paste(yml$output, 'identify_outlier.Rmd', sep='/'); 

@@ -12,7 +12,6 @@ CreateClReport<-function(yml) {
   library(knitr);
   library(rmarkdown); 
   
-  
   if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE)
   
   fn.temp<-paste(yml$output, 'ClReport.Rmd', sep='/'); 
@@ -22,8 +21,6 @@ CreateClReport<-function(yml) {
   } else {
     file.copy(yml$input$template, fn.temp); 
   }
-  
-  if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE);
   
   fn.html<-paste(yml$output, 'index.html', sep='/'); 
   

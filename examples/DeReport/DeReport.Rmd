@@ -1,5 +1,5 @@
 ---
-title: "2-group differential gene expression"
+title: "Analysis of 2-group differential gene expression"
 author: "Jim Zhang"
 date: "`r Sys.Date()`"
 output:
@@ -8,20 +8,22 @@ output:
 ---
 
 ```{r global_setup, include=FALSE}
-knitr::opts_chunk$set(eval=TRUE, eval=FALSE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+knitr::opts_chunk$set(eval=FALSE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
+library(rchive);
+library(DEGandMore);
 library(gplots);
 library(knitr);
 library(rmarkdown); 
 library(yaml); 
 
- fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/results/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
+fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
- yml <- yaml.load_file(fn.yaml);  
+yml <- yaml.load_file(fn.yaml);  
 
 inputs<-yml$input;
 if (class(inputs$anno) == 'character') inputs$anno<-readRDS(inputs$anno); 
@@ -254,7 +256,7 @@ dn<-degs[[2]];
 stat.table<-cbind(anno[rownames(stat), ], stat);
 stat.formatted<-awsomics::FormatNumeric(cbind(ID=rownames(stat.table), stat.table));
 stat.formatted$ID<-awsomics::AddHref(stat.formatted$ID, awsomics::UrlEntrezGene(stat.formatted$ID));
-awsomics::CreateDatatable(stat.formatted, fn = paste(path, 'DEG', 'all_genes.html', sep='/'), rownames = FALSE, caption = "Differential expression of all genes");
+CreateDatatable(stat.formatted, fn = paste(path, 'DEG', 'all_genes.html', sep='/'), rownames = FALSE, caption = "Differential expression of all genes");
 ```
 
 ```{r summary_deg, include=FALSE}
@@ -317,7 +319,7 @@ ind<-c(rownames(up)[1], rownames(dn)[1]);
 
 cex<-min(0.75, min(0.5/max(strwidth(colnames(e1.2), unit='in'))));
 col<-rep(c('grey', 'lightblue'), c(length(g1.ind), length(g2.ind)));
-for (ii in 1:2) barplot(e1.2[ind[ii], ], las=3, cex.names=cex, main=as.vector(anno[ind[ii], 1]), cex.main=.75, cex.axis=.75, col=col);
+for (ii in 1:2) barplot(e1.2[ind[ii], ], las=3, cex.names=cex, main=CleanHtmlTags(anno[ind[ii], 1], FALSE), cex.main=.75, cex.axis=.75, col=col);
 dev.off();
 
 # Plot heatmap of top genes
@@ -363,11 +365,11 @@ fn.barplot<-sapply(names(ids), function(nm) {
     pdf(nm, w=8, h=6); 
     par(mai=c(1.2, 1, 0.6, 0.2));
     barplot(expr[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Expression level', cex.lab=wid, cex.names=wid);
-    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
+    title(main=paste(ids[nm], CleanHtmlTags(as.vector(anno[ids[nm], 1])), sep=' - '), cex.main=2);
     #plot.new();
     par(mai=c(1.2, 1, 0.6, 0.2));
     barplot(pctl[ids[nm], c(g1.ind, g2.ind)], las=3, col=col, ylab='Percentile (%)', ylim=c(0, 100), cex.lab=2, cex.names=wid);
-    title(main=paste(ids[nm], as.vector(anno[ids[nm], 1]), sep=' - '), cex.main=2);
+    title(main=paste(ids[nm], CleanHtmlTags(as.vector(anno[ids[nm], 1])), sep=' - '), cex.main=2);
 
     dev.off();
     nm;
@@ -377,46 +379,44 @@ fn.barplot<-sapply(names(ids), function(nm) {
 cnm<-c(colnames(anno), colnames(up), 'Samples');
 up.tbl<-data.frame(anno[rownames(up), , drop=FALSE], up, rep('Figure', nrow(up)));
 colnames(up.tbl)<-cnm;
-up.tbl$Samples<-awsomics::AddHref(up.tbl$Samples, paste('./bars/', rownames(up), '.pdf', sep='')); 
-up.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(up.tbl), paste(pth.deg1, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-                                             title=paste('Genes with higher expression in', g2.name));
+up.tbl$Samples<-AddHref(up.tbl$Samples, paste('./bars/', rownames(up), '.pdf', sep='')); 
+up.formatted<-GeneList2Datatable(FormatNumeric(up.tbl), paste(pth.deg1, 'index.html', sep='/'), col.symbol=1, genome=genome, title=paste('Genes with higher expression in', g2.name));
 
 dn.tbl<-data.frame(anno[rownames(dn), , drop=FALSE], dn, rep('Figure', nrow(dn)));
 colnames(dn.tbl)<-cnm;
-dn.tbl$Samples<-awsomics::AddHref(dn.tbl$Samples, paste('./bars/', rownames(dn), '.pdf', sep='')); 
-dn.formatted<-DEGandMore::GeneList2Datatable(awsomics::FormatNumeric(dn.tbl), paste(pth.deg2, 'index.html', sep='/'), col.symbol=1, genome=genome, 
-                                             title=paste('Genes with lower expression in', g2.name));
+dn.tbl$Samples<-AddHref(dn.tbl$Samples, paste('./bars/', rownames(dn), '.pdf', sep='')); 
+dn.formatted<-GeneList2Datatable(FormatNumeric(dn.tbl), paste(pth.deg2, 'index.html', sep='/'), col.symbol=1, genome=genome, title=paste('Genes with lower expression in', g2.name));
 ```
 
 ```{r analysis_ora, include=FALSE}
 
 ########################################################################################################
-gse<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
+ora<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
 ########################################################################################################
 
 path.ora<-paste(path, 'ORA', sep='/');
 if (!file.exists(path.ora)) dir.create(path.ora);
 sapply(names(degs), function(nm) if (!file.exists(paste(path.ora, nm, sep='/'))) dir.create(paste(path.ora, nm, sep='/'), recursive = TRUE))->x;
-names(gse)<-names(degs);
-saveRDS(gse, paste(path.ora, 'ora_full.rds', sep='/'));
+names(ora)<-names(degs);
+saveRDS(ora, paste(path.ora, 'ora_full.rds', sep='/'));
 
-ora.table<-lapply(gse, function(gse) {
-  g<-gse$stat;
-  lst<-gse$list[rownames(g)];
+ora.table<-lapply(ora, function(ora) {
+  g<-ora$stat;
+  lst<-ora$list[rownames(g)];
   rand<-sapply(lst, function(l) { 
     mtrx<-e1.2[rownames(e1.2) %in% l, , drop=FALSE];
     flexclust::randIndex(table(kmeans(t(mtrx), 2)[[1]], rep(1:2, sapply(grps, length))));
   })
   an<-geneset[[1]][rownames(g), ];
   data.frame(row.names = rownames(g), stringsAsFactors = TRUE, Source=an[,1], Collection=an[,2], Term=an[, 'Name'], 
-                Total=rowSums(gse$size[rownames(g), 3:4]), Within=gse$size[rownames(g), 4], Enrichment=g[, 'Odds_Ratio'], 
+                Total=rowSums(ora$size[rownames(g), 3:4]), Within=ora$size[rownames(g), 4], Enrichment=g[, 'Odds_Ratio'], 
                 Rand=rand, Pvalue=g[, 'P_HyperGeo'], FDR=g[, 'FDR_BH']);
 }); 
 
-
 ########################################################################################################
 # Biclustering
-bic<-lapply(gse, function(g) if (nrow(g[[1]])<5) NA else awsomics::BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
+bic<-lapply(ora, function(g) if (nrow(g[[1]])<5) NA else BiclusterFromList(g[[2]][rownames(g[[1]])[1:min(250, nrow(g[[1]]))]]));
+ora$bicluster<-bic;
 
 bic2gs<-lapply(bic, function(bic) lapply(bic[[2]], rownames));
 gs2bic<-lapply(bic2gs, function(b) lapply(split(rep(1:length(b), sapply(b, length)), unlist(b, use.names=FALSE)), function(x) sort(unique(x))));
@@ -515,24 +515,24 @@ bic.formatted<-lapply(names(bic), function(nm) {
   fns<-sapply(1:nrow(t), function(i) {
     fn<- paste(path.ora, nm, 'bicluster', paste(t[i, 1], c('_terms.html', '_genes.html', '_heatmap.pdf'), sep=''), sep='/');
     t1<-ora.formatted[[nm]][rownames(bic[[nm]][[2]][[i]]), ];
-    awsomics::CreateDatatable(t1, fn[1], FALSE, caption=paste('Terms of', t[i,1]));
+    CreateDatatable(t1, fn[1], FALSE, caption=paste('Terms of', t[i,1]));
     t2<-stat.slim[colnames(bic[[nm]][[2]][[i]]), , drop=FALSE];
     t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
     GeneList2Datatable(t2, fn[2], genome = genome, title=paste('Genes of', t[i,1])); 
     t3<-bic[[nm]][[2]][[i]];
     rownames(t3)<-paste(ora.table[[nm]][rownames(t3), 2], ora.table[[nm]][rownames(t3), 3], sep=' - ');
-    colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), anno[colnames(t3), 1], sep=' - ');
+    colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), CleanHtmlTags(anno[colnames(t3), 1]), sep=' - ');
     if (min(t3)==1) col.min<-'#0000FF' else col.min<-'#999999';
-    awsomics::PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
+    PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
     fn;
   });
   bic.fn<-t(fns);
   
   # write index table
-  t$Num_Terms<-awsomics::AddHref(t$Num_Terms, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 1]));
-  t$Num_Genes<-awsomics::AddHref(t$Num_Genes, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 2]));
-  t$ID<-awsomics::AddHref(t$ID, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 3]));
-  awsomics::CreateDatatable(t, fn=paste(path.ora, nm, 'bicluster.html', sep='/'), rownames = FALSE);
+  t$Num_Terms<-AddHref(t$Num_Terms, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 1]));
+  t$Num_Genes<-AddHref(t$Num_Genes, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 2]));
+  t$ID<-AddHref(t$ID, sub(paste(path.ora, nm, sep='/'), '\\.', bic.fn[, 3]));
+  CreateDatatable(t, fn=paste(path.ora, nm, 'bicluster.html', sep='/'), rownames = FALSE);
   
   t;
 });
@@ -551,7 +551,17 @@ input.gsea<-yml$input$gsea;
 gsea.yml<-input.gsea$template;
 if (input.gsea$remote) gsea.yml<-yaml.load(RCurl::getURL(gsea.yml)) else gsea.yml<-yaml.load_file(gsea.yml)
 
-fn.gsea<-PrepareGSEA(e1.2, grps, paste(tmp, 'input', sep='/'), desc = anno[[1]]); 
+# If Rank Product was used for DE, adjust the data for GSEA so the group mean difference reflects RP results
+e1.2_gsea<-e1.2; 
+if (deg.method[1] == 'DeRankP') {
+  log.rp<-log10(de$results$stat[, 'RP2']/de$results$stat[, 'RP1']);
+  m1<-rowMeans(e1.2[, g1.ind]); 
+  m2<-rowMeans(e1.2[, g2.ind]); 
+  m0<-m1+log.rp; 
+  e1.2_gsea[, g2.ind]<-e1.2[, g2.ind] - (m2-m0); 
+}; 
+
+fn.gsea<-PrepareGSEA(e1.2_gsea, grps, paste(tmp, 'input', sep='/'), desc = anno[[1]]); 
 
 gsea.yml$jar<-input.gsea$jar;
 gsea.yml$preranked<-FALSE;
@@ -569,19 +579,113 @@ gsea.yml$gmt<-input.gsea$gmt;
 ```{r analysis_gsea, include=FALSE}
 gsea.cmmd<-GSEAviaJava(gsea.yml); 
 file.rename(paste(gsea.yml$out, tmp, sep='/'), path.gsea); 
-gsea.tbl<-readRDS(paste(path.gsea, 'full_table.rds', sep='/')); 
+gsea.tbl<-readRDS(paste(path.gsea, 'full_table.rds', sep='/'));
+for (i in 1:ncol(gsea.tbl)) gsea.tbl[[i]]<-as.vector(gsea.tbl[[i]]); 
+saveRDS(gsea.tbl, file=paste(path.gsea, 'full_table.rds', sep='/')); 
+
+# Load gene lists of gene sets from GMT files
+fn.gmt<-gsea.yml$gmt
+gmts<-lapply(fn.gmt, PGSEA::readGmt); 
+gsea.lst<-lapply(gmts, function(gmt) {
+  nm<-sub(' $', '', sapply(gmt, function(g) g@reference)); 
+  lst<-lapply(gmt, function(g) g@ids); 
+  names(lst)<-toupper(nm); 
+  lst;
+}); 
+
+########################################################################################################
+# Biclustering
+gsea.tbl.sig<-gsea.tbl[gsea.tbl$PValue<=0.05, ]; 
+gsea.tbl.sig<-gsea.tbl.sig[order(gsea.tbl.sig$PValue), , drop=FALSE]; 
+gsea.lst.sig<-lapply(1:nrow(gsea.tbl.sig), function(i) gsea.lst[[gsea.tbl.sig[i, 1]]][[gsea.tbl.sig[i, 2]]]); 
+gsea.lst.sig<-lapply(gsea.lst.sig, function(l) l[l %in% unlist(lapply(degs, rownames), use.names=FALSE)]); 
+names(gsea.lst.sig)<-rownames(gsea.tbl.sig); 
+gsea.lst.sig<-gsea.lst.sig[sapply(gsea.lst.sig, length)>1];
+gsea.gs<-split(gsea.lst.sig, gsea.tbl.sig[names(gsea.lst.sig), ncol(gsea.tbl.sig)]); 
+gsea.gs<-rev(gsea.gs); 
+names(gsea.gs)<-names(degs); 
+
+gsea.bic<-lapply(gsea.gs, function(g) BiclusterFromList(g[1:min(250, length(g))])); 
+gsea.bic2gs<-lapply(gsea.bic, function(bic) lapply(bic[[2]], rownames));
+gsea.gs2bic<-lapply(gsea.bic2gs, function(b) lapply(split(rep(1:length(b), sapply(b, length)), unlist(b, use.names=FALSE)), function(x) sort(unique(x))));
+gsea.gs2bic<-lapply(gsea.gs2bic, function(b) sapply(b, function(b) paste(b, collapse=';')));
+```
+
+```{r bicluster_gsea, include=FALSE}
+# Formatted table of biclustering
+gsea.bic.formatted<-lapply(names(gsea.bic), function(nm) {
+  path.bic<-paste(path.gsea, 'bicluster', nm, sep='/'); 
+  if (!file.exists(path.bic)) dir.create(path.bic, recursive = TRUE);
+
+  t<-awsomics::FormatNumeric(gsea.bic[[nm]]$summary);
+  t$ID<-as.vector(t$ID); 
+  
+  # write individual files of biclusters
+  fns<-sapply(1:nrow(t), function(i) {
+    fn<-paste(path.bic, paste(t[i, 1], c('_terms.html', '_genes.html', '_heatmap.pdf'), sep=''), sep='/');
+    t1<-gsea.tbl[rownames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
+    CreateDatatable(FormatNumeric(t1[, 1:6]), fn[1], FALSE, caption=paste('Terms of', t[i,1]));
+    t2<-stat.slim[colnames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
+    t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
+    GeneList2Datatable(t2, fn[2], genome = genome, title=paste('Genes of', t[i,1])); 
+    t3<-gsea.bic[[nm]][[2]][[i]];
+    rownames(t3)<-paste(gsea.tbl[rownames(t3), 1], gsea.tbl[rownames(t3), 2], sep=' - ');
+    colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), CleanHtmlTags(anno[colnames(t3), 1]), sep=' - ');
+    if (min(t3)==1) col.min<-'#0000FF' else col.min<-'#999999';
+    PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
+    fn;
+  });
+  gsea.bic.fn<-t(fns);
+  
+  # write index table
+  t$Num_Terms<-AddHref(t$Num_Terms, paste(t$ID, '_terms.html', sep=''));
+  t$Num_Genes<-AddHref(t$Num_Genes, paste(t$ID, '_genes.html', sep=''));
+  t$ID<-AddHref(t$ID, paste(t$ID, '_heatmap.pdf', sep=''));
+  CreateDatatable(t, fn=paste(path.bic, 'index.html', sep='/'), rownames = FALSE);
+  
+  t;
+});
+
+gsea<-list(path=gsea.yml$out, geneset=gsea.lst, stat=gsea.tbl, bicluster=gsea.bic); 
+```
+
+```{r write_bic, include=FALSE}
+t<-data.frame(matrix('table', nr=2, nc=2), stringsAsFactors = FALSE); 
+t[1, ]<-AddHref(t[1, ], paste("../ORA", names(degs), 'bicluster.html', sep='/')); 
+t[2, ]<-AddHref(t[2, ], paste("../GSEA/bicluster", names(degs), 'index.html', sep='/')); 
+colnames(t)<-names(degs);
+rownames(t)<-c('Over-representation analysis', 'Gene set enrichment analysis'); 
+CreateDatatable(t, paste(path, 'DEG', 'bicluster_index.html', sep='/')); 
 ```
 
 ```{r kegg_gsea, include=FALSE}
-#kegg<-GseaKegg(expr, g1.ind, g2.ind, c(g1.name, g2.name), paired, genome, 
-#               path=paste(path, '/KEGG', sep=''), Inf, Inf, ranking.penalty=penalty, 
-#               path.xml=paste(Sys.getenv('RCHIVE_HOME'), 'data/pathway/public/kegg/src', sep='/'));
+path.kegg<-paste(path.gsea, 'kegg', sep='/'); 
+if (file.exists(path.kegg)) unlink(path.kegg, recursive = TRUE); 
+dir.create(path.kegg, recursive = TRUE); 
+
+kegg.stat<-gsea.tbl[gsea.tbl$Collection=='KEGG_pathway' & gsea.tbl$PValue<=0.05, , drop=FALSE];
+kegg.id<-tolower(substr(kegg.stat$Gene_set, 1, 8)); 
+kegg.dff<-rowMeans(e1.2_gsea[, g2.ind])-rowMeans(e1.2_gsea[, g1.ind]); 
+
+capture.output(kegg<-pathview(kegg.dff, pathway.id=kegg.id, species = GetGenomeAlias(genome, "code"), 
+                              low = list(gene = "blue"), kegg.dir=yml$input$gsea$kegg))->x; 
+fn.kegg<-paste(kegg.id, '.pathview.png', sep=''); 
+file.rename(fn.kegg, paste(path.kegg, fn.kegg, sep='/')); 
+
+kegg.ind<-FormatNumeric(kegg.stat[, -1]);
+kegg.ind$Gene_set<- AddHref(kegg.ind$Gene_set, fn.kegg); 
+kegg.ind<-kegg.ind[order(kegg.ind$NES), , drop=FALSE]; 
+CreateDatatable(kegg.ind, paste(path.kegg, 'index.html', sep='/')); 
 ```
 
 ```{r write_excel, include=FALSE}
 # Excel spreadsheets
 xls<-list(stat.table, stat.table[rownames(up), , drop=FALSE], stat.table[rownames(dn), , drop=FALSE],
           ora.table[[1]], ora.table[[2]], gsea.tbl);
+xls<-lapply(xls, function(x) {
+  for (i in 1:ncol(x)) x[[i]]<-CleanHtmlTags(x[[i]], FALSE); 
+  x;
+});
 names(xls)<-c('Complete List', 
   paste('Top', nrow(up), ', higher in ', g2.name, sep=''), 
   paste('Top', nrow(dn), ', lower in ', g2.name, sep=''),
@@ -595,24 +699,24 @@ WriteExcel(xls, fn.xls, );
 ```
 
 ```{r convert_figure, include=FALSE}
-fn.png<-lapply(fn.fig, function(f) awsomics::ConvertPdf2Png(f, resize=80, density=150));
+fn.png<-lapply(fn.fig, function(f) ConvertPdf2Png(f, resize=80, density=150));
 fn.png[[length(fn.png)+1]]<-sapply(names(bic), function(nm) {
   t<-bic[[nm]]$summary;
   n<-t[,2]*t[,3];
   f<-paste('bicluster/', t[n==max(n)[1], 1], '_heatmap.pdf', sep='');
   awsomics::ConvertPdf2Png(paste(path.ora, nm, f, sep='/'), resize=80, density=150); 
 });
-fn.png[[length(fn.png)+1]]<-sapply(kegg$Formatted, function(t) {
-  ids<-as.vector(t$Pathway_ID);
-  fn<-paste(path, 'KEGG', 'Files', 'figures', 'colored_plots', paste(ids, '.pathview.png', sep=''), sep='/');
-  fn[file.exists(fn)][1];
-});
+# fn.png[[length(fn.png)+1]]<-sapply(kegg$Formatted, function(t) {
+#   ids<-as.vector(t$Pathway_ID);
+#   fn<-paste(path, 'KEGG', 'Files', 'figures', 'colored_plots', paste(ids, '.pathview.png', sep=''), sep='/');
+#   fn[file.exists(fn)][1];
+# });
 ```
 
 ```{r zip, include=FALSE}
 res$de<-de;
-res$ora<-gse;
-res$gsea<-gsea.tbl;
+res$ora<-ora;
+res$gsea<-gsea;
 saveRDS(res, file=paste(path, 'result.rds', sep='/'));
 
 fn.zip<-sapply(strsplit(path, '/'), function(x) x[length(x)]);
@@ -624,76 +728,147 @@ if (file.exists(fn.z)) file.remove(fn.z);
 file.rename(fn.zip, fn.z);
 ```
 
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ***
+***
+
+<div align='center'> <span style="color:blue; font-family:Georgia; font-size:3em;"> `r g1.name` </span> <span style="color:black; font-family:Georgia; font-size:2em;"> vs. </span> <span style="color:red; font-family:Georgia; font-size:3em;"> `r g2.name` </span> </div>
 
 # Results at a glance
 
-<span style="color:purple; font-family:Georgia; font-size:2em;"> `r g1.name` </span> vs. <span style="color:purple; font-family:Georgia; font-size:2em;"> `r g2.name` </span> 
+<div style="background-color:rgba(0, 0, 0, 0.025); font-size:1.5em; padding:40px 0">
 
-<span style="color:darkblue; font-family:Georgia; font-size:1.5em;"> Click a number to see table, or read the rest of this page for details: </span>
+Click links to go directly to results, or read through the rest of this page for details: 
 
- - Differential gene expression ([All genes](DEG/all_genes.html))
-   - [`r nrow(degs[[1]])` genes](`r paste('DEG', names(degs)[1], 'index.html', sep='/')`) with increased expression in `r g1.name`
-   - [`r nrow(degs[[2]])` genes](`r paste('DEG', names(degs)[2], 'index.html', sep='/')`) with decreased expression in `r g1.name`
- - Download
-   - [Excel](`r paste(path0, '.xlsx', sep='')`) file with multiple statistical tables can be downloaded from [here](./`r paste(path0, '.xlsx', sep='')`)
-   - [Zip](`r paste(path0, '.zip', sep='')`) file with complete results.
+  - Differential gene expression ([All genes](DEG/all_genes.html))
+    - [`r nrow(degs[[1]])` genes](`r paste('DEG', names(degs)[1], 'index.html', sep='/')`) with higher expression in `r g2.name`
+    - [`r nrow(degs[[2]])` genes](`r paste('DEG', names(degs)[2], 'index.html', sep='/')`) with lower expression in `r g2.name`
+  - Analysis of differentially expressed genes (DEGs)
+    - [ORA](ORA/index.html) (Over-representation analysis) of gene sets
+    - [GSEA](GSEA/index.html) (Gene set enrichment analysis) of gene sets
+        - [Top hits](GSEA/full_table.html) cheat sheet
+        - [Colored maps](GSEA/kegg/index.html) of KEGG pathways
+    - [Biclustering](DEG/bicluster_index.html) of significant genes and gene sets
+  - Download
+    - [Excel](`r paste(path0, '.xlsx', sep='')`) file with statistical tables 
+    - [Zip](`r paste(path0, '.zip', sep='')`) file with complete results.
+
+</div>
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ***
 ***
-# Introduction
+
+# Project
+
+```{r project, eval=TRUE, include=FALSE}
+lns<-lapply(names(yml$project), function(nm) {
+  c(paste('##', nm), '\n', yml$project[[nm]], '\n'); 
+});
+lns<-paste(do.call('c', lns), collapse='\n'); 
+```
+
+`r lns`
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
+***
+***
+
+# Inputs
   
 This document reports the analysis results from comparing the transcriptomes of two sample groups: **`r g1.name` vs. `r g2.name`**. 
   
 ***
-## Required input variables
+## Required variables
   
-The following inputs are required to generate this report. You can download an example of input data file from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport_Inputs.rds?raw=true).
+The following inputs are required to generate this report. You can download an example of input specifications as a yaml file from https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.yml 
 
- - **anno:** Gene annotation information as a data.frame.
-  - the row names are unique Entrez gene IDs
-  - the first column must be official gene symbol
-	- the last column must be full gene name
-
- - **expr:** A data matrix includes processed gene expression data.
-  - each row corresponds to a gene and each column corresponds to a sample
-	- rows must exactly match the rows of **anno**, with the same IDs and the same number of rows
-  - it is assumed that the data have been normalized and in linear scale (usually by log2-transformation)
-
- - **indexes:** Column indexes or column names of samples in **expr**, corresponding to the 2 sample groups. Each group must have more than 1 sample.
+  - **home:** URL of project home page
   
- - **names:** Names of two sample groups to be compared. By default, the first group is the control or reference.
-
- - **genome:** Name of the reference genome, in the form of "human", "hsa", or "hg38".
-
- - **paired:** Boolean indicates if the samples in the 2 groups are paired. Default is **FALSE**. If **TRUE**, the samples will be paired by their order. 
+  - **output:** Location of all output files
   
- - **penalty:** Whether to give penalty to genes with high sample-sample variance within groups. No penalty if **0**; highest possible penalty if **1**.
+  - **project:** Project information, can have multiple sections
+  
+  - **input:** All inputs
+  
+    - **anno:** File location to gene annotation information as a data.frame. Must be a .rds file.
+    
+        - the row names are unique Entrez gene IDs
+        - the first column must be official gene symbol, can be bracketed by a hyperlink html tag
+	      - the last column is usually full gene name
 
- - **deg:** Options of statistic test to identifiy differentially expressed genes (DEGs).
- 
- - **geneset:** Location to file with all the gene sets to be tested for over-representative analsysis of DEGs. 
- 
- - **output:** Location to all output files
+    - **expr:** File location to a data matrix includes processed gene expression data. Must be a .rds file
+    
+        - each row corresponds to a gene and each column corresponds to a sample
+	      - rows must exactly match the rows of **anno**, with the same IDs and the same number of rows
+        - it is assumed that the data have been normalized and in linear scale (usually by log2-transformation)
+      
+    - **geneset:** File location to a collection of predefined gene sets for over-representation analysis. Must be a .rds file
+    
+        - Examples can be found at: https://github.com/zhezhangsh/DEGandMore/tree/master/examples/geneset_collections
+      
+    - **genome:** Name of the reference genome, in the form of "human", "hsa", or "hg38".
+
+    - **paired:** Boolean indicates if the samples in the 2 groups are paired. Default is **FALSE**. If **TRUE**, the samples will be paired by their order. 
+  
+    - **penalty:** Whether to give penalty to genes with high sample-sample variance within groups. No penalty if **0**; highest possible penalty if **1**.
+
+    - **comparison:** A list of 2 named character vectors
+    
+        - Vector names will be used as sample group names
+        - The character vectors correspond to sample names and must match column names of the data matrix
+        - The first vector has the control samples and the second has the case samples
+
+    - **deg:** Options of statistic test to identifiy differentially expressed genes (DEGs).
+    
+        - **method:** Statistical method to use. One of `r paste(DeMethods(), collapse='; ')`. Default is Rank Product.
+        - **cutoff.l2r:** Cutoff of group difference to choose DEGs
+        - **cutoff.p:** Cutoff of p value to choose DEGs 
+        - **cutoff.fdr:** Cutoff of FDR to choose DEGs
+        - **num.top** Number of genes to choose if not enough DEGs
+        - **nperm** Number permutations for Rand Product
+        - **logged** Whether the data has been log-transformed into linear scale
+    
+    - **gsea:** Options of running gene set enrichment analysis (GSEA)
+    
+        - An example of full specifications in .yaml format: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/gsea/GSEA_example.yaml
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ***
-## Comparison metadata
-  
+
+## Input summary
+
  - **Total number of genes:** `r nrow(expr)`
- - **Total number of samples:** `r ncol(expr)`
+ - **Total number of samples:** `r ncol(e1.2)`
  - **Comparison:** `r g1.name` (n=`r ncol(e1)`) vs. `r g2.name` (n=`r ncol(e2)`)
-  - **`r g1.name`:** `r paste(colnames(e1), collapse='; ')`
-  - **`r g2.name`:** `r paste(colnames(e2), collapse='; ')`
- - **Output:** `r path`
-  
+     - **`r g1.name`:** `r paste(colnames(e1), collapse='; ')`
+     - **`r g2.name`:** `r paste(colnames(e2), collapse='; ')`
+ - **Differential expression method:** `r yml$input$deg$method`
+ - **Output location:** `r path`
+ - **Data file:** `r yml$input$expr`
+ - **Gene annotation file:** `r yml$input$anno`
+ - **ORA gene set file:** `r yml$input$geneset`
+ - **GSEA gene set files:**
+`r paste(paste('      - **', names(yml$input$gsea$gmt), ':** ', unlist(yml$input$gsea$gmt), sep=''), collapse='\n')`
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ***
 ***
-# Sample analysis
+
+# Analysis and results
+
+***
+## Sample analysis
   
 This section analyzes the samples by summarizing their global expression patterns, through descriptive statistics, unsupervised clustering, and sample-sample correlation.
   
 ***
-## Global distribution
+### Data distribution of all genes
   
 Distribution of average expression level and sample-sample variance. 
 
@@ -701,12 +876,14 @@ Distribution of average expression level and sample-sample variance.
  - **Figure 1B:** This figure is based on the between-sample standard deviations of all genes. The distribution usually has a single peak and a long tail on the right side. An enlarged tail usually indicates more genes are differentially expressed between samples. In a high quality data set, a gene not differentially expressed between samples should have small variance. So, if we assume that the majority of genes have no or little differential expression, the skewness of the peak towards the left side roughly represents data quality. 
  - **Figure 1C:** This figure summarizes the relationship between gene expression measurements and their between-sample variance. Genes having smaller variance are more likely to get significant results from Student t test and similar methods. So, if there is a strong dependency of variance on expression measurements, the analysis of differential expression will be affected by the baseline expression level of genes. Variance stabilization procedure is commonly used during data normalization to minimize such dependency. In the figure, the red line is the result of LOWESS smoothing and the majority of this line should be approximately straight and horizontal if the data has been normalized properly. In practice, the LOWESS line is usually a curve higher in the middle.
   
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 1: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 1</span></div>
   
-![](`r fn.png[[1]]`)
+<div align='center'>![](`r fn.png[[1]]`)</div>
   
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ***
-## Sample-sample correlation
+### Sample-sample correlation
 
 All genes in this data set were used to calculate the Pearson's correlation between each pair of samples. The result is often used to identify potential outlier samples as the outliers tend to have relatively lower correlation coefficient to any of the other samples. 
  
@@ -716,27 +893,23 @@ All genes in this data set were used to calculate the Pearson's correlation betw
 
  - **Figure 4:** PCA, or Principal Components Analysis, is another type of unsupervised analysis that converts a large number of correlated variables (genes) into a smaller set of uncorrelated variables (principal components). Each principal component accounts for certain percentage of the variability of the whole data set and the one having the highest percentage is ordered first. This plot shows the top two principal components and their share of total variability (in parentheses). In general, samples close to each other on this plot have similar global expression patterns. PCA is often used to identify confounding factor(s) during analysis of microarray data while each principal component may or may not corresponds to a real life variable (age, treatment, disease state, etc.)
   
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 2: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 2</span></div>
   
-![](`r fn.png[[2]]`)
+<div align='center'>![](`r fn.png[[2]]`)</div>
   
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 3: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 3</span></div>
   
-![](`r fn.png[[3]]`)
+<div align='center'>![](`r fn.png[[3]]`)</div>
   
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 4: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 4</span></div>
   
-![](`r fn.png[[4]]`)
+<div align='center'>![](`r fn.png[[4]]`)</div>
   
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ***
-***
-# Differential gene expression
-  
-This section evaluates the differential expression of each each between two sample groups. A compiled version of differential expression results can be downloaded as an Excel file [here](`r paste(path, paste(path0, '.xlsx', sep=''), sep='/')`). 
-  
-***
-## Differential expression of single genes
+
+## Gene-level differential expression
   
 By default, [Rank Product](http://www.ncbi.nlm.nih.gov/pubmed/15327980) (RP), a non-paramatric statistical test based on ranks of fold changes, is used for the statistical analysis. The outputs of RP include:
   
@@ -745,8 +918,10 @@ By default, [Rank Product](http://www.ncbi.nlm.nih.gov/pubmed/15327980) (RP), a 
  - **Fold change, percentage change, ratio, or log2-ratio:** These variables indicate the magnitude of the difference of group averages. They are the same values in different scale and can be easily converted to each other (see **Appendix 1**). Given the data has been log2-transformed, the difference of group averages is equivalent to the log2-ratio of unlogged data as _log2(A/B)==log2(A)-log2(B)_. So, group difference will be referred as log2-ratio throughout this report. 
  
  - **p value, q value, or FDR:** These variables indicates the statistical significance of group difference.  P value refers to type I error of statistical test, or the chance to mistakenly conclude the differential expression of a gene while the gene is actually unchanged. RP estimates both p values and FDR based on a permutation procedure during which the ranked gene lists were shuffled to generate a background distribution of rank products.
-  
-### Summary 
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
+### Differential expression of all genes
   
 The full table of single gene differential expression can be seen [here](./DEG/all_genes.html).
 
@@ -760,47 +935,51 @@ We use the following visualization methods to get an overview of all `r nrow(exp
   
  - **Figure 5D: FDR.** This plots traces the number of genes corresponding to each FDR (false discovery rate) cutoff. The table below lists the number of genes corresponding to commonly used FDR cutoffs. 
   
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 5: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 5</span></div>
   
-![](`r fn.png[[5]]`)
+<div align='center'>![](`r fn.png[[5]]`)</div>
   
-  
-<span style="color:red; font-family:Georgia; font-size:1em;">Table: Gene counts by FDR cutoffs. </span>
-  
-```{r fdr_table, eval=TRUE, include=TRUE}
-pander::pander(fdr.table);
-``` 
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ### Top genes
 
 **Figure 6:** Top-ranked genes on both sides (**left:** higher in `r g2.name`; **right:** lower in `r g2.name`)
 
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 6: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 6</span></div>
   
-![](`r fn.png[[6]]`)
-  
-### DEGs (differentially expressed genes)
+<div align='center'>![](`r fn.png[[6]]`)</div>
 
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
+### DEGs (differentially expressed genes)
+  
+DEGs were selected using the following rules:
+  
+ - If there are more than `r num.top` genes with **p values** less than `r yml$input$deg$cutoff.p` and **FDR** less than `r yml$input$deg$cutoff.fdr`, select **ALL** of them for further analysis; apply the next rule otherwise;
+ - Select all genes with **p values** less than `r yml$input$deg$cutoff.fdr`; if the number of selected genes is greater than `r yml$input$deg$num.top`, select only the top-ranked `r yml$input$deg$num.top` genes otherwise. If **Rank Product** was not used as the statistical test of differential expression, rank the genes by their fold change (**LogFC**). 
+  
 Click link to get full list of DEGs:
   
  > [Higher in `r g2.name`](./DEG/`r names(degs)[1]`/index.html)
   
  > [Lower in `r g2.name`](./DEG/`r names(degs)[2]`/index.html)
  
+<span style="color:red; font-family:Georgia; font-size:1em;">Table: Gene counts by FDR cutoffs. </span>
   
-DEGs were selected using the following rules:
-  
- - If there are more than `r num.top` genes with **p values** less than `r cutoff.p` and **FDR** less than `r cutoff.fdr`, select **ALL** of them for further analysis; apply the next rule otherwise;
- - Select all genes with **p values** less than `r cutoff.p`; if the number of selected genes is greater than `r num.top`, select only the top-ranked `r num.top` genes otherwise. If **Rank Product** was not used as the statistical test of differential expression, rank the genes by their fold change (**LogFC**). 
-  
+```{r fdr_table, eval=TRUE, include=TRUE}
+pander::pander(fdr.table);
+``` 
+
   **Figure 7:** A heatmap using all DEGs. Expression measurements of each gene are normalized across samples for plotting; redder means higher expression level. The color of column sidebar indicates which group each sample belongs to.
   
-  <span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 7: </span>
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 7</span></div>
   
-  ![](`r fn.png[[7]]`)
-  
+  <div align='center'>![](`r fn.png[[7]]`)</div>
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ***
-## Differential expression of gene sets
+## Gene-set analysis
   
 In this section, the unit of analysis is predefined gene sets. It is based on the assumption that if genes of the same gene set, such as those in the same signaling pathway or coregulated group, are more likely to have differential expression, the gene set is important to the biological difference between the two sample groups.
 
@@ -810,58 +989,94 @@ ORA evaluates whether the genes of any predefined gene sets, such as a KEGG path
 
 We have archived a large collection of gene sets from multiple sources. By default, a subset of these gene sets, each including at least `r min(geneset[[1]][, 'Size'])`, are used to test over-representation of DEGs in them. Click [here](./ORA/geneset.html) to see a summary of these genesets. 
 
-Click link to get full ORA results:
+Click link to view full ORA results:
+
+ > [ORA results](ORA/index.html) 
+
+```{r ex_ora, eval=TRUE, include=FALSE}
+pdf(paste(path, 'figure', 'ora.pdf', sep='/'), w=4.8, h=3.6); 
+id1<-geneset[[2]][[rownames(ora[[1]][[1]])[1]]]
+id2<-rownames(degs[[1]]);
+PlotVenn(id1, id2, c(paste('Gene set:', rownames(ora[[1]][[1]])[1]), paste('Higher expression in', g2.name)), rownames(anno));
+dev.off();
+ex.ora<-ConvertPdf2Png(paste(path, 'figure', 'ora.pdf', sep='/'), resize=80, density=150)
+```
+
+**Figure 8:** Example of DEGs over-represented in a predefined gene set. 
+
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 8</span></div>
   
- > [Higher in `r g2.name`](./ORA/`r names(degs)[1]`/term.html)
+<div align='center'>![](`r ex.ora`)</div>
   
- > [Lower in `r g2.name`](./ORA/`r names(degs)[2]`/term.html)
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
+### Gene set enrichment analysis (GSEA)
+
+GSEA is a different category of analyses applied to gene sets. Instead of using selected top DEGs like **ORA**, GSEA takes into account all genes in the data set after they were ranked by a statistical test such as **Rank Product** test. The original [GSEA](http://www.broadinstitute.org/gsea/index.jsp) was developed by Broad Institute that is usually run as a stand-alone program. We used a local installation of GSEA and our own collection of gene sets from different databases, such as BioSystems and KEGG. By default, the normalized rank products of all genes were used to adjust gene expression matrix, so the genes will be ranked by their test statistics for GSEA.
+
+ > [GSEA results](GSEA/index.html)
+ 
+```{r ex_gsea, eval=TRUE, include=FALSE}
+gsea.ex<-gsea$stat;
+gsea.ex<-gsea.ex[abs(gsea.ex$NES)==max(abs(gsea.ex$NES)), ];
+ex.gsea<-dir(paste(path.gsea, gsea.ex$Collection, sep='/')); 
+ex.gsea<-ex.gsea[grep(gsea.ex$Gene_set[1], ex.gsea)];
+ex.gsea<-paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][1], sep='/');
+```
+
+**Figure 9:** Example of GSEA enrichment plot. See [here](http://software.broadinstitute.org/gsea/doc/GSEAUserGuideTEXT.htm#_GSEA_Statistics) for intepretaion of such a plot.
+
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 9</span></div>
   
+<div align='center'>![](`r ex.gsea`)</div>
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
+#### Color-coded KEGG pathways
+
+[KEGG pathways](http://www.genome.jp/kegg/pathway.html) are mostly canonical metabolic pathways conserved across species. Each pathway can include both genes(proteins) and chemical compounds. Color-coded (**red** = hiher in `r g2.name`) map of KEGG pathway illustrates intuitively the overall change of genes in a pathway. In this analysis, GSEA was used to identify significant pathway first, and the test statistic from differential expression analysis, such as the normalized rank products, was used to plot the maps.
+
+ > [KEGG maps](GSEA/index.html)
+
+```{r ex_kegg, eval=TRUE, include=FALSE}
+ex.kegg<- kegg.stat[abs(kegg.stat$NES)==max(abs(kegg.stat$NES)), ];
+ex.id<-tolower(substr(ex.kegg[1,2], 1, 8));
+ex.kegg<-paste(path.kegg, paste(ex.id, '.pathview.png', sep=''), sep='/');
+```
+
+**Figure 10:** Example of color-coded KEGG pathway (red = higher in `r g2.name`). See [here](`r paste("http://www.genome.jp/kegg-bin/show_pathway?", ex.id, sep='')`) to see the original pathway map on KEGG web site.
+
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 10</span></div>
+  
+<div align='center'>![](`r ex.kegg`)</div>
+
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ### Gene-gene set biclustering
-  
-This analysis performs biclustering DEGs and up to top 250 gene sets identified from the ORA. Its goal is to reduce redundant information in the ORA results by identifying "modules" of genes and gene sets likely to be grouped together. The bicluster was done with **[Iterative Signature Algorithm](http://www.ncbi.nlm.nih.gov/pubmed/12689096)**. **Figure 8A and 8B** are two examples of biclusters.
-  
-Click link to get full biclustering results:
-  
- > [Higher in `r g2.name`](./ORA/`r names(degs)[1]`/bicluster.html)
-  
- > [Lower in `r g2.name`](./ORA/`r names(degs)[2]`/bicluster.html)
-  
-  
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 8A: A bicluster module based on DEGs with higher expression in `r g2.name`</span>
-  
-![](`r fn.png[[8]][1]`)
-  
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 8B: A bicluster module based on DEGs with lower expression in `r g2.name`</span>
-  
-![](`r fn.png[[8]][2]`)
-  
-  
-### Gene set enrichment analysis (GSEA) of KEGG pathways
 
-GSEA is a different category of analyses applied to gene sets. Instead of using selected top DEGs like **ORA**, GSEA takes into account all genes in the data set after they were ranked by a statistical test such as **Rank Product** test. The original [GSEA](http://www.broadinstitute.org/gsea/index.jsp) was developed by Broad Institute that is usually run as a stand-alone program. We used a similar method called [GAGE](http://www.biomedcentral.com/1471-2105/10/161) in this analysis. By default, the normalized rand products of all genes were used to make colored pathway plots. 
+A potential problem complicates the result intepretation of gene set analysis is that many gene sets are redundant to each other by including common DEGs. Biclustering of significant genes and gene sets can be used to reduce redundant information by identifying a smaller number of "modules". Each module includes multiple genes that are likely to be found in the same gene sets and gene sets that are likely to include the same DEGs. The biclustering was performed by **[Iterative Signature Algorithm](http://www.ncbi.nlm.nih.gov/pubmed/12689096)** in this analysis. 
+ 
+ > [Biclustering results](DEG/bicluster_index.html)
 
-[KEGG pathways](http://www.genome.jp/kegg/pathway.html) are mostly canonical metabolic pathways conserved across species. Each pathway can include both genes(proteins) and chemical compounds. The goal of this analysis is to identify pathways that were up- or down-regulated in `r g2.name` by examing the general pattern of gene differential expression. Each element in the pathways were colored to represent its differential expression (**red:** hiher in `r g2.name`). **Figure 9A and 9B** are two examples of colored KEGG pathways.
+```{r ex_bic, eval=TRUE, include=FALSE}
+ex.bic<-gsea$bicluster[[1]]$summary;
+ex.bic<-ex.bic[ex.bic[,2]*ex.bic[,3]==max(ex.bic[,2]*ex.bic[,3]), ];
+ex.bic<-paste(path.gsea, 'bicluster', names(degs)[1], paste(ex.bic[1,1], '_heatmap.pdf', sep=''), sep='/');
+ex.bic<-ConvertPdf2Png(ex.bic, resize=80, density=150)
+```
 
-Click link to get full GSEA results of KEGG pathways:
-  
- > [Higher in `r g2.name`](./KEGG/`r names(degs)[1]`/index.html)
+**Figure 11:** Example of a gene-gene set biclustering module. Blue means the gene is both a DEG and a member of the gene set.
 
- > [Lower in `r g2.name`](./KEGG/`r names(degs)[2]`/index.html)
+<div align='center'><span style="color:red; font-family:Georgia; font-size:3em;">Figure 11</span></div>
+  
+<div align='center'>![](`r ex.bic`)</div>
 
-  
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 9A: A KEGG pathway with higher expression in `r g2.name`</span>
-  
-![](`r fn.png[[9]][1]`)
-  
-<span style="color:red; font-family:Georgia; font-size:1.5em;">Figure 9A: A KEGG pathway with lower expression in `r g2.name`</span>
-  
-![](`r fn.png[[9]][2]`)
-  
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
+
 ***
 ***
+
 # Appendix
-  
-Supplementary information about this report
 
 ***
 ## Fold change vs. log(fold change)
@@ -884,25 +1099,28 @@ pander::pander(t);
 The table below lists the core R/Bioconductor packages and functions used to generate this report while in-house functions are used to customize their outputs.
   
 ```{r biocondductor, eval=TRUE, include=TRUE}
-t<-strsplit("Create this report\tknitr\tknit2html
+t<-strsplit(
+"Create this report\tDEGandMore\tDeReport
 Hierarchical clustering\tstats\thclust 
 PCA\tstats\tprcomp
 Differential expression\tRankProd\tRP
 Heatmap\tstats\theatmap
-Gene ontology analysis\tRDAVIDWebService\tDAVIDWebService
 Biclustering analysis\tisa2\tisa
-Gene set enrichment analysis of KEGG pathways\tgage\tgage
+Over-representation analysis\tawsomics\tTestGSE
+Gene set enrichment analysis\tDEGandMore\tGSEAviaJava
 Plot color-coded KEGG pathways\tpathview\tpathview
-Write data to Excel\txlsx\tcreateWorkbook
-Misc. custom functions\tawsomics\t ", '\n')[[1]]; 
+Write Java HTML datatables\tawsomics\tCreateDatatable
+Write data to Excel\txlsx\tcreateWorkbook",
+'\n')[[1]]; 
 t<-do.call('rbind', strsplit(t, '\t'));
 colnames(t)<-c('Task', 'R package', 'R function');
 pander::pander(t);
 ```
-  
-The .Rmd template file is within the [DEGandMore](https://github.com/zhezhangsh/DEGandMore) package and can be found [here](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport.Rmd).
-  
-An example of input data can be download from [here](https://github.com/zhezhangsh/DEGandMore/blob/master/examples/DeReport/inputs.rds?raw=true)
+
+Examples:
+
+  - [Rmarkdown template](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.Rmd)
+  - [Yaml input specifications](https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.yml)
   
 ***
 ##References
@@ -915,11 +1133,11 @@ An example of input data can be download from [here](https://github.com/zhezhang
   
  - **Biclustering:** Ihmels J, Bergmann S, Barkai N, 2004 _Defining transcription modules using large-scale gene expression data._ Bioinformatics. [Home page](http://www2.unil.ch/cbg/index.php?title=ISA). 
   
- - **GAGE:** Luo, W., Friedman, M., Shedden K., Hankenson, K. and Woolf, P _GAGE: Generally Applicable Gene Set Enrichment for Pathways Analysis._ BMC Bioinformatics 2009, 10:161. [Home page](https://www.bioconductor.org/packages/release/bioc/html/gage.html)
+ - **GSEA:** Subramanian A et al. 2005 _Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles_ PNAS. [Home page](gsea rna-seq)
   
- - **Awsomics & Rchive:** [Home page](awsomics.org)
+ - **Awsomics:** [Home page](awsomics.org)
 
+<div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
 ***
-**END OF DOCUMENT**
-
+_END OF DOCUMENT_
