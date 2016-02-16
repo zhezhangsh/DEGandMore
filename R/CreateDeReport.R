@@ -21,7 +21,7 @@ CreateDeReport<-function(yml) {
     file.copy(yml$input$template, './DeReport.Rmd'); 
   }
   
-  errors<-try(rmarkdown::render('./DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir='.', 
+  errors<-try(rmarkdown::render('DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir='.', 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
   fn.html<-paste(yml$output, 'index.html', sep='/'); 

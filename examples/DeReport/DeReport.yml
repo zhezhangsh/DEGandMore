@@ -4,7 +4,7 @@ input:
   anno: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/anno_url.rds
   expr: /nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/expr75_adjuted.rds
   geneset: /nas/is1/rchive/data/gene.set/r/default_set_worm_5-1000.rds
-  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.yml
+  template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.Rmd
   remote: yes
   genome: worm
   paired: no
