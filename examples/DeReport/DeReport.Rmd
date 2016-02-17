@@ -718,14 +718,6 @@ res$de<-de;
 res$ora<-ora;
 res$gsea<-gsea;
 saveRDS(res, file=paste(path, 'result.rds', sep='/'));
-
-fn.zip<-sapply(strsplit(path, '/'), function(x) x[length(x)]);
-fn.zip<-paste(fn.zip, '.zip', sep=''); 
-if (file.exists(fn.zip)) file.remove(fn.zip); 
-zip(fn.zip, path, flag='-r0X', zip='zip');
-fn.z<-paste(path, fn.zip, sep='/');
-if (file.exists(fn.z)) file.remove(fn.z); 
-file.rename(fn.zip, fn.z);
 ```
 
 <div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
@@ -1133,7 +1125,7 @@ Examples:
   
  - **Biclustering:** Ihmels J, Bergmann S, Barkai N, 2004 _Defining transcription modules using large-scale gene expression data._ Bioinformatics. [Home page](http://www2.unil.ch/cbg/index.php?title=ISA). 
   
- - **GSEA:** Subramanian A et al. 2005 _Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles_ PNAS. [Home page](gsea rna-seq)
+ - **GSEA:** Subramanian A et al. 2005 _Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles_ PNAS. [Home page](http://software.broadinstitute.org/gsea/index.jsp)
   
  - **Awsomics:** [Home page](awsomics.org)
 
