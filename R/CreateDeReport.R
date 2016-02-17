@@ -25,7 +25,13 @@ CreateDeReport<-function(yml) {
     file.copy(yml$input$template, './DeReport.Rmd'); 
   }
 
-  errors<-try(rmarkdown::render('DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir=path, 
+  errors<-list(); 
+  
+  fn.md<-paste(path, 'DeReport.md', sep='/'); 
+  if (file.exists(fn.md)) file.remove(fn.md); 
+  errors$knit<-try(knit('DeReport.Rmd', fn.md)); 
+  
+  errors$render<-try(rmarkdown::render('DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir=path, 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
   file.copy('./DeReport.Rmd', paste(path, 'DeReport.Rmd', sep='/'));
