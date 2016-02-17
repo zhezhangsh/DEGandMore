@@ -32,5 +32,5 @@ CreateDeReport<-function(yml) {
   writeLines(as.yaml(yml), paste(path, 'DeReport.yml', sep='/'));
   zip(paste(path, '.zip', sep=''), path, flag='-r0X', zip='zip');
   
-  path; 
+  list(output=path, message=errors); 
 }

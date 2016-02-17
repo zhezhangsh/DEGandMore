@@ -18,12 +18,12 @@ library(knitr);
 library(rmarkdown); 
 library(yaml); 
 
-#fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/DeReport.yml"; # comment it out if running through knitr::knit function
+fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/MS010_A-vs-dTPP_A.yml"; # comment it out if running through knitr::knit function
 
 # Loading inputs from yaml file
 # if (!exists('fn.yaml')) stop('Input file not found\n'); 
 # writeLines(yaml::as.yaml(yml), fn.yaml);
-#yml <- yaml.load_file(fn.yaml);  
+yml <- yaml.load_file(fn.yaml);  
 
 inputs<-yml$input;
 if (class(inputs$anno) == 'character') inputs$anno<-readRDS(inputs$anno); 
@@ -602,11 +602,12 @@ gsea.lst.sig<-lapply(gsea.lst.sig, function(l) l[l %in% unlist(lapply(degs, rown
 names(gsea.lst.sig)<-rownames(gsea.tbl.sig); 
 gsea.lst.sig<-gsea.lst.sig[sapply(gsea.lst.sig, length)>1];
 gsea.gs<-split(gsea.lst.sig, gsea.tbl.sig[names(gsea.lst.sig), ncol(gsea.tbl.sig)]); 
-gsea.gs<-rev(gsea.gs); 
+#gsea.gs<-rev(gsea.gs); 
+gsea.gs<-lapply(rev(gsea.gs), function(x) x[!duplicated(x)]); 
 names(gsea.gs)<-names(degs); 
 
 gsea.bic<-lapply(gsea.gs, function(g) BiclusterFromList(g[1:min(250, length(g))])); 
-gsea.bic2gs<-lapply(gsea.bic, function(bic) lapply(bic[[2]], rownames));
+gsea.bic2gs<-lapply(gsea.bic, function(bic) if (identical(NA, bic)) NA else lapply(bic[[2]], rownames));
 gsea.gs2bic<-lapply(gsea.bic2gs, function(b) lapply(split(rep(1:length(b), sapply(b, length)), unlist(b, use.names=FALSE)), function(x) sort(unique(x))));
 gsea.gs2bic<-lapply(gsea.gs2bic, function(b) sapply(b, function(b) paste(b, collapse=';')));
 ```
@@ -617,30 +618,33 @@ gsea.bic.formatted<-lapply(names(gsea.bic), function(nm) {
   path.bic<-paste(path.gsea, 'bicluster', nm, sep='/'); 
   if (!file.exists(path.bic)) dir.create(path.bic, recursive = TRUE);
 
-  t<-awsomics::FormatNumeric(gsea.bic[[nm]]$summary);
-  t$ID<-as.vector(t$ID); 
+  if (identical(NA, gsea.bic[[nm]])) t<-data.frame(ID='No clusters found', stringsAsFactors = FALSE) else {
+    t<-FormatNumeric(gsea.bic[[nm]]$summary);
+    t$ID<-as.vector(t$ID); 
+    
+    # write individual files of biclusters
+    fns<-sapply(1:nrow(t), function(i) {
+      fn<-paste(path.bic, paste(t[i, 1], c('_terms.html', '_genes.html', '_heatmap.pdf'), sep=''), sep='/');
+      t1<-gsea.tbl[rownames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
+      CreateDatatable(FormatNumeric(t1[, 1:6]), fn[1], FALSE, caption=paste('Terms of', t[i,1]));
+      t2<-stat.slim[colnames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
+      t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
+      GeneList2Datatable(t2, fn[2], genome = genome, title=paste('Genes of', t[i,1])); 
+      t3<-gsea.bic[[nm]][[2]][[i]];
+      rownames(t3)<-paste(gsea.tbl[rownames(t3), 1], gsea.tbl[rownames(t3), 2], sep=' - ');
+      colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), CleanHtmlTags(anno[colnames(t3), 1]), sep=' - ');
+      if (min(t3)==1) col.min<-'#0000FF' else col.min<-'#999999';
+      PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
+      fn;
+    });
+    gsea.bic.fn<-t(fns);
+    
+    # write index table
+    t$Num_Terms<-AddHref(t$Num_Terms, paste(t$ID, '_terms.html', sep=''));
+    t$Num_Genes<-AddHref(t$Num_Genes, paste(t$ID, '_genes.html', sep=''));
+    t$ID<-AddHref(t$ID, paste(t$ID, '_heatmap.pdf', sep=''));
+  }
   
-  # write individual files of biclusters
-  fns<-sapply(1:nrow(t), function(i) {
-    fn<-paste(path.bic, paste(t[i, 1], c('_terms.html', '_genes.html', '_heatmap.pdf'), sep=''), sep='/');
-    t1<-gsea.tbl[rownames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
-    CreateDatatable(FormatNumeric(t1[, 1:6]), fn[1], FALSE, caption=paste('Terms of', t[i,1]));
-    t2<-stat.slim[colnames(gsea.bic[[nm]][[2]][[i]]), , drop=FALSE];
-    t2<-t2[order(t2[, paste('Rank', nm, sep='_')]), , drop=FALSE];
-    GeneList2Datatable(t2, fn[2], genome = genome, title=paste('Genes of', t[i,1])); 
-    t3<-gsea.bic[[nm]][[2]][[i]];
-    rownames(t3)<-paste(gsea.tbl[rownames(t3), 1], gsea.tbl[rownames(t3), 2], sep=' - ');
-    colnames(t3)<-paste(rownames(anno[colnames(t3), , drop=FALSE]), CleanHtmlTags(anno[colnames(t3), 1]), sep=' - ');
-    if (min(t3)==1) col.min<-'#0000FF' else col.min<-'#999999';
-    PlotHeatmap(t3, size.max=Inf, fn=sub('.pdf$', '', fn[3]), col.min=col.min, col.max='#0000FF');
-    fn;
-  });
-  gsea.bic.fn<-t(fns);
-  
-  # write index table
-  t$Num_Terms<-AddHref(t$Num_Terms, paste(t$ID, '_terms.html', sep=''));
-  t$Num_Genes<-AddHref(t$Num_Genes, paste(t$ID, '_genes.html', sep=''));
-  t$ID<-AddHref(t$ID, paste(t$ID, '_heatmap.pdf', sep=''));
   CreateDatatable(t, fn=paste(path.bic, 'index.html', sep='/'), rownames = FALSE);
   
   t;
@@ -1133,3 +1137,4 @@ Examples:
 
 ***
 _END OF DOCUMENT_
+
