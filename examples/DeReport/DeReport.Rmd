@@ -1055,9 +1055,12 @@ ex.gsea<-paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][
  > [KEGG maps](GSEA/index.html)
 
 ```{r ex_kegg, eval=TRUE, include=FALSE}
-ex.kegg<- kegg.stat[abs(kegg.stat$NES)==max(abs(kegg.stat$NES)), ];
-ex.id<-tolower(substr(ex.kegg[1,2], 1, 8));
-ex.kegg<-paste(path.kegg, paste(ex.id, '.pathview.png', sep=''), sep='/');
+ex.kegg<-kegg.stat[rownames(kegg.ind), ];
+if (nrow(ex.kegg) == 0) ex.kegg<-'' else {
+  ex.kegg<- kegg.stat[abs(kegg.stat$NES)==max(abs(kegg.stat$NES)), ];
+  ex.id<-tolower(substr(ex.kegg[1,2], 1, 8));
+  ex.kegg<-paste(path.kegg, paste(ex.id, '.pathview.png', sep=''), sep='/');
+}
 ```
 
 **Figure 10:** Example of color-coded KEGG pathway (red = higher in `r g2.name`). See [here](`r paste("http://www.genome.jp/kegg-bin/show_pathway?", ex.id, sep='')`) to see the original pathway map on KEGG web site.
