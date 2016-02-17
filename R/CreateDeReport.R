@@ -1,5 +1,5 @@
 # Use this template to create a report of differential gene expression 
-CreateDeReport<-function(yml) {
+CreateDeReport<-function(yml, overwrite=FALSE) {
   # yml     The yaml file or an yaml list defines the inputs and parameters of the analysis
   
   library(awsomics);
@@ -16,7 +16,8 @@ CreateDeReport<-function(yml) {
   if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE);
   
   path<-paste(yml$output, paste(names(yml$input$comparison), collapse='-vs-'), sep='/');
-  if (file.exists(path)) unlink(path, recursive = TRUE); 
+  if (overwrite & file.exists(path)) unlink(path, recursive = TRUE); 
+  
   
   if (yml$input$remote) {
     if (!RCurl::url.exists(yml$input$template)) stop("Template Rmd file ', yml$input$template, ' not exists\n");
@@ -31,7 +32,7 @@ CreateDeReport<-function(yml) {
   if (file.exists(fn.md)) file.remove(fn.md); 
   errors$knit<-try(knit('DeReport.Rmd', fn.md)); 
   
-  errors$render<-try(rmarkdown::render('DeReport.Rmd', output_format="html_document", output_file="index.html", output_dir=path, 
+  errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
   file.copy('./DeReport.Rmd', paste(path, 'DeReport.Rmd', sep='/'));
