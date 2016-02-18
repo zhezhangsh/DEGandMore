@@ -679,7 +679,7 @@ if (nrow(kegg.stat) == 0) kegg.ind<-kegg.stat[, -1] else {
   kegg.dff<-rowMeans(e1.2_gsea[, g2.ind])-rowMeans(e1.2_gsea[, g1.ind]); 
   
   fn.kegg<-sapply(kegg.id, function(id) {
-    capture.output(kegg<-pathview(kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
+    capture.output(kegg<-pathview(-1*kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
                                 low = list(gene = "blue"), kegg.dir=yml$input$gsea$kegg))->x; 
     paste(id, '.pathview.png', sep=''); 
   }); 

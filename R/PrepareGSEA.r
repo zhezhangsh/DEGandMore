@@ -8,9 +8,9 @@ PrepareGSEA<-function(mtrx, grps, out, desc=rep('na', nrow(mtrx)), reverse.group
   # out     Path and name prefix of output .gct file, with or without the .gct extension
   # desc    The values of the <Description> column in .gct file, which is optional; values will be 'na' if not given;
 
-  mtrx<-mtrx[, unlist(grps, use.names=FALSE)];
-
   if (reverse.group) grps<-grps[2:1]; 
+  
+  mtrx<-mtrx[, unlist(grps, use.names=FALSE)];
     
   # Prepare and write out the .gct file
   out1<-paste(out, '.gct', sep='');  
