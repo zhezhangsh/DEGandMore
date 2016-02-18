@@ -674,13 +674,13 @@ if (nrow(kegg.stat) == 0) kegg.ind<-kegg.stat else {
   kegg.id<-tolower(substr(kegg.stat$Gene_set, 1, 8)); 
   kegg.dff<-rowMeans(e1.2_gsea[, g2.ind])-rowMeans(e1.2_gsea[, g1.ind]); 
   
-  # fn.kegg<-sapply(kegg.id[1:3], function(id) {
-  #   capture.output(kegg<-pathview(kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
-  #                               low = list(gene = "blue"), kegg.dir=yml$input$gsea$kegg))->x; 
-  #   fn<-paste(id, '.pathview.png', sep=''); 
-  #   file.rename(fn, paste(path.kegg, fn, sep='/'));
-  #   fn;
-  # }); 
+  fn.kegg<-sapply(kegg.id, function(id) {
+    capture.output(kegg<-pathview(kegg.dff, pathway.id=id, species = GetGenomeAlias(genome, "code"), 
+                                low = list(gene = "blue"), kegg.dir=yml$input$gsea$kegg))->x; 
+    fn<-paste(id, '.pathview.png', sep=''); 
+    file.rename(fn, paste(path.kegg, fn, sep='/'));
+    fn;
+  }); 
   
   # Run pathview, generate figures in a temp directory and copy them to output directory
   path.temp<-as.character(as.integer(Sys.time()));
@@ -1057,7 +1057,7 @@ ex.gsea<-paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][
 ```{r ex_kegg, eval=TRUE, include=FALSE}
 ex.kegg<-kegg.stat[rownames(kegg.ind), ];
 if (nrow(ex.kegg) == 0) ex.kegg<-'' else {
-  ex.kegg<- kegg.stat[abs(kegg.stat$NES)==max(abs(kegg.stat$NES)), ];
+  ex.kegg<- ex.kegg[abs(ex.kegg$NES)==max(abs(ex.kegg$NES)), ];
   ex.id<-tolower(substr(ex.kegg[1,2], 1, 8));
   ex.kegg<-paste(path.kegg, paste(ex.id, '.pathview.png', sep=''), sep='/');
 }
