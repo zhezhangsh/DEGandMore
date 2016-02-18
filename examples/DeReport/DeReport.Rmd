@@ -674,7 +674,7 @@ kegg.stat<-gsea.tbl[gsea.tbl$Collection=='KEGG_pathway' & gsea.tbl$PValue<=0.05,
 path.temp<-as.character(as.integer(Sys.time()));
 if (!file.exists(path.temp)) dir.create(path.temp);
 setwd(path.temp); 
-if (nrow(kegg.stat) == 0) kegg.ind<-kegg.stat else {
+if (nrow(kegg.stat) == 0) kegg.ind<-kegg.stat[, -1] else {
   kegg.id<-tolower(substr(kegg.stat$Gene_set, 1, 8)); 
   kegg.dff<-rowMeans(e1.2_gsea[, g2.ind])-rowMeans(e1.2_gsea[, g1.ind]); 
   
