@@ -30,14 +30,22 @@ CreateDeReport<-function(yml, overwrite=FALSE) {
   
   fn.md<-paste(path, 'DeReport.md', sep='/'); 
   if (file.exists(fn.md)) file.remove(fn.md); 
+  
+  # Run template, save error message
   errors$knit<-try(knit('DeReport.Rmd', fn.md)); 
   
+  # Convert markdown file to html file
   errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
+  # save template and yaml file
   file.copy('./DeReport.Rmd', paste(path, 'DeReport.Rmd', sep='/'));
   writeLines(as.yaml(yml), paste(path, 'DeReport.yml', sep='/'));
-  zip(paste(path, '.zip', sep=''), path, flag='-r0X', zip='zip');
+  
+  # zip whole folder
+  fn.zip<-paste(path, '.zip', sep=''); 
+  zip(fn.zip, path, flag='-r0X', zip='zip');
+  file.rename(fn.zip, paste(path, rev(strsplit(fn.zip, '/')[[1]])[1], sep='/')); 
   
   list(output=path, message=errors); 
 }
