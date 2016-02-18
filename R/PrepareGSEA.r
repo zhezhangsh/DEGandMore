@@ -2,14 +2,16 @@
 
 ########################################################################################################################
 # Make the .gct and .cls files from a data matrix
-PrepareGSEA<-function(mtrx, grps, out, desc=rep('na', nrow(mtrx))) {
+PrepareGSEA<-function(mtrx, grps, out, desc=rep('na', nrow(mtrx)), reverse.group=TRUE) {
   # mtrx    The data matrix whose row names will be used as the <NAME> column in output
   # grps    Named list of sample groups; each element has the sample indexes or names corresponding to columns in mtrx
   # out     Path and name prefix of output .gct file, with or without the .gct extension
   # desc    The values of the <Description> column in .gct file, which is optional; values will be 'na' if not given;
-  
+
   mtrx<-mtrx[, unlist(grps, use.names=FALSE)];
-  
+
+  if (reverse.group) grps<-grps[2:1]; 
+    
   # Prepare and write out the .gct file
   out1<-paste(out, '.gct', sep='');  
   tbl<-data.frame(NAME=rownames(mtrx), Description=desc, mtrx, row.names=1:nrow(mtrx), stringsAsFactors=FALSE);
