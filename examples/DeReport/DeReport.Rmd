@@ -443,7 +443,7 @@ if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
 ora.wrapped<-lapply(names(ora.table), function(nm) {
   pth<-paste(path.ora, nm, 'table', sep='/');
   if (!file.exists(pth)) dir.create(pth, recursive = TRUE); 
-  WrapGSE(ora.table[[nm]][, -(1:3)], geneset$meta, TRUE, pth); 
+  WrapGSE(ora.table[[nm]][, -(1:3)], geneset$meta, pth, TRUE); 
 });
 names(ora.wrapped)<-names(ora.table);
 
