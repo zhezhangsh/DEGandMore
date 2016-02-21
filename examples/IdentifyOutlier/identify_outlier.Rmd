@@ -303,8 +303,8 @@ if (nrow(outliers) == 0) ln.hi<-ln.lo<-'No outliers found' else {
   gses<-lapply(names(degs), function(nm) {
     cat(nm, '\n'); 
     gse<-lapply(degs[[nm]], function(gs) TestGSE(names(gs), rownames(anno), gset[[2]])[[1]]); 
-    hi<-WrapGSE(gse[[1]], gset[[1]], path.gse, paste(nm, 'Higher', sep='_')); 
-    lo<-WrapGSE(gse[[2]], gset[[1]], path.gse, paste(nm, 'Lower' , sep='_')); 
+    hi<-WrapGSE(gse[[1]], gset[[1]], paste(path.gse, paste(nm, 'Higher', sep='_'), sep='/')); 
+    lo<-WrapGSE(gse[[2]], gset[[1]], paste(path.gse, paste(nm, 'Lower' , sep='_'), sep='/')); 
     list(hi, lo); 
   }); 
   fn.hi<-sapply(gses, function(g) g[[1]]$file[gset.src]);
