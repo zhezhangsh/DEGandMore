@@ -93,8 +93,9 @@ SummarizeGSEA<-function(name1, name2, fn.index='index.html', path='.', GSEAColle
       names(tbl)[ncol(tbl)]<-paste(name2, name1, sep='>');
       saveRDS(tbl, file='full_table.rds');
       url<-paste(tbl[, 1], '/', tbl[, 2], '.html', sep='');
-      url[!file.exists(url)]<-''
+      has.file<-file.exists(url);
       tbl$Gene_set<-awsomics::AddHref(tbl$Gene_set, url);
+      tbl$Gene_set[!has.file]<-CleanHtmlTags(tbl$Gene_set[!has.file], FALSE); 
       awsomics::CreateDatatable(tbl, "full_table.html", rownames = FALSE, caption = paste('GSEA Result Table:', name1, 'vs.', name2));
     }
     
