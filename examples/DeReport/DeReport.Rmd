@@ -251,6 +251,7 @@ if (deg.method == DeMethods()[3]) { # Rank Product methods
   stat<-out;
 }
 
+de$DEG<-degs;
 up<-degs[[1]];
 dn<-degs[[2]];
 
@@ -732,7 +733,7 @@ fn.png[[length(fn.png)+1]]<-sapply(names(bic), function(nm) {
 # });
 ```
 
-```{r zip, include=FALSE}
+```{r write_out, include=FALSE}
 res$de<-de;
 res$ora<-ora;
 res$gsea<-gsea;

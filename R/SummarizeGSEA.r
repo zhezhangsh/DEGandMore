@@ -92,7 +92,9 @@ SummarizeGSEA<-function(name1, name2, fn.index='index.html', path='.', GSEAColle
       tbl<-data.frame(tbl, di, stringsAsFactors=FALSE);
       names(tbl)[ncol(tbl)]<-paste(name2, name1, sep='>');
       saveRDS(tbl, file='full_table.rds');
-      tbl$Gene_set<-awsomics::AddHref(tbl$Gene_set, paste("http://www.broadinstitute.org/gsea/msigdb/cards", tbl$Gene_set, sep='/'));
+      url<-paste(tbl[, 1], '/', tbl[, 2], '.html', sep='');
+      url[!file.exists(url)]<-''
+      tbl$Gene_set<-awsomics::AddHref(tbl$Gene_set, url);
       awsomics::CreateDatatable(tbl, "full_table.html", rownames = FALSE, caption = paste('GSEA Result Table:', name1, 'vs.', name2));
     }
     
