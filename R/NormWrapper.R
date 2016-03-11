@@ -22,13 +22,7 @@ NormWrapper <- function(mtrx, mthd=NormMethods[1], args=list()) {
   # Full argument list
   all.args<-append(list(mtrx=mtrx), args);
   
-  # return a list
-  list(
-    data=mtrx,
-    method=mthd,
-    parameters=args,
-    results=do.call(mthd, all.args) # call the selected method with an argument list
-  )
+  do.call(mthd, all.args) # call the selected method with an argument list
 }
 
 NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, ...) {
