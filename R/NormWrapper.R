@@ -31,7 +31,7 @@ NormWrapper <- function(mtrx, mthd=NormMethods[1], args=list()) {
   )
 }
 
-NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), ...) {
+NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, ...) {
   
   ref<-tolower(ref)[1];
   
@@ -40,10 +40,17 @@ NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), ...) {
       if (ref=='last') x<-mtrx[, ncol(mtrx)] else 
         x<-rowMeans(mtrx);
   
-  apply(mtrx, 2, function(y) {
+  d0<-lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
+  
+  d<-parallel::mclapply(d0, function(y) {
     z<-residuals(loess(y~x));
     z+x;
-  }); 
+  }, mc.cores = thread); 
+
+  d<-do.call('cbind', d);
+  colnames(d)<-colnames(mtrx); 
+  
+  d;
 }
 
 
