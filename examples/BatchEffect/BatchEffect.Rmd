@@ -10,8 +10,8 @@ output:
 ```{r global_setup, include=FALSE}
 knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
-fn.yaml <- "/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/batch_effect/Juvenile_SC_injury/24/batch_effect.yml";
-
+#fn.yaml <- "/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/batch_effect/Juvenile_SC_injury/24/batch_effect.yml";
+fn.yaml<-"./BatchEffect.yml"
 ```
 
 # Introduction
