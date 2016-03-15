@@ -1,0 +1,9 @@
+filename:
+  matrix: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/expr24.rds
+  sample: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/r/Juvenile_SC_injury/smpl24.rds
+variable:
+  interest:
+  - Group
+  batch: Replicate
+output: /nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/batch_effect/Juvenile_SC_injury/24
+

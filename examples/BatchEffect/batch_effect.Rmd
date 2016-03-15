@@ -1,0 +1,120 @@
+---
+title: "Analysis of batch effect in data matrix"
+author: "Jim Zhang"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+---
+
+```{r global_setup, include=FALSE}
+knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
+
+fn.yaml <- "/nas/is1/zhangz/projects/barr/2015-11_Rat_Brain_Development/result/batch_effect/Juvenile_SC_injury/24/batch_effect.yml";
+
+```
+
+# Introduction
+
+This analysis uses the Bioconductor [_SVS_](bioconductor sva) package to 1. identify and build surrogate variables from high-throughput data (Leek and Storey 2007 PLoS Genetics,2008 PNAS); and 2. remove known batch effect using the [_ComBat_](http://www.ncbi.nlm.nih.gov/pubmed/16632515) (Johnson et al. 2007 Biostatistics) method. 
+
+```{r prepare_data, include=FALSE}
+library(sva);
+
+yml <- yaml::yaml.load_file(fn.yaml);
+
+mtr<-readRDS(yml$filename$matrix); # full data matrix; columns are samples/rows are variables
+smp<-readRDS(yml$filename$sample); # sample description; rows must match columns of data matrix
+
+smp<-smp[rownames(smp) %in% colnames(mtr), , drop=FALSE];
+mtr<-mtr[, rownames(smp)];
+if (nrow(smp) < 2) stop('Not enough samples to perform the analysis.\n'); 
+
+smp<-data.frame(as.matrix(smp), stringsAsFactors = TRUE);
+
+v0<-yml$variable$interest; # variable(s) of interest
+v1<-yml$variable$batch; # known batch effect variable(s)
+
+v0<-v0[v0 %in% colnames(smp)];
+v1<-v1[v1 %in% colnames(smp)];
+if (length(v0) < 1) stop('No variable of interest was specified. \n'); 
+path.out<-yml$output;
+if (!file.exists(path.out)) dir.create(path.out, recursive = TRUE);
+```
+
+# Estimate unknown batch effect or other artifacts via the _sva_ function
+
+```{r surrogate_variable, include=FALSE}
+# building models
+mod.nll <- model.matrix(~1, data=smp); # null model
+mod.int <- model.matrix(formula(paste('~', paste(v0, collapse=' + '))), data=smp); # model of variable of interest
+
+###############################
+sv<-sva(mtr, mod.int, mod.nll);
+###############################
+
+sv[[1]]<-matrix(sv[[1]], nr=nrow(smp)); 
+
+# unadjusted and adjusted p values from F test
+p0<-f.pvalue(mtr, mod.int, mod.nll);
+p1<-f.pvalue(mtr, cbind(mod.int, sv[[1]]), cbind(mod.nll, sv[[1]])); 
+stat<-cbind(p0, p.adjust(p0, method='BH'), p1, p.adjust(p1, method='BH'));
+colnames(stat)<-c('pF', 'FDR', 'pF_SV', 'FDR_SV'); 
+
+# sample feature vs. surrogate variable
+nl<-sapply(1:ncol(smp), function(i) length(unique(as.vector(smp[[i]])))); 
+s<-smp[, nl>1 & nl<nrow(smp), drop=FALSE]; 
+p<-sapply(colnames(s), function(nm) apply(sv$sv, 2, function(x) summary(aov(x~as.factor(smp[[nm]])))[[1]][1, 5]));
+p<-matrix(p, nc=ncol(s), nr=ncol(sv$sv)); 
+dimnames(p)<-list(paste('SV', 1:nrow(p), sep=''), colnames(s)); 
+fn1<-paste(path.out, 'sample-sv.html', sep='/');
+#awsomics::CreateDatatable(awsomics::FormatNumeric(p, 3), fn1, caption='Sample feature vs. surrogate variable'); 
+
+out<-list(model=list(null=mod.nll, full=mod.int), surrogate=sv, anova=p, statistics=stat);
+saveRDS(out, file=paste(path.out, 'surrogate_variable.rds', sep='/')); 
+```
+
+The _sva_ function first identified that the number of surrogate variables to be estimated is `r sv$n.sv`. It then estimated the value of surrogate variables for each sample. 
+
+We used ANOVA test to get a p value for the correlation between each sample characteristic and each surrogate variable. 
+
+```{r fdr_table, eval=TRUE, include=TRUE}
+pander::pander(awsomics::FormatNumeric(p, 3));
+``` 
+
+Last, we used _f.pvalue_ function to calculate parametric F-test p-values for each row in the original data matrix, and then re-run the test after adjusting the data for surrogate variables. The p value distribution before and after adjusting was compared in the figure below: 
+
+```{r p_value, fig.width=6, fig.height=6}
+x<--1*log10(stat[, c(1, 3)]); 
+par(mar=c(5,5,2,2));
+plot(x, pch=19, col='#88888888', xlab='-Log10(p), Original', ylab='-Log10(p), Adjusted', cex.lab=2); 
+abline(0, 1, col='darkblue', lty=2);
+```
+
+# Adjust known batch effect via the _ComBat_ function
+
+```{r remove_batch, include=FALSE}
+if (length(v1) > 0) {
+  adj<-ComBat(mtr, as.vector(smp[[v1[1]]]), mod.nll, TRUE, FALSE);
+  saveRDS(adj, file=paste(path.out, 'batch_adjusted.rds', sep='/')); 
+  p2<-f.pvalue(adj, mod.int, mod.nll);
+  stat<-cbind(stat, p_Adj=p2, FDR_Adj=p.adjust(p2, method='BH')); 
+  out$statistics<-stat; 
+  out$adjusted<-adj;
+  saveRDS(out, file=paste(path.out, 'surrogate_variable.rds', sep='/')); 
+}
+```
+
+The _ComBat_ function adjusts for known batches using an empirical Bayesian framework ([Ref](http://biostatistics.oxfordjournals.org/content/8/1/118.abstract)). The known batch variable is `r v1`. The p value distribution before and after adjusting for known batch effect was compared in the figure below:
+
+```{r p_value_adj, fig.width=6, fig.height=6}
+x<--1*log10(stat[, c(1, 5)]); 
+par(mar=c(5,5,2,2));
+plot(x, pch=19, col='#88888888', xlab='-Log10(p), Original', ylab='-Log10(p), Adjusted', cex.lab=2); 
+abline(0, 1, col='darkblue', lty=2);
+```
+
+
+***
+**END OF DOCUMENT**
+
