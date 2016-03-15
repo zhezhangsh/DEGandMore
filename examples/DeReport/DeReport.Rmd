@@ -715,7 +715,7 @@ names(xls)<-c('Complete List',
 );
 xls<-lapply(xls, awsomics::FormatNumeric);
 fn.xls<-paste(path, paste(g1.name, g2.name, sep='-vs-'), sep='/');
-WriteExcel(xls, fn.xls, ); 
+WriteExcel(xls, fn.xls); 
 ```
 
 ```{r convert_figure, include=FALSE}
