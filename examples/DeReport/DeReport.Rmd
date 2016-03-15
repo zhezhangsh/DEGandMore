@@ -12,13 +12,14 @@ cat("Setting up and loading data\n");
 
 knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
-library(awsomics);
-library(rchive);
-library(DEGandMore);
+library(MASS);
 library(gplots);
 library(knitr);
 library(rmarkdown); 
 library(yaml); 
+library(awsomics);
+library(rchive);
+library(DEGandMore);
 library(pathview); 
 
 #fn.yaml<-"/nas/is1/zhangz/projects/falk/2015-01_Worm_Antioxidant_Drugs/R/pairwise/MS010_A-vs-dTPP_A.yml"; # comment it out if running through knitr::knit function
@@ -1207,4 +1208,5 @@ Examples:
 
 ***
 _END OF DOCUMENT_
+
 
