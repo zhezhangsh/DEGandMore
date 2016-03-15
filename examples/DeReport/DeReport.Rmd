@@ -71,9 +71,11 @@ path.output<-yml$output;
 path0<-paste(g1.name, g2.name, sep='-vs-');
 path<-paste(path.output, path0, sep='/');
 path.figure<-paste(path, 'figure', sep='/');
+path.table <-paste(path, 'table',  sep='/');
 if (!file.exists(path.output)) dir.create(path.output, recursive = TRUE);
 if (!file.exists(path)) dir.create(path, recursive = TRUE);
 if (!file.exists(path.figure)) dir.create(path.figure, recursive = TRUE);
+if (!file.exists(path.table )) dir.create(path.table , recursive = TRUE);
 
 # Re-process gene expression matrix
 e1<-expr[, g1.ind, drop=FALSE];
