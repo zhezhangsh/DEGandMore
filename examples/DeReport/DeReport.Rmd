@@ -8,6 +8,8 @@ output:
 ---
 
 ```{r global_setup, include=FALSE}
+cat("Setting up and loading data\n");
+
 knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE);
 
 library(awsomics);
@@ -89,6 +91,8 @@ res<-list(inputs=inputs);  # Result set
 ```
 
 ```{r analysis_variance, include=FALSE}
+cat('Analyze data variance\n');
+
 fn.fig['variance']<-paste(path.figure, 'variance.pdf', sep='/'); 
 pdf(fn.fig['variance'], width=6.4, height=8);
 par(mfrow=c(3,1), mar=c(4,5,2,2));
@@ -133,6 +137,8 @@ dev.off();
 ```
 
 ```{r analysis_boxplot, include=FALSE}
+cat('Plot variance boxplot\n');
+
 fn.fig['boxplot']<-paste(path.figure, 'boxplot.pdf', sep='/');
 pdf(fn.fig['boxplot'], width=6.4, height=4); 
 par(mfrow=c(1,1), mai=c(0.7, 0.6, .1,.1))
@@ -145,6 +151,8 @@ dev.off();
 ```
 
 ```{r analysis_clustering, include=FALSE}
+cat('Unsupervised hierarchical clustering\n');
+
 fn.fig['clustering']<-paste(path.figure, 'clustering.pdf', sep='/');
 pdf(fn.fig['clustering'], width=6.4, height=4.8);
 par(mfrow=c(1,1), mai=c(0.2, 0.8, .2 , .2));
@@ -154,6 +162,8 @@ dev.off();
 ```
 
 ```{r analysis_pca, include=FALSE}
+cat('Plot PCA\n'); 
+
 fn.fig['pca']<-paste(path.figure, 'pca.pdf', sep='/');
 pdf(fn.fig['pca'], width=6.4, height=4.8);
 
@@ -192,6 +202,8 @@ dev.off();
 ```
 
 ```{r analysis_deg, include=FALSE}
+cat('DEG analysis\n'); 
+
 pth.deg<-paste(path, '/DEG', sep='');
 if (!file.exists(pth.deg)) dir.create(pth.deg);
 
@@ -264,6 +276,8 @@ CreateDatatable(stat.formatted, fn = paste(path, 'DEG', 'all_genes.html', sep='/
 ```
 
 ```{r summary_deg, include=FALSE}
+cat('Summarizing DEG analysis\n'); 
+
 fn.fig['deg']<-paste(path.figure, 'deg.pdf', sep='/');
 pdf(fn.fig['deg'], width=6.4, height=4.8);
 par(mai=c(0.4, 0.5, 0.3, 0.05), mfrow=c(2,2));
@@ -352,6 +366,8 @@ rnk<-sign(d[, 'LogFC'])*sqrt(d[,'LogFC']^2+log10(p)^2);
 ```
 
 ```{r write_deg, include=FALSE}
+cat('Write out DEG results\n');
+
 pth.deg1<-paste(pth.deg, '/Higher_in_', g2.name, sep='');
 pth.deg2<-paste(pth.deg, '/Lower_in_', g2.name, sep='');
 pth.deg1.bars<-paste(pth.deg1, '/bars', sep='');
@@ -393,6 +409,7 @@ dn.formatted<-GeneList2Datatable(FormatNumeric(dn.tbl), paste(pth.deg2, 'index.h
 ```
 
 ```{r analysis_ora, include=FALSE}
+cat('ORA analysis\n');
 
 ########################################################################################################
 ora<-lapply(degs, function(gs) awsomics::TestGSE(rownames(gs), rownames(expr), geneset$list));
@@ -439,6 +456,8 @@ names(ora.table)<-names(bic);
 ```
 
 ```{r write_ora, include=FALSE}
+cat('Write out ORA results\n');
+
 path.ora<-paste(path, 'ORA', sep='/');
 if (!file.exists(path.ora)) dir.create(path.ora, recursive = TRUE);
 
@@ -543,6 +562,8 @@ bic.formatted<-lapply(names(bic), function(nm) {
 ```
 
 ```{r prepare_gsea, include=FALSE}
+cat('Preparing GSEA analysis\n');
+
 path.gsea<-paste(path, 'GSEA', sep='/');
 if (file.exists(path.gsea)) unlink(path.gsea, recursive = TRUE); # Path must not exist
 
@@ -581,6 +602,8 @@ gsea.yml$gmt<-input.gsea$gmt;
 ```
 
 ```{r analysis_gsea, include=FALSE}
+cat('GSEA analysis\n');
+
 gsea.cmmd<-GSEAviaJava(gsea.yml); 
 file.rename(paste(gsea.yml$out, tmp, sep='/'), path.gsea); 
 gsea.tbl<-readRDS(paste(path.gsea, 'full_table.rds', sep='/'));
@@ -617,6 +640,8 @@ gsea.gs2bic<-lapply(gsea.gs2bic, function(b) sapply(b, function(b) paste(b, coll
 ```
 
 ```{r bicluster_gsea, include=FALSE}
+cat('Biclustering GSEA results\n');
+
 # Formatted table of biclustering
 gsea.bic.formatted<-lapply(names(gsea.bic), function(nm) {
   path.bic<-paste(path.gsea, 'bicluster', nm, sep='/'); 
@@ -658,6 +683,8 @@ gsea<-list(path=gsea.yml$out, geneset=gsea.lst, stat=gsea.tbl, bicluster=gsea.bi
 ```
 
 ```{r write_bic, include=FALSE}
+cat('Write out biclustering results\n');
+
 t<-data.frame(matrix('table', nr=2, nc=2), stringsAsFactors = FALSE); 
 t[1, ]<-AddHref(t[1, ], paste("../ORA", names(degs), 'bicluster.html', sep='/')); 
 t[2, ]<-AddHref(t[2, ], paste("../GSEA/bicluster", names(degs), 'index.html', sep='/')); 
@@ -667,6 +694,8 @@ CreateDatatable(t, paste(path, 'DEG', 'bicluster_index.html', sep='/'));
 ```
 
 ```{r kegg_gsea, include=FALSE}
+cat('GSEA analysis of KEGG pathways\n');
+
 path.kegg<-paste(path.gsea, 'kegg', sep='/'); 
 if (file.exists(path.kegg)) unlink(path.kegg, recursive = TRUE); 
 dir.create(path.kegg, recursive = TRUE); 
@@ -701,6 +730,8 @@ CreateDatatable(kegg.ind, paste(path.kegg, 'index.html', sep='/'));
 ```
 
 ```{r write_excel, include=FALSE}
+cat('Writing tables to Excel file\n');
+
 # Excel spreadsheets
 xls<-list(stat.table, stat.table[rownames(up), , drop=FALSE], stat.table[rownames(dn), , drop=FALSE],
           ora.table[[1]], ora.table[[2]], gsea.tbl);
@@ -722,6 +753,8 @@ WriteExcel(xls, fn.xls);
 ```
 
 ```{r convert_figure, include=FALSE}
+cat('Converting figures to png format\n');
+
 fn.png<-lapply(fn.fig, function(f) ConvertPdf2Png(f, resize=80, density=150));
 fn.png[[length(fn.png)+1]]<-sapply(names(bic), function(nm) {
   t<-bic[[nm]]$summary;
@@ -737,6 +770,8 @@ fn.png[[length(fn.png)+1]]<-sapply(names(bic), function(nm) {
 ```
 
 ```{r write_out, include=FALSE}
+cat('Writing out all results\n'); 
+
 res$de<-de;
 res$ora<-ora;
 res$gsea<-gsea;
@@ -779,6 +814,9 @@ Click links to go directly to results, or read through the rest of this page for
 # Project
 
 ```{r project, eval=TRUE, include=FALSE}
+cat('Writing DE report\n');
+cat('Writing project background\n'); 
+
 lns<-lapply(names(yml$project), function(nm) {
   c(paste('##', nm), '\n', yml$project[[nm]], '\n'); 
 });
@@ -1009,6 +1047,8 @@ Click link to view full ORA results:
  > [ORA results](ORA/index.html) 
 
 ```{r ex_ora, eval=TRUE, include=FALSE}
+cat('Writing example of ORA analysis\n');
+
 pdf(paste(path, 'figure', 'ora.pdf', sep='/'), w=4.8, h=3.6); 
 id1<-geneset[[2]][[rownames(ora[[1]][[1]])[1]]]
 id2<-rownames(degs[[1]]);
@@ -1032,6 +1072,8 @@ GSEA is a different category of analyses applied to gene sets. Instead of using 
  > [GSEA results](GSEA/index.html)
  
 ```{r ex_gsea, eval=TRUE, include=FALSE}
+cat('Writing example of GSEA\n');
+
 gsea.ex<-gsea$stat;
 gsea.ex<-gsea.ex[abs(gsea.ex$NES)==max(abs(gsea.ex$NES)), ];
 ex.gsea<-dir(paste(path.gsea, gsea.ex$Collection, sep='/')); 
@@ -1054,6 +1096,8 @@ ex.gsea<-paste(path.gsea, gsea.ex$Collection, ex.gsea[grep('^enplot', ex.gsea)][
  > [KEGG maps](GSEA/index.html)
 
 ```{r ex_kegg, eval=TRUE, include=FALSE}
+cat('Writing example of KEGG pathway analysis\n'); 
+
 ex.kegg<-kegg.stat[rownames(kegg.ind), ];
 if (nrow(ex.kegg) == 0) ex.kegg<-'' else {
   ex.kegg<- ex.kegg[abs(ex.kegg$NES)==max(abs(ex.kegg$NES)), ];
@@ -1077,6 +1121,8 @@ A potential problem complicates the result intepretation of gene set analysis is
  > [Biclustering results](DEG/bicluster_index.html)
 
 ```{r ex_bic, eval=TRUE, include=FALSE}
+cat('Writing example of biclustering analysis\n');
+
 ex.bic<-gsea$bicluster[[1]]$summary;
 ex.bic<-ex.bic[ex.bic[,2]*ex.bic[,3]==max(ex.bic[,2]*ex.bic[,3]), ];
 ex.bic<-paste(path.gsea, 'bicluster', names(degs)[1], paste(ex.bic[1,1], '_heatmap.pdf', sep=''), sep='/');
@@ -1102,6 +1148,8 @@ ex.bic<-ConvertPdf2Png(ex.bic, resize=80, density=150)
 In this report, **fold change** refers the ratio of two group means in their unlogged form. So a fold change of 2.0 means the average of the second group is increased to twice of the average of the first group; similarly, a fold change of 0.5 means the average is reduced to half. Log(fold change) equals to the log2-transformation of the fold change. The table below gives a few examples of the conversion of these 2 variables.
   
 ```{r fold_change, eval=TRUE, include=TRUE}
+cat('Writing Appendix\n');
+
 c<-c(1.25, 1.5, 2, 4, 8);
 fc<-c(1/rev(c), 1, c);
 lg<-log2(fc);
