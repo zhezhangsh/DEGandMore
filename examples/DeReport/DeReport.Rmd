@@ -716,6 +716,7 @@ names(xls)<-c('Complete List',
   "GSEA"
 );
 xls<-lapply(xls, awsomics::FormatNumeric);
+tbl<-sapply(names(xls), function(nm) write.csv(xls[[nm]], paste(path.table, paste(nm, '.csv', sep=''), sep='/'))); 
 fn.xls<-paste(path, paste(g1.name, g2.name, sep='-vs-'), sep='/');
 WriteExcel(xls, fn.xls); 
 ```
