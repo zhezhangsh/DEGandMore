@@ -3,7 +3,7 @@ CreateOiReport<-function(yml) {
   # yml     The .ymal file or a yaml list defines the inputs and parameters of the analysis
   
   if (class(yml) == 'character') {
-    if (!file.exists('yml')) stop('Input file', yml, 'not found\n'); 
+    if (!file.exists(yml)) stop('Input file ', yml, ' not found\n'); 
     yml <- yaml::yaml.load_file(yml);  
   }
   
