@@ -335,7 +335,7 @@ Results from gene set enrichment analysis of genes having higher expression in o
 
 ```{r write_out, include=FALSE}
 fn<-paste(yml$output, 'outliers.rds', sep='/'); 
-if (nrow(outliers) == 0) saveRDS(list(stat=smm)) else saveRDS(list(stat=smm, deg=degs, gse=gses), fn);
+if (nrow(outliers) == 0) saveRDS(list(stat=smm), fn) else saveRDS(list(stat=smm, deg=degs, gse=gses), fn);
 ```
 
 Results were saved to `r fn`.
