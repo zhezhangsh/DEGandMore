@@ -1149,8 +1149,6 @@ ex.bic<-ConvertPdf2Png(ex.bic, resize=80, density=150)
 In this report, **fold change** refers the ratio of two group means in their unlogged form. So a fold change of 2.0 means the average of the second group is increased to twice of the average of the first group; similarly, a fold change of 0.5 means the average is reduced to half. Log(fold change) equals to the log2-transformation of the fold change. The table below gives a few examples of the conversion of these 2 variables.
   
 ```{r fold_change, eval=TRUE, include=TRUE}
-cat('Writing Appendix\n');
-
 c<-c(1.25, 1.5, 2, 4, 8);
 fc<-c(1/rev(c), 1, c);
 lg<-log2(fc);
