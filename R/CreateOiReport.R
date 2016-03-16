@@ -29,7 +29,7 @@ CreateOiReport<-function(yml) {
   errors<-try(rmarkdown::render(fn.temp, output_format="html_document", output_file="index.html", output_dir=yml$output, 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
-  writeLines(yaml::as.yaml(yml), paste(yml$output, 'ClReport.yml', sep='/'));   
+  writeLines(yaml::as.yaml(yml), paste(yml$output, 'identify_outlier.yml', sep='/'));   
   
   zip(paste(yml$output, '.zip', sep=''), yml$output, "-r9X", zip='zip'); 
   
