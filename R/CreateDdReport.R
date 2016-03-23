@@ -22,29 +22,35 @@ CreateDdReport<-function(yml, overwrite=FALSE) {
   } else {
     file.copy(yml$template$location, './DdReport.Rmd'); 
   }
-
-  errors<-list(); 
-  
-  fn.md<-paste(path, 'DdReport.md', sep='/'); 
-  if (file.exists(fn.md)) file.remove(fn.md); 
-  
-  # Run template, save error message
-  errors$knit<-try(knit('DdReport.Rmd', fn.md)); 
-  
-  file.rename('figure', paste(path, 'figure', sep='/')); 
-  
-  # Convert markdown file to html file
-  errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
-                                quiet=TRUE, envir=new.env()), silent=TRUE);
   
   # save template and yaml file
   file.copy('./DdReport.Rmd', paste(path, 'DdReport.Rmd', sep='/'));
   writeLines(as.yaml(yml), paste(path, 'DdReport.yml', sep='/'));
   
+  wd<-getwd();
+  setwd(path); 
+  
+  errors<-list(); 
+  
+  fn.md<-'DdReport.md'; 
+  if (file.exists(fn.md)) file.remove(fn.md); 
+  
+  # Run template, save error message
+  errors$knit<-try(knit('DdReport.Rmd', fn.md)); 
+  
+  # Convert markdown file to html file
+  errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
+                                quiet=TRUE, envir=new.env()), silent=TRUE);
+
+  fld<-rev(strsplit(path, '/')[[1]])[1];
+  setwd('..'); 
+  
   # zip whole folder
-  fn.zip<-paste(path, '.zip', sep=''); 
-  zip(fn.zip, path, flag='-r0X', zip='zip');
-  file.rename(fn.zip, paste(path, rev(strsplit(fn.zip, '/')[[1]])[1], sep='/')); 
+  fn.zip<-paste(fld, '.zip', sep=''); 
+  zip(fn.zip, fld, flag='-r0X', zip='zip');
+  file.rename(fn.zip, paste(fld, fn.zip, sep='/')); 
+  
+  setwd(wd);
   
   list(output=path, message=errors); 
 }
