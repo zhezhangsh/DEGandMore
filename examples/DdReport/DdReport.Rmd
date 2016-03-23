@@ -71,6 +71,13 @@ lns<-paste(do.call('c', lns), collapse='\n');
 
 `r lns`
 
+## Pairwise comparisons
+
+This report compares the results of the 2 following pairwise comparisons. Click links to view full results of individual comparisons: 
+
+  - [`r paste(grp[[1]], collapse=' vs. ')`](`r paste(yml$input$comparison$Liver_Female, 'index.html', sep='/')`)
+  - [`r paste(grp[[2]], collapse=' vs. ')`](`r paste(yml$input$comparison$Liver_Male, 'index.html', sep='/')`)
+
 <div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
 ***
@@ -218,6 +225,7 @@ sig.aov<-sig.aov[order(sig.aov[, 3]), ]
 #CreateDatatable(cbind(anno[rownames(sig.aov), ], FormatNumeric(sig.aov)), paste(path, 'anova_table.html', sep='/'), caption='ANOVA p value'); 
 
 m<-sapply(grps, function(g) rowMeans(d[, g, drop=FALSE])); 
+colnames(paov)<-paste('P', colnames(paov), sep='_'); 
 aov.stat<-cbind(m, paov); 
 aov.tbl<-data.frame(anno, FormatNumeric(aov.stat), stringsAsFactors = FALSE);
 CreateDatatable(aov.tbl, paste(path, 'anova_table.html', sep='/'), caption='ANOVA results'); 
@@ -296,6 +304,7 @@ gs.tbl<-gset[[1]][rownames(stat.gs), ];
 gs.tbl$Name<-AddHref(gs.tbl$Name, gs.tbl$URL);
 gs.tbl<-cbind(gs.tbl[, 1:3], FormatNumeric(stat.gs)); 
 
+CreateDatatable(gs.tbl, paste(path, 'geneset_table.html', sep='/'), rownames = FALSE, caption='Gene set average'); 
 saveRDS(gs.tbl, paste(path.r, 'geneset_stat.rds', sep='/'));
 write.csv(gs.tbl, paste(path.tbl, 'geneset_stat.csv', sep='/')); 
 ```
@@ -365,7 +374,7 @@ fn.tbl<-lapply(names(ora.s), function(nm) {
     a<-a[, 1:3]; 
     t<-cbind(a[a$Source==src, , drop=FALSE], FormatNumeric(s[a$Source==src, , drop=FALSE]))[, -1]; 
     f<-paste('ORA/', src, '_', nm, '.html', sep=''); 
-    CreateDatatable(t, paste(path, f, sep='/'), caption=paste(src, nm, sep=': '));
+    CreateDatatable(t, paste(path, f, sep='/'), rownames = FALSE, caption=paste(src, nm, sep=': '));
     c<-nrow(t); 
     names(c)<-f;
     c;
@@ -407,7 +416,7 @@ ol<-sapply(rownames(ind), function(nm) {
   t<-t[, 1:3]; 
   t<-cbind(t, ora.stat[[1]][[i[1]]][g, c(2, 4, 5, 6)], ora.stat[[2]][[i[2]]][g, c(2, 4, 5, 6)]); 
   colnames(t)[4:11]<-paste(colnames(t)[4:11], rep(names(grp), each=4), sep='_'); 
-  fn<-CreateDatatable(t, paste(path, f, sep='/'), caption=c); 
+  fn<-CreateDatatable(t, paste(path, f, sep='/'), rownames = FALSE, caption=c); 
   list(c, f); 
 });
 
@@ -511,7 +520,7 @@ ol<-sapply(rownames(ind), function(nm) {
   t<-t[, 1:3]; 
   t<-cbind(t, gsea.stat[[1]][g, c(4, 5, 6)], gsea.stat[[2]][g, c(4, 5, 6)]); 
   colnames(t)[4:9]<-paste(colnames(t)[4:9], rep(names(grp), each=3), sep='_'); 
-  fn<-CreateDatatable(t, paste(path, f, sep='/'), rownames=FALSE, caption=c); 
+  fn<-CreateDatatable(FormatNumeric(t), paste(path, f, sep='/'), rownames=FALSE, caption=c); 
   list(c, f); 
 });
 
@@ -584,7 +593,17 @@ cls<-reCl(d1, cl, yml$input$geneset$cluster$recluster$corr, yml$input$geneset$cl
 ms<-t(sapply(cls, function(x) colMeans(d1[x, ]))); 
 rownames(ms)<-names(cls)<-paste('Cluster', 1:length(cls), sep='_'); 
 
-saveRDS(cls, file=paste(path.r, 'cluster.rds', sep='/')); 
+fn.htmp<-sapply(names(cls), function(nm) {
+  x<-d1[cls[[nm]], ];
+  f<-paste(path.cl, '/Heatmap_', nm, '.pdf', sep=''); 
+  sz<-CalculateColoredBlockSize(x);
+  pdf(f, width = sz[1], height = sz[2]);
+  PlotColoredBlock(x, num.breaks = 31, key = 'Normalized expression', groups = grps); 
+  dev.off();
+  f;
+});
+
+saveRDS(list(cluster=cls, data=d1), file=paste(path.r, 'cluster.rds', sep='/')); 
 ```
 
 Genes with significant ANOVA p values (p <= 'r yml$input$geneset$cluster$panova') were used as seeds to perform a gene-gene clustering analysis and `r length(cls)` clusters were identified. ORA was performed on the clusters to identify their functional association (see table below); 
@@ -613,11 +632,13 @@ sz<-sapply(cls, length);
 lnk<-paste('[', n, '](', sapply(fn.tbl, names), ')', sep='');
 cl.tbl<-data.frame(Size=sz, mm, Gene_set=lnk, stringsAsFactors = FALSE);
 cl.tbl[, 1]<-paste('[', sz, '](CLUSTER/', names(cls), '.html)', sep=''); 
+cl.tbl<-cbind(ID=rownames(cl.tbl), cl.tbl); 
+cl.tbl[, 1]<-paste('[', cl.tbl[, 1], '](CLUSTER/Heatmap_', names(cls), '.pdf)', sep=''); 
 ```
 
 **Table 4** This table lists the number of genes in each cluster (click the numbers to see gene lists), the average expression of all genes in a cluster of all sample groups, and then the gene sets over-represented in each cluster (click the numbers to see gene set lists). The gene expression levels were normalized so the mean of the control groups equals to 0 and the mean of the treatment groups is the number of standard deviations. 
 
-`r kable(cl.tbl, align='c')`
+`r kable(cl.tbl, row.names=FALSE, align='c')`
 
 **Figure 8**  This plot shows below the average expression levels of each cluster. Data was normalized before the analysis, so the mean of the control groups was zero and the standard deviation of all samples of each gene was 1.0. Values indicate number of standard deviation from mean of relative control group.
 
