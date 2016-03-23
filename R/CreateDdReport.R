@@ -14,7 +14,7 @@ CreateDdReport<-function(yml, overwrite=FALSE) {
   }
   
   path<-yml$output;
-  if (!file.exists(path)) dir.create(, recursive = TRUE);
+  if (!file.exists(path)) dir.create(path, recursive = TRUE);
 
   if (yml$template$remote) {
     if (!RCurl::url.exists(yml$template$location)) stop("Template Rmd file ', yml$input$template, ' not exists\n");
