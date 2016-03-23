@@ -1,7 +1,7 @@
 home: ../../index.html
 output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/delta_delta/placenta_gender
 template: 
-  location: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.Rmd
+  location: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DdReport/DdReport.Rmd
   remote: yes
 input:
   sample: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/r/sample.rds
