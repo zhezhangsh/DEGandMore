@@ -210,7 +210,7 @@ if (!file.exists(pth.deg)) dir.create(pth.deg);
 
 means<-cbind(rowMeans(expr[, g1.ind]), rowMeans(expr[, g2.ind]));
 colnames(means)<-c(g1.name, g2.name);
-if (logged) l2r<-means[,2]-means[,1] else  l2r<-log2(means[,2]/means[,1]);
+if (logged) l2r<-means[,2]-means[,1] else l2r<-log2(means[,2]/means[,1]);
 l2r[is.na(l2r)]<-0;
 fc<-exp(l2r*log(2));
 mn<-cbind(means, l2r, fc);
@@ -237,6 +237,9 @@ if(penalty>0) {
 de<-DeWrapper(e, grps, deg.method, list(nperm=nperm, paired=paired, logged=logged));
 ############################################################################################
 
+de$results$stat[, c(1,2,4)]<-mn[, 1:3];
+de$results$stat[, 3]<-de$results$stat[, 2]-de$results$stat[, 1]; 
+de$data<-expr; 
 saveRDS(de, file=paste(pth.deg, 'deg.rds', sep='/')); 
 if (deg.method == DeMethods()[3]) { # Rank Product methods
   s<-de$results$stat; 
@@ -809,7 +812,6 @@ Click links to go directly to results, or read through the rest of this page for
 
 <div align='right'>**_[Go back to project home](`r yml$project$Home`)_**</div>
 
-***
 ***
 
 # Project

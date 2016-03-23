@@ -1,0 +1,38 @@
+home: ../../index.html
+output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/delta_delta/placenta_gender
+template: 
+  location: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DeReport/DeReport.Rmd
+  remote: yes
+input:
+  sample: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/r/sample.rds
+  comparison:
+    Liver_Female: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_F_Ctrl-vs-Placenta_F_LPS
+    Liver_Male: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_M_Ctrl-vs-Placenta_M_LPS
+  gene:
+    union: no           # Using union set or intersect set when the 2 data sets include different sets of genes
+    pvalue: 0.01
+    anova: 
+      f1: Gender                              # Feature name distinguishing the 2 comparison
+      f2: Treatment                           # Feature name distinguishing the 2 groups to be compared in each comparison
+      formula: d ~ Gender*Treatment           # ANOVA formula, must include f1*f2
+      core: 8                                 # Number of cores for parallel computing
+      p: 0.01
+  geneset:
+    source: /nas/is1/rchive/data/gene.set/r/default_set_mouse_5-1000.rds
+    min: 10
+    max: 500
+    cluster:
+      panova: 0.025
+      top: 500
+      seed: 8
+      merge: 
+        corr: 0.8
+        p: 0.01
+      recluster: 
+        corr: 0.7
+        diff: 0.2
+project: # Project background
+  Title: Treatment of pregnant mice with LPS ## Project title
+  Home: http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS ## Project home page
+  Description: The project studies effect of LPS on 3 mouse tissues; uterus of mother mice, placenta of newborns and liver of newborns. Additionally, newborns were separated by genders. ## Full description
+  Analysis: This analysis is interested in the gender difference in terms of response to LPS in infant mouse livers. 
