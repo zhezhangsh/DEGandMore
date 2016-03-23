@@ -14,7 +14,7 @@ CreateDdReport<-function(yml, overwrite=FALSE) {
   }
   
   path<-yml$output;
-  if (!file.exists(path)) dir.create(path, recursive = TRUE);
+  if (!file.exists(path)) dir.create(, recursive = TRUE);
 
   if (yml$template$remote) {
     if (!RCurl::url.exists(yml$template$location)) stop("Template Rmd file ', yml$input$template, ' not exists\n");
@@ -30,6 +30,8 @@ CreateDdReport<-function(yml, overwrite=FALSE) {
   
   # Run template, save error message
   errors$knit<-try(knit('DdReport.Rmd', fn.md)); 
+  
+  file.rename('figure', paste(path, 'figure', sep='/')); 
   
   # Convert markdown file to html file
   errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
