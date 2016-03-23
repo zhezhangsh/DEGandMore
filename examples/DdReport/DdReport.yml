@@ -1,38 +1,37 @@
-home: ../../index.html
-output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/delta_delta/placenta_gender
+home: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/source/index.html                                               # Location of project home page
+output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/delta_delta/placenta_gender                            # Location of output files
 template: 
-  location: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DdReport/DdReport.Rmd
-  remote: yes
+  location: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DdReport/DdReport.Rmd             # Location of Rmarkdown template
+  remote: yes                                                                                                         # Is the template a remote file or local
 input:
-  sample: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/r/sample.rds
+  sample: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/r/sample.rds                                                # Sample information of both comparisons (4 groups total)
   comparison:
-    Liver_Female: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_F_Ctrl-vs-Placenta_F_LPS
-    Liver_Male: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_M_Ctrl-vs-Placenta_M_LPS
+    Liver_Female: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_F_Ctrl-vs-Placenta_F_LPS   # Comparison 1
+    Liver_Male: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/pairwise/Placenta_M_Ctrl-vs-Placenta_M_LPS     # Comparison 2
   gene:
-    union: no           # Using union set or intersect set when the 2 data sets include different sets of genes
-    pvalue: 0.01
+    union: no                                                                                                         # Using union set or intersect set when the 2 data sets include different sets of genes
+    pvalue: 0.01                                                                                                      # Cutoff of DEG p value to select significant genes
     anova: 
       f1: Gender                              # Feature name distinguishing the 2 comparison
       f2: Treatment                           # Feature name distinguishing the 2 groups to be compared in each comparison
       formula: d ~ Gender*Treatment           # ANOVA formula, must include f1*f2
       core: 8                                 # Number of cores for parallel computing
-      p: 0.01
+      p: 0.01                                 # Cutoff of DEG p value (interaction term) to select significant genes
   geneset:
-    source: /nas/is1/rchive/data/gene.set/r/default_set_mouse_5-1000.rds
-    min: 10
-    max: 500
+    source: /nas/is1/rchive/data/gene.set/r/default_set_mouse_5-1000.rds    # Source of gene set collection
+    min: 10                                                                 # Minimum number of genes in the gene set to be included in the analysis
+    max: 500                                                                # Maximum number of genes in the gene set to be included in the analysis
     cluster:
-      panova: 0.025
-      top: 500
-      seed: 8
-      merge: 
-        corr: 0.8
-        p: 0.01
+      top: 500                                                              # Number of top significant genes to be used as seeds of clusterings
+      seed: 8                                                               # Number of initial clusters using seed genes 
+      merge:                
+        corr: 0.8                                                           # Merge clusters with correlation of means higher than this value
+        p: 0.01                                                             # Merge clusters with p value of correlation of means lower than this value
       recluster: 
-        corr: 0.7
-        diff: 0.2
+        corr: 0.7                                                           # Recluster a gene to the most close cluster if their correlation is higher than this value
+        diff: 0.2                                                           # The minimal difference of the correlation coefficient to the 2nd close cluster
 project: # Project background
-  Title: Treatment of pregnant mice with LPS ## Project title
-  Home: http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS ## Project home page
-  Description: The project studies effect of LPS on 3 mouse tissues; uterus of mother mice, placenta of newborns and liver of newborns. Additionally, newborns were separated by genders. ## Full description
-  Analysis: This analysis is interested in the gender difference in terms of response to LPS in infant mouse livers. 
+  Title: Treatment of pregnant mice with LPS                                                                                                                                                # Project title
+  Home: http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS                                                                                                                     # Project home page
+  Description: The project studies effect of LPS on 3 mouse tissues; uterus of mother mice, placenta of newborns and liver of newborns. Additionally, newborns were separated by genders.   # Full description
+  Analysis: This analysis is interested in the gender difference in terms of response to LPS in infant mouse livers.                                                                        # This analysis

@@ -551,6 +551,7 @@ d1<-lapply(res, function(x) {
 d1<-do.call('cbind', d1); 
 d1<-t(apply(d1, 1, function(x) x/sd(x))); 
 d0<-d1[rownames(sig.aov), ]; 
+d0<-d0[min(nrow(d0), yml$input$geneset$cluster$top), , drop=FALSE];
 
 # initiate clusters
 hc<-hclust(as.dist(1-cor(t(d0)))); 
@@ -597,7 +598,7 @@ fn.htmp<-sapply(names(cls), function(nm) {
   x<-d1[cls[[nm]], ];
   f<-paste(path.cl, '/Heatmap_', nm, '.pdf', sep=''); 
   sz<-CalculateColoredBlockSize(x);
-  pdf(f, width = sz[1], height = sz[2]);
+  pdf(f, width = max(sz[2]/3, sz[1]), height = sz[2]);
   PlotColoredBlock(x, num.breaks = 31, key = 'Normalized expression', groups = grps); 
   dev.off();
   f;
@@ -606,7 +607,7 @@ fn.htmp<-sapply(names(cls), function(nm) {
 saveRDS(list(cluster=cls, data=d1), file=paste(path.r, 'cluster.rds', sep='/')); 
 ```
 
-Genes with significant ANOVA p values (p <= 'r yml$input$geneset$cluster$panova') were used as seeds to perform a gene-gene clustering analysis and `r length(cls)` clusters were identified. ORA was performed on the clusters to identify their functional association (see table below); 
+The top `r nrow(d)` genes with significant ANOVA p values (p <= 'r yml$input$gene$anova$p') were used as seeds to perform a gene-gene clustering analysis and `r length(cls)` clusters were identified. ORA was performed on the clusters to identify their functional association (see table below); 
 
 ```{r clustering_ora, include=FALSE}
 fn.tbl<-lapply(names(cls), function(nm) {
