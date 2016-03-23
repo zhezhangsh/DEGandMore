@@ -25,10 +25,17 @@ CreateDeReport<-function(yml, overwrite=FALSE) {
   } else {
     file.copy(yml$input$template, './DeReport.Rmd'); 
   }
-
+  
+  # save template and yaml file
+  file.copy('./DeReport.Rmd', paste(path, 'DeReport.Rmd', sep='/'));
+  writeLines(as.yaml(yml), paste(path, 'DeReport.yml', sep='/'));
+  
+  wd<-getwd(); 
+  setwd(path); 
+  
   errors<-list(); 
   
-  fn.md<-paste(path, 'DeReport.md', sep='/'); 
+  fn.md<-'DeReport.md'; 
   if (file.exists(fn.md)) file.remove(fn.md); 
   
   # Run template, save error message
@@ -38,14 +45,15 @@ CreateDeReport<-function(yml, overwrite=FALSE) {
   errors$render<-try(rmarkdown::render(fn.md, output_format="html_document", output_file="index.html", output_dir=path, 
                                 quiet=TRUE, envir=new.env()), silent=TRUE);
   
-  # save template and yaml file
-  file.copy('./DeReport.Rmd', paste(path, 'DeReport.Rmd', sep='/'));
-  writeLines(as.yaml(yml), paste(path, 'DeReport.yml', sep='/'));
+  fld<-rev(strsplit(getwd(), '/')[[1]])[1];
   
   # zip whole folder
-  fn.zip<-paste(path, '.zip', sep=''); 
-  zip(fn.zip, path, flag='-r0X', zip='zip');
-  file.rename(fn.zip, paste(path, rev(strsplit(fn.zip, '/')[[1]])[1], sep='/')); 
+  setwd('..');
+  fn.zip<-paste(fld, '.zip', sep=''); 
+  zip(fn.zip, fld, flag='-r0X', zip='zip');
+  file.rename(fn.zip, paste(fld, fn.zip, sep='/')); 
+  
+  setwd(wd); 
   
   list(output=path, message=errors); 
 }

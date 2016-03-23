@@ -13,7 +13,7 @@ output:
 ```{r global_setup, include=FALSE}
 cat("Setting up and loading data\n");
 
-knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE, figure.path=paste(yml$output, 'FIGURE', sep='/'));
+knitr::opts_chunk$set(eval=TRUE, dpi=300, fig.pos="H", fig.width=8, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE, fig.path='FIGURE/');
 
 library(MASS);
 library(gplots);
