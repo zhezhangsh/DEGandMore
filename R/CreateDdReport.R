@@ -12,13 +12,10 @@ CreateDdReport<-function(yml, overwrite=FALSE) {
     if (!file.exists(yml)) stop('Input file', yml, 'not found\n'); 
     yml <- yaml::yaml.load_file(yml);  
   }
+  
+  path<-yml$output;
+  if (!file.exists(path)) dir.create(path, recursive = TRUE);
 
-  if (!file.exists(yml$output)) dir.create(yml$output, recursive = TRUE);
-  
-  path<-paste(yml$output, paste(names(yml$input$comparison), collapse='-vs-'), sep='/');
-  if (overwrite & file.exists(path)) unlink(path, recursive = TRUE); 
-  
-  
   if (yml$template$remote) {
     if (!RCurl::url.exists(yml$template$location)) stop("Template Rmd file ', yml$input$template, ' not exists\n");
     writeLines(RCurl::getURL(yml$template$location)[[1]], './DdReport.Rmd');

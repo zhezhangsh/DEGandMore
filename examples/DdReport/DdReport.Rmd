@@ -24,8 +24,8 @@ library(awsomics);
 library(rchive);
 library(DEGandMore);
 
-fn.yaml<-'~/R/source/DEGandMore/examples/DdReport/DdReport.yml';
-yml<-yaml.load_file(fn.yaml); 
+#fn.yaml<-'~/R/source/DEGandMore/examples/DdReport/DdReport.yml';
+#yml<-yaml.load_file(fn.yaml); 
 
 path<-yml$output;
 if (!file.exists(path)) dir.create(path, recursive = TRUE); 
