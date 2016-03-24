@@ -215,7 +215,7 @@ paov<- parallel::mclapply(d0, function(x) {
   if (length(smm)==1) smm[[1]] else smm;
 }, mc.cores=yml$input$gene$anova$core);
 cnm<-rownames(paov[[1]]); 
-cnm<-gsub(' ', '', cnm[-length(cnm)]); saveRDS(paov, paste(path, 'test.rds', sep='')); 
+cnm<-gsub(' ', '', cnm[-length(cnm)]); 
 paov<-t(sapply(paov, function(x) x[-nrow(x), 5])); 
 dimnames(paov)<-list(rownames(d), cnm); 
 cnm0<-c(yml$input$gene$anova$f1, yml$input$gene$anova$f2, paste(yml$input$gene$anova$f1, yml$input$gene$anova$f2, sep=':'));
