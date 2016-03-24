@@ -339,15 +339,20 @@ ora.univ<-lapply(ora, function(x) lapply(x[1:2], function(x) rownames(x[[3]])));
 ora.univ<-Reduce('union', c(ora.univ[[1]], ora.univ[[2]])); 
 
 # Combine stats
-ora.n<-lapply(ora, function(o) sapply(o[1:2], function(o) o[[3]][ora.univ, 'n11'])); 
+ora.n<-lapply(ora, function(o) sapply(o[1:2], function(o) o[[3]][, 'n11'][ora.univ])); 
 ora.n<-cbind(ora.n[[1]], ora.n[[2]]); 
+ora.n[is.na(ora.n)]<-0; 
+rownames(ora.n)<-ora.univ;
 colnames(ora.n)<-paste('N', colnames(ora.n), sep='_'); 
 ora.or<-lapply(ora, function(o) sapply(o[1:2], function(o) {
-  c<-o[[3]][ora.univ, ]; 
-  (c[, 1]/c[, 2])*(c[, 4]/c[, 3]); 
+  c<-o[[3]]; 
+  c<-(c[, 1]/c[, 2])*(c[, 4]/c[, 3]); 
+  c<-c[ora.univ];
+  c;
 })); 
 ora.or<-cbind(ora.or[[1]], ora.or[[2]]); 
 ora.or[is.na(ora.or)]<-1; 
+rownames(ora.or)<-ora.univ;
 colnames(ora.or)<-paste('OR', colnames(ora.or), sep='_'); 
 ora.or<-cbind(ora.or[, c(1, 3)], OR_High_Diff=ora.or[, 3]-ora.or[, 1], ora.or[, c(2, 4)], OR_Low_Diff=ora.or[, 4]-ora.or[, 2]);
 ora.p<-lapply(ora.stat, function(o) sapply(o, function(o) o[, 'P_HyperGeo'][ora.univ]));
@@ -491,6 +496,8 @@ Each 2-group comparison performs gene set enrichment analysis (GSEA) on genes ra
 ```{r nes, fig.width=6, fig.height=6, out.width='600px'}
 par(mar=c(5,5,2,2)); 
 rng<-range(gsea.tbl[, c(4, 8)]); 
+gsea.tbl[is.na(gsea.tbl[,4]), 4]<-0; 
+gsea.tbl[is.na(gsea.tbl[,8]), 8]<-0; 
 plot(gsea.tbl[, c(4, 8)], col='#88888888', cex=0.6, pch=19, xlim=rng, ylim=rng, main='Enrichment score', xlab=labs[1], ylab=labs[2]); 
 abline(h=0, v=0, col='blue', lty=2);
 points(gsea.tbl[gsea.tbl[,5]<=0.05&gsea.tbl[,9]<=0.05, c(4, 8)], col='red', cex=0.6, pch=19); 
@@ -548,7 +555,8 @@ d1<-lapply(res, function(x) {
   z<-y$expr[, unlist(y$comparison)];
   z-rowMeans(z[, y$comparison[[1]]])
 });
-d1<-do.call('cbind', d1); 
+gs<-Reduce('intersect', lapply(d1, rownames)); 
+d1<-do.call('cbind', lapply(d1, function(x) x[gs, , drop=FALSE])); 
 d1<-t(apply(d1, 1, function(x) x/sd(x))); 
 x<-paov[order(paov[, 3]), ];
 x<-x[x[,3]<=yml$input$geneset$cluster$panova, , drop=FALSE]; 
