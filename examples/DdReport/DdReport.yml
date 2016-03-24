@@ -22,6 +22,7 @@ input:
     min: 10                                                                 # Minimum number of genes in the gene set to be included in the analysis
     max: 500                                                                # Maximum number of genes in the gene set to be included in the analysis
     cluster:
+      panova: 0.025                                                         # ANOVA p value cutoff (interaction term) for selecting significant genes as seeds
       top: 500                                                              # Number of top significant genes to be used as seeds of clusterings
       seed: 8                                                               # Number of initial clusters using seed genes 
       merge:                
