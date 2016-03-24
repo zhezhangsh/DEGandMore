@@ -75,8 +75,8 @@ lns<-paste(do.call('c', lns), collapse='\n');
 
 This report compares the results of the 2 following pairwise comparisons. Click links to view full results of individual comparisons: 
 
-  - [`r paste(grp[[1]], collapse=' vs. ')`](`r paste(yml$input$comparison$Liver_Female, 'index.html', sep='/')`)
-  - [`r paste(grp[[2]], collapse=' vs. ')`](`r paste(yml$input$comparison$Liver_Male, 'index.html', sep='/')`)
+  - [`r paste(grp[[1]], collapse=' vs. ')`](`r paste(yml$input$comparison[[1]], 'index.html', sep='/')`)
+  - [`r paste(grp[[2]], collapse=' vs. ')`](`r paste(yml$input$comparison[[2]], 'index.html', sep='/')`)
 
 <div align='right'>**_[Go back to project home](`r yml$home`)_**</div>
 
