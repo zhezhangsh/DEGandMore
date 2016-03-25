@@ -1,0 +1,44 @@
+# Location of Rmarkdown template
+template: https://raw.githubusercontent.com/zhezhangsh/DEGandMore/master/examples/DdReport/Dd3Report.Rmd
+# Navigation home page
+home: ../../index.html
+# Folder of all output files
+output: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/result/delta_delta/placenta_liver_uterus
+# Project decription
+project:
+  Title: Treatment of pregnant mice and infants with LPS ## Project title
+  Home: http://mybic.chop.edu/labs/Rebecca_Simmons_Lab/Infant_mouse_LPS ## Project home page
+  Description: The project studies effect of LPS on 3 mouse tissues; uterus of mother mice, placenta of newborns and liver of newborns. Additionally, newborns were separated by genders. ## Full description
+  Analysis: This analysis is interested in the tissue difference in terms of their response to LPS in infant mouse placenta and liver and mother mouse uterus. 
+# Data and parameters
+input:
+  sample: /nas/is1/zhangz/projects/simmons/2016-02_RNAseq/r/sample_family.rds
+  comparison:
+    Placenta: ../../pairwise/Placenta_Ctrl4-vs-Placenta_LPS3   # output path is the current path if using relative path
+    Liver: ../../pairwise/Liver_Ctrl4-vs-Liver_LPS3            # output path is the current path if using relative path
+    Uterus: ../../pairwise/Uterus_Ctrl4-vs-Uterus_LPS3         # output path is the current path if using relative path
+  gene:
+    union: yes
+    pvalue: 0.01
+    anova: 
+      f1: Tissue                                            # Feature name distinguishing the 3 comparisons
+      f2: Treatment                                         # Feature name distinguishing the 2 groups to be compared in each comparison
+      formula: d ~ Tissue*Treatment                         # ANOVA formula, must include f1*f2
+      core: 8                                               # Number of cores for parallel computing
+      p: 0.01
+  geneset:
+    source: /nas/is1/rchive/data/gene.set/r/default_set_mouse_5-1000.rds
+    min: 10
+    max: 500
+    cluster:
+      panova: 0.01        # lower with bigger sample size
+      top: 2000           # higher with bigger sample size  
+      seed: 12            
+      merge: 
+        corr: 0.8         # higher with bigger sample size  
+        p: 0.01           # lower with bigger sample size       
+      recluster: 
+        time: 20          # re-cluster seed genes for multiple times
+        corr: 0.8         # higher with bigger sample size  
+        diff: 0.1         # higher if want more distinctive clusters
+        nmax: 500         # max size of each cluster
