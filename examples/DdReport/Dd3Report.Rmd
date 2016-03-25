@@ -23,8 +23,8 @@ library(awsomics);
 library(rchive);
 library(DEGandMore);
 
-fn.yaml<-'Placenta_Liver_Uterus.yml';
-yml<-yaml.load_file(fn.yaml); 
+#fn.yaml<-'Placenta_Liver_Uterus.yml';
+#yml<-yaml.load_file(fn.yaml); 
 
 path<-yml$output;
 if (!file.exists(path)) dir.create(path, recursive = TRUE); 
