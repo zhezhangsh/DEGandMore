@@ -12,7 +12,8 @@ DeEdgeR<-function(mtrx, grps, norm.method='TMM', ...) {
   dge<-DGEList(counts=ct, group=group);
   dge<-calcNormFactors(dge, method=norm.method);
   dge<-estimateCommonDisp(dge);
-  dge<-estimateTagwiseDisp(dge);
+  if (ncol(ct)==2) dge@.Data[[3]]<-0.5 else # No replicates
+    dge<-estimateTagwiseDisp(dge); 
   
   stat<-as.data.frame(exactTest(dge)[[1]]);
   m1<-rowMeans(e1, na.rm=TRUE);
