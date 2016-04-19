@@ -495,9 +495,9 @@ Each 2-group comparison performs gene set enrichment analysis (GSEA) on genes ra
 <div align='center'>
 ```{r nes, fig.width=6, fig.height=6, out.width='600px'}
 par(mar=c(5,5,2,2)); 
-rng<-range(gsea.tbl[, c(4, 8)]); 
 gsea.tbl[is.na(gsea.tbl[,4]), 4]<-0; 
 gsea.tbl[is.na(gsea.tbl[,8]), 8]<-0; 
+rng<-range(gsea.tbl[, c(4, 8)]); 
 plot(gsea.tbl[, c(4, 8)], col='#88888888', cex=0.6, pch=19, xlim=rng, ylim=rng, main='Enrichment score', xlab=labs[1], ylab=labs[2]); 
 abline(h=0, v=0, col='blue', lty=2);
 points(gsea.tbl[gsea.tbl[,5]<=0.05&gsea.tbl[,9]<=0.05, c(4, 8)], col='red', cex=0.6, pch=19); 
