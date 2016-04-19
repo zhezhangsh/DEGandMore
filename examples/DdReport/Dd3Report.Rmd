@@ -774,7 +774,7 @@ PlotColoredBlock(ms, min=-1*mx, max=mx, key='Normalized expression level', group
 **Figure 9** This plot summarizes the group means and standard errors of all clusters.
 
 <div align='center'>
-```{r clustering_mean, include=TRUE, fig.width=8, fig.height=6, out.width='750px'}
+```{r clustering_mean, include=TRUE, fig.width=8, fig.height=8, out.width='750px'}
 ms<-t(ms); 
 m<-sapply(grps, function(g) colMeans(ms[g, , drop=FALSE]));
 se<-sapply(grps, function(g) apply(ms[g, , drop=FALSE],  2, function(x) sd(x)/sqrt(length(x)))); 
