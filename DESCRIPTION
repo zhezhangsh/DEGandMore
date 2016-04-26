@@ -3,6 +3,6 @@ Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
 Authors@R: person("Zhe", "Zhang", , "zhangz@email.chop.edu", role = c("aut", "cre"))
 Description: Analyses related to differential gene expression and functional annotation
-Depends: R (>= 3.1.0), snow
+Depends: R (>= 3.0.0), snow
 License: What license is it under?
 LazyData: true
