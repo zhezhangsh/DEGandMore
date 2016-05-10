@@ -11,7 +11,7 @@ DeMethods<-function () c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq2', 'DeEdgeR', 'DeVo
 # DeVoomLimma Voom normalization followed by Limma for DE
 ######################################################################################
 
-DeWrapper <- function(mtrx, grps, mthd=DeMethods[1], args=list()) {
+DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], args=list()) {
     # mtrx  A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
     # grps  A list of vectors, each vector has the column indexes (numeric vectors) or column names (character vectors) of a group; vectors are named by group names  
     # mthd  Name of the method to use for differential expression analysis
