@@ -27,6 +27,7 @@ export("NormAffyQspline");
 export("NormDESeq");
 export("NormFPKM");
 export("NormMedian");
+export("NormQQ");
 export("NormRLE");
 export("NormTMM");
 export("NormTotalCount");
