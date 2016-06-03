@@ -9,6 +9,7 @@ NormMethods<-function () {
     "NormFPKM",            # fragment per kilobases per million reads, RNA-seq only
     "NormLoess",           # rescale by fitting loess regression to a reference sample
     "NormMedian",          # rescale by median of non-zero genes
+    "NormQQ",              # quantile-quantile normalization
     "NormRLE", "NormTMM",  # calcNormFactors() function of the edgeR package, using relative log or trimmed mean
     "NormTotalCount",      # rescale by total read count, RNA-seq only
     "NormTPM",             # transcripts per million, RNA-seq only
@@ -45,6 +46,25 @@ NormTotalCount <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
   x[is.na(x)] <- rowMeans(mtrx, na.rm=TRUE)[is.na(x)]; 
   
   apply(mtrx, 2, function(c) c/(mean(c)/mean(x, na.rm=TRUE)));
+}
+
+####################################################################################
+NormQQ <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
+  ref<-tolower(ref)[1];
+  
+  if (ref[1]=='median') x<-apply(mtrx, 1, median) else
+    if (ref[1]=='first') x<-mtrx[, 1] else 
+      if (ref[1]=='last') x<-mtrx[, ncol(mtrx)] else 
+        x<-rowMeans(mtrx, na.rm=TRUE);
+  x <- rev(sort(x));
+  
+  d <- apply(mtrx, 2, function(y) {
+    names(y) <- 1:length(y); 
+    z <- y[y > x[length(x)]]; 
+    z[1:length(z)] <- x[length(z)-rank(z, ties.method='random')+1]; 
+    y[names(z)] <- z; 
+    as.vector(y); 
+  });   
 }
 
 ####################################################################################
