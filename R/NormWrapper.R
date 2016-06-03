@@ -1,14 +1,20 @@
 ######################################################################################
+##################################################################################################################
 # Names of normalization methods
-NormMethods<-function () 
-  c("NormAffyConstant", "NormAffyLoess", "NormAffyQspline", "NormDESeq", "NormFPKM", "NormLoess", "NormMedian", "NormRLE", "NormTMM", 
-    "NormTotalCount", "NormTPM", "NormUpperQuantile", "NormWrapper", 'NormLoess', 'NormAffyLoess', 'NormAffyQspline');
-
-# NormLoess           Self-implemented Loess normalization
-# NormAffyLoess       normalize.loess function of Affy package
-# NormAffyQspline     normalize.qsline function of Affy package
-# NormAffyConstant    normalize.constant function of Affy package 
-######################################################################################
+NormMethods<-function () {
+  c("NormAffyConstant",    # normalize.constant() function of the affy package, using constant scaling factors
+    "NormAffyLoess",       # normalize.loess() function of the affy package, fitting loess normalization
+    "NormAffyQspline",     # normalize.qspline() function of the affy package, using quantiles to fit cubic splines
+    "NormDESeq",           # estimateSizeFactors() function of the DESeq package for RNA-seq, median of ratio
+    "NormFPKM",            # fragment per kilobases per million reads, RNA-seq only
+    "NormLoess",           # rescale by fitting loess regression to a reference sample
+    "NormMedian",          # rescale by median of non-zero genes
+    "NormRLE", "NormTMM",  # calcNormFactors() function of the edgeR package, using relative log or trimmed mean
+    "NormTotalCount",      # rescale by total read count, RNA-seq only
+    "NormTPM",             # transcripts per million, RNA-seq only
+    "NormUpperQuantile")   # rescale by upper quantile of non-zero genes
+}
+##################################################################################################################
 
 NormWrapper <- function(mtrx, mthd=NormMethods[1], args=list()) {
   # mtrx  A numeric matrix of gene expression data. Rows are samples
@@ -78,10 +84,7 @@ NormMedian <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
 NormDESeq <- function(mtrx) {
   require(DESeq); 
   
-  cds <- newCountDataSet(mtrx, rep('A', ncol(mtrx)));
-  cds <- estimateSizeFactors(cds); 
-  f <- sizeFactors(cds);
-  
+  f <- estimateSizeFactorsForMatrix(mtrx); 
   d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
   colnames(d) <- colnames(mtrx); 
   
