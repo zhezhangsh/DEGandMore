@@ -182,7 +182,7 @@ NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, ..
   }, mc.cores = thread); 
 
   d<-do.call('cbind', d);
-  colnames(d)<-colnames(mtrx); 
+  dimnames(d)<-dimnames(mtrx); 
   
   d;
 }
