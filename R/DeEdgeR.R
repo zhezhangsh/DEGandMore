@@ -25,7 +25,7 @@ DeEdgeR<-function(mtrx, grps, norm.method='TMM', ...) {
   q<-p.adjust(p, method='BH');
   
   s<-cbind(m1, m2, m2-m1, lgfc, p, q);
-  colnames(s)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  colnames(s)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
   s<-cbind(s, stat[, 2, drop=FALSE]);
   
   list(stat=s[rownames(mtrx), ], group=grps, dge=dge);
