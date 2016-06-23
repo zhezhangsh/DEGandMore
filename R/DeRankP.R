@@ -6,6 +6,11 @@ DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   require(RankProd);
   require(DEGandMore);
   
+  prepared <- PrepareDe(mtrx, grps, paired);
+  mtrx     <- prepared[[1]];
+  grps     <- prepared[[2]];
+  paired   <- prepared[[3]];
+  
   stat<-DeRankProd(mtrx=mtrx, grps=grps, paired=paired, logged=logged, nperm=nperm, ...);
   
   s<-stat$single.rank[, 4:6];

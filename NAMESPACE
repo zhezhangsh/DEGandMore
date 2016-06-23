@@ -39,6 +39,7 @@ export("NormAffyLoess");
 export("NormAffyQspline");
 export("NormMethods");
 export("PCALegend");
+export("PrepareDe");
 export("PrepareGSEA");
 export("RunningRank");
 export("SummarizeGSEA");

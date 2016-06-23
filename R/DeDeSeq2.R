@@ -1,6 +1,11 @@
-DeDeSeq2<-function(mtrx, grps, paired=FALSE, ...) {
-  library(DEGandMore);
-  library(DESeq2);
+DeDeSeq2 <- function(mtrx, grps, paired=FALSE, ...) {
+  require(DEGandMore);
+  require(DESeq2);
+  
+  prepared <- PrepareDe(mtrx, grps, paired);
+  mtrx     <- prepared[[1]];
+  grps     <- prepared[[2]];
+  paired   <- prepared[[3]];
   
   e1<-mtrx[, grps[[1]], drop=FALSE];
   e2<-mtrx[, grps[[2]], drop=FALSE];
@@ -8,7 +13,7 @@ DeDeSeq2<-function(mtrx, grps, paired=FALSE, ...) {
   colData<-data.frame(row.names=unlist(grps, use.names=FALSE), stringsAsFactors = FALSE, Condition=rep(names(grps), sapply(grps, length)));
   
   dds <- DESeqDataSetFromMatrix(countData = cbind(e1, e2), colData = colData, design = ~ Condition);
-  ds <- DESeq(dds, quiet=TRUE, ...);
+  ds <- DESeq2::DESeq(dds, quiet=TRUE, ...);
   res<-data.frame(results(ds));
   
   m1<-rowMeans(e1, na.rm=TRUE);

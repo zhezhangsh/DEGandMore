@@ -1,24 +1,21 @@
-DeEdgeR<-function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
+DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   # norm.method   suggestion: use 'upperquantile' for ChIP-seq data
   require(DEGandMore);
   require(edgeR);
   
-  grps <- lapply(grps[1:2], function(g) 
-    if (class(g) == 'character') which(colnames(mtrx) %in% g) else g[g>0 & g<=ncol(mtrx)]);
-  if (length(grps[[1]])<2 | length(grps[[2]])<2) stop('Error: not enough samples, require at least 2 in each group.\n');
-  if (paired) if (length(grps[[1]]) != length(grps[[2]])) {
-    warning('Warning: number of samples not equal between 2 groups; running unpaired test instead.\n'); 
-    paired <- FALSE;
-  }
+  prepared <- PrepareDe(mtrx, grps, paired);
+  mtrx     <- prepared[[1]];
+  grps     <- prepared[[2]];
+  paired   <- prepared[[3]];
   
-  e1<-mtrx[, grps[[1]], drop=FALSE];
-  e2<-mtrx[, grps[[2]], drop=FALSE];
-  ct<-cbind(e1, e2);
-  group<-rep(names(grps), sapply(grps, length));
+  e1 <- mtrx[, grps[[1]], drop=FALSE];
+  e2 <- mtrx[, grps[[2]], drop=FALSE];
+  ct <- cbind(e1, e2);
+  group <- rep(names(grps), sapply(grps, length));
   
   # create DGEList object, normalize data and estimate dispersion 
-  dge<-DGEList(counts=ct, group=group);
-  dge<-calcNormFactors(dge, method=norm.method);
+  dge <- DGEList(counts=ct, group=group);
+  dge <- calcNormFactors(dge, method=norm.method);
   
   if (paired) {
     n <- length(grps[[1]]); 
@@ -34,23 +31,24 @@ DeEdgeR<-function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
     lrt <- glmLRT(fit);
     stat <- as.data.frame(topTags(lrt, n=nrow(mtrx))); 
   } else {
-    dge<-estimateCommonDisp(dge);
-    if (ncol(ct)==2) dge@.Data[[3]]<-0.5 else # No replicates
-      dge<-estimateTagwiseDisp(dge); 
-    stat<-as.data.frame(exactTest(dge)[[1]]);
+    dge <- estimateCommonDisp(dge);
+    if (ncol(ct)==2) dge@.Data[[3]] <- 0.5 else # No replicates
+      dge <- estimateTagwiseDisp(dge); 
+    stat <- as.data.frame(exactTest(dge)[[1]]);
   }
   
-  m1<-rowMeans(e1, na.rm=TRUE);
-  m2<-rowMeans(e2, na.rm=TRUE);
-  lgfc<-stat[, 'logFC'];
-  lgfc[is.na(lgfc)]<-0;
-  p<-stat[, 'PValue'];
-  p[is.na(p)]<-1;
-  q<-p.adjust(p, method='BH');
+  stat <- stat[rownames(ct), ]; 
+  m1 <- rowMeans(e1, na.rm=TRUE);
+  m2 <- rowMeans(e2, na.rm=TRUE);
+  lgfc <- stat[, 'logFC'];
+  lgfc[is.na(lgfc)] <- 0;
+  p <- stat[, 'PValue'];
+  p[is.na(p)] <- 1;
+  q <- p.adjust(p, method='BH');
   
-  s<-cbind(m1, m2, m2-m1, lgfc, p, q);
-  colnames(s)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
-  s<-cbind(s, stat[, 2, drop=FALSE]);
+  s <- cbind(m1, m2, m2-m1, lgfc, p, q);
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  s <- cbind(s, stat[, 2, drop=FALSE]);
   
   list(stat=s[rownames(mtrx), ], group=grps, dge=dge);
 }

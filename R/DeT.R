@@ -4,18 +4,12 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     # 
     # column index in range
     
-    library(DEGandMore);
-  
-    grps<-lapply(grps, function(g) if (class(g) == 'character') which(colnames(mtrx) %in% g) else g[g>0 & g<=ncol(mtrx)]);
-    
-    # use default group names if not given
-    if (is.null(names(grps)[1])) names(grps)[1]<-'Group0';
-    if (is.null(names(grps)[2])) names(grps)[2]<-'Group1';
-    
-    # Give error if no qualified samples for comparison
-    if (min(sapply(grps, length)) <= 1) stop("No enough observation for a 2-sample t test.");
-    
-    if (class(mtrx) != 'matrix') mtrx<-as.matrix(mtrx);
+    require(DEGandMore);
+
+    prepared <- PrepareDe(mtrx, grps, paired);
+    mtrx     <- prepared[[1]];
+    grps     <- prepared[[2]];
+    paired   <- prepared[[3]];
     
     # data subsets of the sample groups
     d1<-mtrx[, grps[[1]], drop=FALSE];

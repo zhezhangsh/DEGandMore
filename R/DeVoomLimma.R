@@ -3,9 +3,13 @@ DeVoomLimma<-function(mtrx, grps, paired=FALSE, plot=FALSE, ...) {
   require("edgeR");
   require("limma");
 
+  prepared <- PrepareDe(mtrx, grps, paired);
+  mtrx     <- prepared[[1]];
+  grps     <- prepared[[2]];
+  paired   <- prepared[[3]];
+  
   e1   <- mtrx[, grps[[1]], drop=FALSE];
   e2   <- mtrx[, grps[[2]], drop=FALSE];
-  mtrx <- cbind(e1, e2);
   m1   <- rowMeans(e1, na.rm=TRUE);
   m2   <- rowMeans(e2, na.rm=TRUE);
   
