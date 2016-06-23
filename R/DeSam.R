@@ -6,8 +6,8 @@ DeSam<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   # logged        If the data has been log-transformed
   # nperm				  SAM parameter
   
-  library(DEGandMore);
-  library(samr);
+  require(DEGandMore);
+  require(samr);
   
   e1<-mtrx[, grps[[1]], drop=FALSE];
   e2<-mtrx[, grps[[2]], drop=FALSE];

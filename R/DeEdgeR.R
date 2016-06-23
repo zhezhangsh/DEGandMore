@@ -1,7 +1,15 @@
-DeEdgeR<-function(mtrx, grps, norm.method='TMM', ...) {
+DeEdgeR<-function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   # norm.method   suggestion: use 'upperquantile' for ChIP-seq data
-  library(DEGandMore);
-  library(edgeR);
+  require(DEGandMore);
+  require(edgeR);
+  
+  grps <- lapply(grps[1:2], function(g) 
+    if (class(g) == 'character') which(colnames(mtrx) %in% g) else g[g>0 & g<=ncol(mtrx)]);
+  if (length(grps[[1]])<2 | length(grps[[2]])<2) stop('Error: not enough samples, require at least 2 in each group.\n');
+  if (paired) if (length(grps[[1]]) != length(grps[[2]])) {
+    warning('Warning: number of samples not equal between 2 groups; running unpaired test instead.\n'); 
+    paired <- FALSE;
+  }
   
   e1<-mtrx[, grps[[1]], drop=FALSE];
   e2<-mtrx[, grps[[2]], drop=FALSE];
@@ -11,16 +19,32 @@ DeEdgeR<-function(mtrx, grps, norm.method='TMM', ...) {
   # create DGEList object, normalize data and estimate dispersion 
   dge<-DGEList(counts=ct, group=group);
   dge<-calcNormFactors(dge, method=norm.method);
-  dge<-estimateCommonDisp(dge);
-  if (ncol(ct)==2) dge@.Data[[3]]<-0.5 else # No replicates
-    dge<-estimateTagwiseDisp(dge); 
   
-  stat<-as.data.frame(exactTest(dge)[[1]]);
+  if (paired) {
+    n <- length(grps[[1]]); 
+    x <- factor(paste('Pair', rep(1:n, 2), sep='_'));
+    y <- factor(paste('Group', rep(1:2, each=n), sep='_'));
+    
+    design <- model.matrix(~x+y);
+    dge <- estimateGLMCommonDisp(dge, design, verbose=FALSE);
+    dge <- estimateGLMTrendedDisp(dge, design);
+    dge <- estimateGLMTagwiseDisp(dge, design);
+    
+    fit <- glmFit(dge, design);
+    lrt <- glmLRT(fit);
+    stat <- as.data.frame(topTags(lrt, n=nrow(mtrx))); 
+  } else {
+    dge<-estimateCommonDisp(dge);
+    if (ncol(ct)==2) dge@.Data[[3]]<-0.5 else # No replicates
+      dge<-estimateTagwiseDisp(dge); 
+    stat<-as.data.frame(exactTest(dge)[[1]]);
+  }
+  
   m1<-rowMeans(e1, na.rm=TRUE);
   m2<-rowMeans(e2, na.rm=TRUE);
-  lgfc<-stat[,1];
+  lgfc<-stat[, 'logFC'];
   lgfc[is.na(lgfc)]<-0;
-  p<-stat[,3];
+  p<-stat[, 'PValue'];
   p[is.na(p)]<-1;
   q<-p.adjust(p, method='BH');
   

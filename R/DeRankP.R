@@ -3,9 +3,10 @@
 ###################################################################
 # Make output consistent with other methods
 DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
-  library(DEGandMore);
+  require(RankProd);
+  require(DEGandMore);
   
-  stat<-DeRankProd(mtrx, grps, logged, nperm, ...);
+  stat<-DeRankProd(mtrx=mtrx, grps=grps, paired=paired, logged=logged, nperm=nperm, ...);
   
   s<-stat$single.rank[, 4:6];
   if (logged) s<-cbind(s, s[, 3]) else s<-cbind(s, log2(s[,2]/s[,1]));
@@ -17,7 +18,7 @@ DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
 }
 
 DeRankProd<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
-  library(RankProd);
+  require(RankProd);
   
   nm<-names(grps);
   default.nm<-c('Control', 'Case');

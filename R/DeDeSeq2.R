@@ -1,4 +1,4 @@
-DeDeSeq2<-function(mtrx, grps, ...) {
+DeDeSeq2<-function(mtrx, grps, paired=FALSE, ...) {
   library(DEGandMore);
   library(DESeq2);
   
