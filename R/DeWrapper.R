@@ -33,7 +33,7 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE
     # Give error if no qualified samples for comparison
     if (min(sapply(grps, length)) == 0) 
       stop("No samples found in data matrix for comparison.\n");
-    if (pair & length(grps[[1]])!=length(grps[[2]])) 
+    if (paired & length(grps[[1]])!=length(grps[[2]])) 
       stop("Numbers of samples in groups are unequal for paired test.\n");
     
     grp0 <- colnames(mtrx)[grps[[1]]];
@@ -50,7 +50,8 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE
       group0     = grp0,
       group1     = grp1,
       method     = mthd,
-      paired     = pair,
+      paired     = paired,
+      logged     = logged,
       parameters = args,
       results    = do.call(mthd, all.args) # call the selected method with an argument list
     )
