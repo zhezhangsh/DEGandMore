@@ -44,6 +44,9 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE
     if (DeCountMethods()[mthd]) logged <- FALSE else all.args <- append(all.args, logged); 
     all.args <- append(all.args, args);
     
+    res <- do.call(mthd, all.args); # call the selected method with an argument list
+    res$stat <- res$stat[rownames(mtrx), , drop=FALSE];
+    
     # return a list
     list(
       data       = mtrx,
@@ -53,6 +56,6 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE
       paired     = paired,
       logged     = logged,
       parameters = args,
-      results    = do.call(mthd, all.args) # call the selected method with an argument list
+      results    = res  
     )
   }
