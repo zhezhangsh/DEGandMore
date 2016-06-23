@@ -1,9 +1,9 @@
 DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     # mtrx          A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
     # grps          A 2-vector list, each vector has the column indexes (numeric vectors) or column names (character vectors) of a group; vectors are named by group names  
-    # 
-    # column index in range
-    
+    # paired
+    # logged
+
     require(DEGandMore);
 
     prepared <- PrepareDe(mtrx, grps, paired);

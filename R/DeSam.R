@@ -17,7 +17,7 @@ DeSam<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   e1 <- mtrx[, grps[[1]], drop=FALSE];
   e2 <- mtrx[, grps[[2]], drop=FALSE];
   if (paired) {
-    y <- rep(c(-1, 1), sapply(grps, length));
+    y <- c(-(1:ncol(e1)), 1:ncol(e2)); 
     type <- "Two class paired";
   } else {
     y <- rep(c(1, 2), sapply(grps, length));

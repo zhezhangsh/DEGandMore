@@ -61,8 +61,10 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
   if (single.ranking) { # use a single ranking for both directions of change
     rk<-rank(log2(tbs[[1]][,2])+log2(1/tbs[[2]][,2]));
     p<-rep(1, length(rk)); 
-    p[tbs[[1]][, 5]>0]<-tbs[[1]][tbs[[1]][, 5]>0, 3];
-    p[tbs[[1]][, 5]<0]<-tbs[[2]][tbs[[1]][, 5]<0, 3];
+    ind1<-tbs[[1]][, 5]>0 & !is.na(tbs[[1]][, 5]); 
+    p[ind1]<-tbs[[1]][ind1, 3];
+    ind2<-tbs[[2]][, 5]>0 & !is.na(tbs[[2]][, 5]); 
+    p[ind2]<-tbs[[2]][ind2, 3];
     p<-pmin(1, 2*p);
 #     p<-(tbs[[1]][,3]+(1-tbs[[2]][,3]))/2;
 #     p<-2*pmin(p, 1-p);
