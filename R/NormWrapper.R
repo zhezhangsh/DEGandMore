@@ -58,13 +58,16 @@ NormQQ <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
         x<-rowMeans(mtrx, na.rm=TRUE);
   x <- rev(sort(x));
   
-  apply(mtrx, 2, function(y) {
+  d <- apply(mtrx, 2, function(y) {
     names(y) <- 1:length(y); 
     z <- y[y > x[length(x)]]; 
     z[1:length(z)] <- x[length(z)-rank(z, ties.method='random')+1]; 
     y[names(z)] <- z; 
     as.vector(y); 
-  });   
+  });  
+  
+  rownames(d) <- rownames(mtrx); 
+  d;
 }
 
 ####################################################################################
