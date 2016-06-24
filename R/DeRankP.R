@@ -66,9 +66,6 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
     ind2<-tbs[[2]][, 5]>0 & !is.na(tbs[[2]][, 5]); 
     p[ind2]<-tbs[[2]][ind2, 3];
     p<-pmin(1, 2*p);
-#     p<-(tbs[[1]][,3]+(1-tbs[[2]][,3]))/2;
-#     p<-2*pmin(p, 1-p);
-#     p[p<0]<-0;
     a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], Pvalue=p, FDR=p.adjust(p, method='BH'));
     if (!identical(NA, genename)) rownames(a)<-genename;
     tbs$single.rank<-a;

@@ -221,3 +221,12 @@ NormAffyConstant<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), ...) 
 }
 
 ####################################################################################
+# normalizeCyclicLoess {limma}
+# http://web.mit.edu/~r/current/arch/i386_linux26/lib/R/library/limma/html/normalizeCyclicLoess.html
+NormCyclicLoess <- function(mtrx) {
+  require(limma);
+  
+  normalizeCyclicLoess(mtrx, method='pairs')
+}
+
+####################################################################################

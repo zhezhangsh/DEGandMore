@@ -24,6 +24,7 @@ export("GSEAviaJava");
 export("NormAffyConstant");
 export("NormAffyLoess");
 export("NormAffyQspline");
+export("NormCyclicLoess");
 export("NormDESeq");
 export("NormFPKM");
 export("NormMedian");
