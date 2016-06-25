@@ -22,7 +22,7 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   
   # Summary statistics
   lgfc <- res[, 2];
-  pval <- 1-2*abs(pnorm(res[, 4])-0.5); 
+  pval <- 2*pnorm(-abs(res[, 4])); 
   lgfc[is.na(lgfc)] <- 0;
   pval[is.na(pval)] <- 1;  
   
