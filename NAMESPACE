@@ -4,7 +4,7 @@ export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
 export("CreateOiReport");
-export("DeDeSeq2");
+export("DeDeSeq");
 export("DeEdgeR");
 export("DegHeatmap");
 export("DegPCA");
