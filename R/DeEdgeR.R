@@ -23,32 +23,33 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
     y <- factor(paste('Group', rep(1:2, each=n), sep='_'));
     
     design <- model.matrix(~x+y);
-    dge <- estimateGLMCommonDisp(dge, design, verbose=FALSE);
-    dge <- estimateGLMTrendedDisp(dge, design);
-    dge <- estimateGLMTagwiseDisp(dge, design);
+    dge    <- estimateGLMCommonDisp(dge, design, verbose=FALSE);
+    dge    <- estimateGLMTrendedDisp(dge, design);
+    dge    <- estimateGLMTagwiseDisp(dge, design);
     
-    fit <- glmFit(dge, design);
-    lrt <- glmLRT(fit);
+    fit  <- glmFit(dge, design);
+    lrt  <- glmLRT(fit);
     stat <- as.data.frame(topTags(lrt, n=nrow(mtrx))); 
   } else {
-    dge <- estimateCommonDisp(dge);
+    dge  <- estimateCommonDisp(dge);
     if (ncol(ct)==2) dge@.Data[[3]] <- 0.5 else # No replicates
       dge <- estimateTagwiseDisp(dge); 
     stat <- as.data.frame(exactTest(dge)[[1]]);
   }
-  
   stat <- stat[rownames(ct), ]; 
-  m1 <- rowMeans(e1, na.rm=TRUE);
-  m2 <- rowMeans(e2, na.rm=TRUE);
+  nm   <- dge@.Data[[4]];  
+  m1   <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
+  m2   <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
   lgfc <- stat[, 'logFC'];
+  p    <- stat[, 'PValue'];
+  q    <- p.adjust(p, method='BH');
   lgfc[is.na(lgfc)] <- 0;
-  p <- stat[, 'PValue'];
-  p[is.na(p)] <- 1;
-  q <- p.adjust(p, method='BH');
+  p[is.na(p)]       <- 1;
+  q[is.na(q)]       <- 1;
   
-  s <- cbind(m1, m2, m2-m1, lgfc, p, q);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
-  s <- cbind(s, stat[, 2, drop=FALSE]);
-  
+  s <- cbind(m1, m2, m2-m1, lgfc, p, q, stat[, 2]);
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
+                   'LogFC', 'Pvalue', 'FDR', 'LogCPM');
+
   list(stat=s[rownames(mtrx), ], group=grps, dge=dge);
 }

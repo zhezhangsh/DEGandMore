@@ -5,7 +5,7 @@ NormMethods<-function () {
   c("NormAffyConstant",    # normalize.constant() function of the affy package, using constant scaling factors
     "NormAffyLoess",       # normalize.loess() function of the affy package, fitting loess normalization
     "NormAffyQspline",     # normalize.qspline() function of the affy package, using quantiles to fit cubic splines
-    "NormDESeq",           # estimateSizeFactors() function of the DESeq package for RNA-seq, median of ratio
+    "NormDESeq",           # estimateSizeFactors() function of the DESeq2 package for RNA-seq, median of ratio
     "NormFPKM",            # fragment per kilobases per million reads, RNA-seq only
     "NormLoess",           # rescale by fitting loess regression to a reference sample
     "NormMedian",          # rescale by median of non-zero genes
@@ -103,9 +103,9 @@ NormMedian <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
 }
 
 ####################################################################################
-# DESeq
+# DESeq2
 NormDESeq <- function(mtrx) {
-  require(DESeq); 
+  require(DESeq2); 
   
   f <- estimateSizeFactorsForMatrix(mtrx); 
   d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
