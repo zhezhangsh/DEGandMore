@@ -12,7 +12,7 @@ DeMethods <- function () c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq', 'DeEdgeR', 'DeV
 ######################################################################################
 
 # Whether the method is applicable to count data only
-DeCountMethods <- function () c('DeT'=FALSE, 'DeSam'=FALSE, 'DeRankP'=FALSE, 'DeDeSeq2'=TRUE, 'DeEdgeR'=TRUE, 'DeVoomLimma'=TRUE);
+DeCountMethods <- function () c('DeT'=FALSE, 'DeSam'=FALSE, 'DeRankP'=FALSE, 'DeDeSeq'=TRUE, 'DeEdgeR'=TRUE, 'DeVoomLimma'=TRUE);
 
 DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE, args=list()) {
     # mtrx    A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
