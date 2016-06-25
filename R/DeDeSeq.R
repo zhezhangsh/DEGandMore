@@ -38,5 +38,5 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   rownames(s) <- rownames(mtrx); 
   
 
-  list(stat=s, group=grps, cds=cds);
+  list(stat=s, group=grps, dds=dds);
 }
