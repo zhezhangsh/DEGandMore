@@ -15,6 +15,11 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DE
   require(DEGandMore);
   require(baySeq);
   
+  prepared <- PrepareDe(mtrx, grps, paired);
+  mtrx     <- prepared[[1]];
+  grps     <- prepared[[2]];
+  paired   <- prepared[[3]];
+  
   norm <- tolower(normalization)[1]; 
   if (normalization=='tmm')    mtrx <- NormTMM(mtrx);
   if (normalization=='rle')    mtrx <- NormRLE(mtrx);
@@ -24,12 +29,8 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DE
   if (normalization=='tc')     mtrx <- NormTotalCount(mtrx);
   if (normalization=='qq')     mtrx <- NormQQ(mtrx);
   mtrx <- round(mtrx); 
+  mtrx <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
   
-  prepared <- PrepareDe(mtrx, grps, paired);
-  mtrx     <- prepared[[1]];
-  grps     <- prepared[[2]];
-  paired   <- prepared[[3]];
-
   n <- sapply(grps, length); 
   
   cl <- NULL; 

@@ -15,6 +15,7 @@ export("DeMethods");
 export("DeRankP");
 export("DeRankProd");
 export("DeSam");
+export("DeSamSeq");
 export("DeT");
 export("DeVoomLimma");
 export("DeWrapper");
