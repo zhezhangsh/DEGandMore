@@ -4,6 +4,7 @@ export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
 export("CreateOiReport");
+export("DeBaySeq");
 export("DeCountMethods");
 export("DeDeSeq");
 export("DeEdgeR");

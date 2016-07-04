@@ -19,7 +19,7 @@ DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE
     # grps    A list of two vectors, each vector has the column indexes (numeric vectors) or column names (character vectors) of a group; vectors are named by group names  
     # mthd    Name of the method to use for differential expression analysis
     # paired  Whether it's a paired test; if TRUE the two groups must have the same number of samples and the samples must be ordered to match each other
-    # logged  Whether data is log2-transformed. It will affect how the LogFC values, but not the p values, will be calculated. It won't affect methods using RNA-seq read count data either.
+    # logged  Whether data is log2-transformed. It will affect how Log(FoldChange), but not the p values, will be calculated. It won't affect methods using RNA-seq read count data either.
     # args    Name:value pairs of specific arguments to selected method 
   
     require(DEGandMore);
