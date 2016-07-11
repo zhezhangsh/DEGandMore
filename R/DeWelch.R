@@ -1,6 +1,6 @@
-# Paired/Unpaired Student's t test
-# Equal variance
-DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
+# Paired/Unpaired Welch's t test
+# Unequal variance
+DeWelch <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
   # mtrx    A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
   # grps    A 2-vector list, each vector has the column indexes (numeric vectors) or column names (character vectors) of a group; vectors are named by group names  
   # paired  Whether it's a paired test; if TRUE the two groups must have the same number of samples and the samples must be ordered to match each other
@@ -30,13 +30,14 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
       mn <- min(mtrx[mtrx>0]); 
       lgfc <- log2(pmax(mn, m2)) - log2(pmax(mn, m1)); 
     };
-    
+
     # calculate variance while assuming unequal variance
     if (!paired | n1!=n2) {
       ss1 <- rowSums((d1-m1)^2, na.rm=TRUE)/(n1-1);
       ss2 <- rowSums((d2-m2)^2, na.rm=TRUE)/(n2-1);
-      t   <- diff/sqrt(ss1/n1+ss2/n2); 
-      df  <- n1+n2-2; # Degree of freedom
+      s   <- sqrt(ss1/n1+ss2/n2); # pooled variance
+      t   <- diff/s; # T statistic
+      df  <- (ss1/n1+ss2/n2)^2/((ss1/n1)^2/(n1-1)+(ss2/n2)^2/(n2-1)); # Degree of freedom
       t[is.na(t)] <- 0;
     } else {
       d   <- d2-d1; 

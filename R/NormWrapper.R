@@ -127,7 +127,7 @@ NormTMM <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
         x<-rowMeans(mtrx, na.rm=TRUE);
   
   f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'RLE')[-1];
-  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]*f[i]); 
+  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
   colnames(d) <- colnames(mtrx); 
   
   d;
@@ -146,7 +146,7 @@ NormRLE <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
         x<-rowMeans(mtrx, na.rm=TRUE);
       
   f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'RLE')[-1];
-  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]*f[i]); 
+  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
   colnames(d) <- colnames(mtrx); 
       
   d;

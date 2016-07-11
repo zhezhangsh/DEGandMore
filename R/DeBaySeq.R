@@ -1,6 +1,5 @@
 # Empirical Bayesian analysis of patterns of differential expression in count data
 # baySeq package: http://bioconductor.org/packages/release/bioc/html/baySeq.html
-
 DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DESeq', 'Median', 'UQ', 'TC', 'QQ'), 
                      samplesize=1000, bootStraps=2, cl=NULL) {
   # normalization methods:
@@ -21,13 +20,13 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DE
   paired   <- prepared[[3]];
   
   norm <- tolower(normalization)[1]; 
-  if (normalization=='tmm')    mtrx <- NormTMM(mtrx);
-  if (normalization=='rle')    mtrx <- NormRLE(mtrx);
-  if (normalization=='deseq')  mtrx <- NormDESeq(mtrx);
-  if (normalization=='median') mtrx <- NormMedian(mtrx);
-  if (normalization=='uq')     mtrx <- NormUpperQuantile(mtrx);
-  if (normalization=='tc')     mtrx <- NormTotalCount(mtrx);
-  if (normalization=='qq')     mtrx <- NormQQ(mtrx);
+  if (norm=='tmm')    mtrx <- NormTMM(mtrx);
+  if (norm=='rle')    mtrx <- NormRLE(mtrx);
+  if (norm=='deseq')  mtrx <- NormDESeq(mtrx);
+  if (norm=='median') mtrx <- NormMedian(mtrx);
+  if (norm=='uq')     mtrx <- NormUpperQuantile(mtrx);
+  if (norm=='tc')     mtrx <- NormTotalCount(mtrx);
+  if (norm=='qq')     mtrx <- NormQQ(mtrx);
   mtrx <- round(mtrx); 
   mtrx <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
   

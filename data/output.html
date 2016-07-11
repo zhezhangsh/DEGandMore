@@ -1,0 +1,73 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">  
+ <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">  
+  <head>                                                 
+ 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />  
+    <title> DEGseq RESULT </title>                     
+       <style type="text/css">                         
+            body{                                        
+                 background-color: #FFFFFF;              
+                 margin-left: 5%;                        
+                 margin-right: 45%;                       
+                 border: 0px dotted gray;                
+                 padding: 10px 10px 10px 10px;           
+                 font-family: sans-serif;                
+                 font-size: 130%;                        
+            }                                            
+            img{                                         
+              width: 576px; 
+              heght: 576px; 
+            }                                            
+            td{text-align:center;}                       
+            p.tips{                                      
+                color: green;                            
+                font-size: 130%;                         
+                font-family: Trebuchet MS;               
+                width: 200%;                             
+            }                                            
+            p.output{                                      
+                font-size: 100%;                         
+                width: 200%;                             
+            }                                            
+      </style>                                           
+  </head>                                                
+  <body>                                                       
+      <p class = "tips"> Tips: change zoom level with Ctrl + or Ctrl - </p> 
+      <table cellpadding="10">                                 
+      <tr>                                                       
+        <td> <img src = "./output/Sample1_hist.png" alt="Sample1_hist.png" /></td>     
+        <td> <img src = "./output/Sample2_hist.png" alt="Sample2_hist.png" /></td>     
+      </tr>                                                       
+      <tr>                                                        
+         <td>&nbsp;&nbsp;&nbsp;&nbsp; Histogram of the number of reads for genes</td>     
+         <td>&nbsp;&nbsp;&nbsp;&nbsp; Histogram of the number of reads for genes</td>             
+      </tr>                                                       
+      </table>                                                    
+      <p> <br/> </p>                                              
+      <table cellpadding="10">                                    
+      <tr>                                                        
+        <td> <img src = "./output/SampleS_box.png" alt="SampleS_box.png" /> </td> 
+        <td> <img src = "./output/Sample1_Sample2_compare.png" alt="Sample1_Sample2_compare.png" /> </td> 
+      </tr>                                                       
+      <tr>                                                        
+      <td>&nbsp;&nbsp;&nbsp;&nbsp; Boxplot of read counts for each gene</td>                   
+<td>Scatterplot comparing the number of reads for each gene for  group1 and group2 </td> 
+      </tr>                                                       
+      </table>                                                    
+      <p> <br/> </p>                                              
+      <table cellpadding="10">                                    
+      <tr>                                                        
+        <td> <img src = "./output/result.png" alt="result.png"  /> </td> 
+      </tr>                                                       
+      <tr>                                                        
+       <td>&nbsp;&nbsp;&nbsp;&nbsp; Differentially expressed genes on the MA-plot</td>        
+      </tr>                                                       
+      </table>                                                    
+<p class = "output"> 
+<br/> 
+<br/> 
+method to identify differentially expressed genes: LRT 
+<br/> 
+output directory: <a href = "file:////Users/zhangz/Documents/DEGandMore/data">/Users/zhangz/Documents/DEGandMore/data</a> 
+</p> 
+  </body>                                                         
+</html>                                                   
