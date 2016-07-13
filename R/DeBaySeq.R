@@ -1,7 +1,7 @@
 # Empirical Bayesian analysis of patterns of differential expression in count data
 # baySeq package: http://bioconductor.org/packages/release/bioc/html/baySeq.html
 DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DESeq', 'Median', 'UQ', 'TC', 'QQ'), 
-                     samplesize=1000, bootStraps=2, cl=NULL) {
+                     samplesize=1000, bootStraps=2, cl=4) {
   # normalization methods:
     # TMM: Trimmed mean method of calcNormFactors() function of the edgeR package
     # RLS: Relative log method of calcNormFactors() function of the edgeR package

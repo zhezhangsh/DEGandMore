@@ -19,6 +19,7 @@ export("DegHeatmap");
 export("DegPCA");
 export("DeLimma");
 export("DeLMGene");
+export("DeMethods");
 export("DeNoiSeq");
 export("DePlgem");
 export("DePoissonSeq");

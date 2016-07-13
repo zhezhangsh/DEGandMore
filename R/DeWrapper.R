@@ -1,14 +1,17 @@
 
 ######################################################################################
 # Names of DE methods
-DeMethods <- function () c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq', 'DeEdgeR', 'DeVoomLimma');
-
-# DeT         Student's T test
-# DeSam       SAM (significance analysis of microarray) test
-# DeRankP     Rank product test
-# DeDeSeq     DeSeq test for RNA-seq data
-# DeEdgeR     EdgeR test for RNA-seq data
-# DeVoomLimma Voom normalization followed by Limma for DE
+DeMethods <- function (all.info=FALSE) {
+  # DeT         Student's T test
+  # DeSam       SAM (significance analysis of microarray) test
+  # DeRankP     Rank product test
+  # DeDeSeq     DeSeq test for RNA-seq data
+  # DeEdgeR     EdgeR test for RNA-seq data
+  # DeVoomLimma Voom normalization followed by Limma for DE
+  
+  c('DeT', 'DeSam', 'DeRankP', 'DeDeSeq', 'DeEdgeR', 'DeVoomLimma');
+  
+}
 ######################################################################################
 
 # Whether the method is applicable to count data only
