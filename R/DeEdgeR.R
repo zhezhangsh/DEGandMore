@@ -8,13 +8,12 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
-  
   # create DGEList object, normalize data and estimate dispersion 
   group <- rep(names(grps), sapply(grps, length));
   dge   <- DGEList(counts=mtrx, group=group);
   dge   <- calcNormFactors(dge, method=norm.method);
   
-  if (paired) {
+  if (paired & length(grps[[1]])==length(grps[[2]])) {
     n <- length(grps[[1]]); 
     x <- factor(paste('Pair', rep(1:n, 2), sep='_'));
     y <- factor(paste('Group', rep(1:2, each=n), sep='_'));
@@ -31,11 +30,10 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
     dge  <- estimateCommonDisp(dge);
     if (ncol(mtrx)==2) dge@.Data[[3]] <- 0.5 else # No replicates
       dge <- estimateTagwiseDisp(dge); 
-    stat <- as.data.frame(exactTest(dge)[[1]]);
+    stat <- as.data.frame(exactTest(dge, pair=names(grps))[[1]]);
   }
   stat <- stat[rownames(mtrx), ]; 
   sz   <- dge@.Data[[2]][, 'norm.factors']
-  nm   <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/sz[i]);   
   m1   <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
   m2   <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
   lgfc <- stat[, 'logFC'];
