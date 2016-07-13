@@ -34,6 +34,7 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   }
   stat <- stat[rownames(mtrx), ]; 
   sz   <- dge@.Data[[2]][, 'norm.factors']
+  nm   <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/sz[i]);   
   m1   <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
   m2   <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
   lgfc <- stat[, 'logFC'];
