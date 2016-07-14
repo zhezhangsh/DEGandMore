@@ -24,7 +24,7 @@ export("DeNoiSeq");
 export("DePlgem");
 export("DePoissonSeq");
 export("DeRankP");
-export(“DeRankProd”);
+export("DeRankProd");
 export("DeRBM");
 export("DeSam");
 export("DeSamSeq");
