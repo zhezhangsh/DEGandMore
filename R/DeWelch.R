@@ -19,7 +19,7 @@ DeWelch <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     
     # sample sizes
     n1 <- apply(d1, 1, function(d) length(d[!is.na(d)]));
-    n2 <- apply(d1, 1, function(d) length(d[!is.na(d)]));
+    n2 <- apply(d2, 1, function(d) length(d[!is.na(d)]));
     
     # group means
     m1 <- rowMeans(d1, na.rm=TRUE);

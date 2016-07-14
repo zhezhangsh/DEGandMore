@@ -1,8 +1,7 @@
 # DEGSeq
 # https://www.bioconductor.org/packages/release/bioc/html/DEGseq.html
 # DEGexp {DEGseq}
-DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MARS", "MATR", "FC"),
-                     normalMethod=c("none", "loess", "median")) {
+DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MARS", "MATR", "FC")) {
   
   require(DEGandMore);
   require(DEGseq);
@@ -12,19 +11,19 @@ DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MA
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
-  if (paired) warning("Paired test not supported by NOISeq; performing unpaired test instead.\n");
+  if (paired) warning("Paired test not supported by DEGseq; performing unpaired test instead.\n");
   
   mthd <- method[1]; 
   norm <- normalMethod[1];                     
   if (!(mthd %in% c("CTR", "FET", "MARS", "MATR", "FC"))) mthd <- 'LRT';      
-  if (!(norm %in% c("loess", "median"))) norm <- 'none';
+  #if (!(norm %in% c("loess", "loess"))) norm <- 'none';
 
   mtrx1 <- as.matrix(cbind(rownames(mtrx), mtrx[, grps[[1]], drop=FALSE])); 
   mtrx2 <- as.matrix(cbind(rownames(mtrx), mtrx[, grps[[2]], drop=FALSE])); 
   
   DEGexp(geneExpMatrix1 = mtrx1, geneCol1=1, expCol1=2:ncol(mtrx1), groupLabel1 = names(grps)[1], 
          geneExpMatrix2 = mtrx2, geneCol2=1, expCol2=2:ncol(mtrx2), groupLabel2 = names(grps)[2],
-         method = mthd, normalMethod = norm, outputDir=tempdir()); 
+         method = mthd, normalMethod = 'none', outputDir=tempdir()); 
   
   res <- read.table(paste(tempdir(), 'output_score.txt', sep='/'), row=1, header=TRUE, sep='\t'); 
   
