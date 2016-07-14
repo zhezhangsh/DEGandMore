@@ -20,6 +20,7 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     # sample sizes
     n1 <- apply(d1, 1, function(d) length(d[!is.na(d)]));
     n2 <- apply(d2, 1, function(d) length(d[!is.na(d)]));
+    n  <- sapply(grps, length); 
     
     # group means
     m1 <- rowMeans(d1, na.rm=TRUE);
@@ -32,7 +33,7 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     };
     
     # calculate variance while assuming unequal variance
-    if (!paired | n1!=n2) {
+    if (!paired | n[1]!=n[2]) {
       ss1 <- rowSums((d1-m1)^2, na.rm=TRUE)/(n1-1);
       ss2 <- rowSums((d2-m2)^2, na.rm=TRUE)/(n2-1);
       t   <- diff/sqrt(ss1/n1+ss2/n2); 
