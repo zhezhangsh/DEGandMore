@@ -57,14 +57,19 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
   if (!identical(NA, genename)) rownames(tbs[[1]])<-rownames(tbs[[2]])<-genename;
   names(tbs)[1]<-paste(class1, '<', class2);
   names(tbs)[2]<-paste(class1, '>', class2);
+  ps <- rp$pval; 
+  fc <- rp$AveFC;
   
   if (single.ranking) { # use a single ranking for both directions of change
     rk<-rank(log2(tbs[[1]][,2])+log2(1/tbs[[2]][,2]));
-    p<-rep(1, length(rk)); 
-    ind1<-tbs[[1]][, 5]>0 & !is.na(tbs[[1]][, 5]); 
-    p[ind1]<-tbs[[1]][ind1, 3];
-    ind2<-tbs[[2]][, 5]>0 & !is.na(tbs[[2]][, 5]); 
-    p[ind2]<-tbs[[2]][ind2, 3];
+    p <- ps[, 1];
+    p[fc > 0] <- ps[fc > 0, 2]; 
+    p[is.na(fc) | is.na(p)] <- 1;
+#     p<-rep(1, length(rk)); 
+#     ind1<-tbs[[1]][, 5]>0 & !is.na(tbs[[1]][, 5]); 
+#     p[ind1]<-tbs[[1]][ind1, 3];
+#     ind2<-tbs[[2]][, 5]>0 & !is.na(tbs[[2]][, 5]); 
+#     p[ind2]<-tbs[[2]][ind2, 3];
     p<-pmin(1, 2*p);
     a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], Pvalue=p, FDR=p.adjust(p, method='BH'));
     if (!identical(NA, genename)) rownames(a)<-genename;
