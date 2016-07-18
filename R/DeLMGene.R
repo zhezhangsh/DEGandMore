@@ -40,9 +40,12 @@ DeLMGene <- function(mtrx, grps, paired=FALSE, min.count=min(8, ncol(mtrx))) {
   pv <- res$Gene.Specific[, 1];
   m1 <- rowMeans(ex[, grps[[1]], drop=FALSE]); 
   m2 <- rowMeans(ex[, grps[[2]], drop=FALSE]); 
-  l2 <- m2-m1;
   
   pv[rowSums(mtrx) <= min.count] <- 1;
+  m1[rowSums(mtrx) <= min.count] <- 0;
+  m2[rowSums(mtrx) <= min.count] <- 0;
+
+  l2 <- m2-m1;
   qv <- p.adjust(pv, method='BH');
   
   m1[is.na(m1)] <- 0;
