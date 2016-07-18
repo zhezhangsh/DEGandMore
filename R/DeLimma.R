@@ -8,6 +8,8 @@ DeLimma <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
+  n <- sapply(grps, length);
+  
   if (paired & n[1]==n[2]) {
     pair   <- factor(rep(1:2, each=n[1])); 
     comp   <- factor(rep(names(grps), sapply(grps, length))); 
