@@ -33,18 +33,20 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
     stat <- as.data.frame(exactTest(dge, pair=names(grps))[[1]]);
   }
   stat <- stat[rownames(mtrx), ]; 
-  sz   <- dge@.Data[[2]][, 'norm.factors']
-  nm   <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/sz[i]);   
-  m1   <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
-  m2   <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
-  lgfc <- stat[, 'logFC'];
-  p    <- stat[, 'PValue'];
-  q    <- p.adjust(p, method='BH');
-  lgfc[is.na(lgfc)] <- 0;
-  p[is.na(p)]       <- 1;
-  q[is.na(q)]       <- 1;
   
-  s <- cbind(m1, m2, m2-m1, lgfc, p, q, stat[, 2]);
+  sz <- dge@.Data[[2]][, 'norm.factors']
+  nm <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/sz[i]);   
+  m1 <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
+  m2 <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
+  l2 <- stat[, 'logFC'];
+  p  <- stat[, 'PValue'];
+  q  <- p.adjust(p, method='BH');
+  
+  l2[is.na(l2)] <- 0;
+  p[is.na(p)]   <- 1;
+  q[is.na(q)]   <- 1;
+  
+  s <- cbind(m1, m2, m2-m1, l2, p, q, stat[, 2]);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
                    'LogFC', 'Pvalue', 'FDR', 'LogCPM');
 

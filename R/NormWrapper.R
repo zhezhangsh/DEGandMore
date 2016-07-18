@@ -22,7 +22,6 @@ NormWrapper <- function(mtrx, mthd=NormMethods[1], args=list()) {
   # mthd  Name of the method to use for normalization
   # args  Name:value pairs of specific arguments to selected method 
   
-  
   library(DEGandMore);
   
   if (!(mthd %in% NormMethods())) stop("No method named: ", mthd, "\n");
@@ -126,10 +125,13 @@ NormTMM <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
       if (ref[1]=='last') x<-mtrx[, ncol(mtrx)] else 
         x<-rowMeans(mtrx, na.rm=TRUE);
   
-  f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'TMM')[-1];
-  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
-  colnames(d) <- colnames(mtrx); 
+  dge <- DGEList(cbind(x, mtrx)); 
+  dge <- calcNormFactors(dge, refColumn = 1, method = 'TMM'); 
+  dge <- estimateDisp(dge);
+  dge <- estimateCommonDisp(dge);
+  dge <- estimateTagwiseDisp(dge);
   
+  d <- dge@.Data[[11]][, -1];
   d;
 }
 
@@ -145,10 +147,12 @@ NormRLE <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
       if (ref[1]=='last') x<-mtrx[, ncol(mtrx)] else 
         x<-rowMeans(mtrx, na.rm=TRUE);
       
-  f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'RLE')[-1];
-  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
-  colnames(d) <- colnames(mtrx); 
+  dge <- DGEList(cbind(x, mtrx)); 
+  dge <- calcNormFactors(dge, refColumn = 1, method = 'RLE'); 
+  dge <- estimateCommonDisp(dge);
+  dge <- estimateTagwiseDisp(dge);
       
+  d <- dge@.Data[[4]][, -1];
   d;
 }
 
