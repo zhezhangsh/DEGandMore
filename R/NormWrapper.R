@@ -126,7 +126,7 @@ NormTMM <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
       if (ref[1]=='last') x<-mtrx[, ncol(mtrx)] else 
         x<-rowMeans(mtrx, na.rm=TRUE);
   
-  f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'RLE')[-1];
+  f <- calcNormFactors(cbind(x, mtrx), refColumn = 1, method = 'TMM')[-1];
   d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
   colnames(d) <- colnames(mtrx); 
   
