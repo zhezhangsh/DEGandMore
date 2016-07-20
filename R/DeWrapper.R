@@ -9,9 +9,9 @@ DeMethods <- function (all.info=FALSE) {
   # DeEdgeR     EdgeR test for RNA-seq data
   # DeVoomLimma Voom normalization followed by Limma for DE
   
-  c("DeAbsSeq.R", "DeAldex2.R", "DeBader.R", "DeBaySeq.R", "DeBGmix.R", "DeBridge.R", "DeDegSeq.R", "DeDeSeq.R", "DeEbSeq.R", 
-    "DeEdgeR.R", "DeEdgeRun.R", "DeLimma.R", "DeLMGene.R", "DeNoiSeq.R", "DePlgem.R", "DePoissonSeq.R", "DeRankP.R", "DeRBM.R", 
-    "DeSam.R", "DeSamSeq.R", "DeSSeq.R", "DeT.R", "DeTweeDeSeq.R", "DeVoomLimma.R", "DeWelch.R", "DeWilcoxon.R");
+  c("DeAbsSeq", "DeAldex2", "DeBader", "DeBaySeq", "DeBGmix", "DeBridge", "DeDegSeq", "DeDeSeq", "DeEbSeq", 
+    "DeEdgeR", "DeEdgeRun", "DeLimma", "DeLMGene", "DeNoiSeq", "DePlgem", "DePoissonSeq", "DeRankP", "DeRBM", 
+    "DeSam", "DeSamSeq", "DeSSeq", "DeT", "DeTweeDeSeq", "DeVoomLimma", "DeWelch", "DeWilcoxon");
 }
 ######################################################################################
 

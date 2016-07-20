@@ -2,7 +2,7 @@
 
 ###################################################################
 # Make output consistent with other methods
-DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
+DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=min(100, 2*ncol(mtrx)), ...) {
   require(RankProd);
   require(DEGandMore);
   

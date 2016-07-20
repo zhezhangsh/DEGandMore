@@ -1,7 +1,7 @@
 # Normalize a read count matrix from RNA-seq
 NormalizeRNAseq <- function(cnt, len=NA, round=FALSE, 
                             methods=c("NormTotalCount", "NormMedian", "NormQQ", "NormUpperQuantile", "NormRLE", 
-                                      "NormTMM", "NormDESeq", "NormLoess", "NormCyclicLoess", "NormFPKM", "NormTPM")) {
+                                      "NormTMM", "NormDESeq", "NormLinear", "NormLoess", "NormCyclicLoess", "NormFPKM", "NormTPM")) {
   
   normLog <- function(mthd, mtrx) {
     sz <- sum(rowMeans(mtrx+1)/10^6); 
@@ -24,6 +24,7 @@ NormalizeRNAseq <- function(cnt, len=NA, round=FALSE,
   if ("NormDESeq" %in% methods) norm$DESeq                        <- NormDESeq(cnt); 
   if ("NormFPKM" %in% methods & length(len)==nrow(cnt)) norm$FPKM <- NormFPKM(cnt, len); 
   if ("NormTPM" %in% methods & length(len)==nrow(cnt)) norm$TPM   <- NormTPM(cnt, len); 
+  if ("NormLoess" %in% methods) norm$Linear                       <- normLog('NormLinear', cnt); 
   if ("NormLoess" %in% methods) norm$Loess                        <- normLog('NormLoess', cnt); 
   if ("NormCyclicLoess" %in% methods) norm$Cyclic_Loess           <- normLog('NormCyclicLoess', cnt); 
 

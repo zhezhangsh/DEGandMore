@@ -34,13 +34,12 @@ DeEdgeRun <- function(mtrx, grps, paired=FALSE, norm.method='TMM', iterations=50
   fit <- UCexactTest(dge, upper=iterations);  
   res <- topTags(fit, n=nrow(mtrx))[[1]][rownames(mtrx), , drop=FALSE]; 
   
-  sz   <- dge@.Data[[2]][, 'norm.factors']
-  nm   <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/sz[i]);   
-  m1   <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
-  m2   <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
-  lgfc <- res[, 'logFC'];
-  p    <- res[, 'PValue'];
-  q    <- p.adjust(p, method='BH');
+  nm <- NormTMM(mtrx); 
+  m1 <- rowMeans(nm[, grps[[1]], drop=FALSE], na.rm=TRUE);
+  m2 <- rowMeans(nm[, grps[[2]], drop=FALSE], na.rm=TRUE);
+  lg <- res[, 'logFC'];
+  p  <- res[, 'PValue'];
+  q  <- p.adjust(p, method='BH');
   
   m1[is.na(m1)]     <- 0;
   m2[is.na(m2)]     <- 0;

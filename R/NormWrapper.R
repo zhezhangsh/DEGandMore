@@ -34,6 +34,62 @@ NormWrapper <- function(mtrx, mthd=NormMethods[1], args=list()) {
 }
 
 ####################################################################################
+# Rescale by fitting linear regression
+NormLinear<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), trim=c(0, 1)) {
+  # ref:    How the reference X will be selected
+  # trim:   Lower and upper fraction to trim the reference X as the training data for linear model
+  ref <- tolower(ref)[1];
+  if (ref[1]=='median') x <- apply(mtrx, 1, median) else
+    if (ref[1]=='first') x <- mtrx[, 1] else 
+      if (ref[1]=='last') x <- mtrx[, ncol(mtrx)] else 
+        x <- rowMeans(mtrx);
+      
+  trim <- sort(trim); 
+  if (trim[1]>0 | trim[2]<1) {
+    y   <- sort(x); 
+    lo  <- y[max(1, floor(trim[1]*nrow(mtrx)))];
+    hi  <- y[min(nrow(mtrx), ceiling(trim[2]*nrow(mtrx)))]; 
+    ind <- which(x>=lo & x<=hi);
+  } else ind <- 1:nrow(mtrx);
+  
+  d <- apply(mtrx, 2, function(y) {
+    mdl <- lm(y[ind] ~ x[ind]); 
+    cof <- coefficients(mdl);
+    prd <- cof[2]*x + cof[1];
+    y - prd + x;
+  }); 
+  
+  dimnames(d) <- dimnames(mtrx); 
+}
+
+####################################################################################
+# Rescale by fitting loess regression
+NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, degree=1, ...) {
+  # degree:  the degree of the polynomials to be used, normally 1 or 2.
+  
+  ref <- tolower(ref)[1];
+  if (ref[1]=='median') x <- apply(mtrx, 1, median) else
+    if (ref[1]=='first') x <- mtrx[, 1] else 
+      if (ref[1]=='last') x <- mtrx[, ncol(mtrx)] else 
+        x <- rowMeans(mtrx);
+      
+  d0 <- lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
+      
+  sp <- min(0.9, round(2000/nrow(mtrx)+0.05, 1)); 
+      
+  d <- parallel::mclapply(d0, function(y) {
+    l <- loess(y ~ x, degree = degree, span = sp);
+    z <- residuals(l);
+    z + x;
+  }, mc.cores = thread);
+  
+  d <- do.call('cbind', d);
+  dimnames(d) <- dimnames(mtrx);
+  
+  d;
+}
+
+####################################################################################
 NormTotalCount <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
   ref<-tolower(ref)[1];
   
@@ -102,6 +158,22 @@ NormMedian <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
 }
 
 ####################################################################################
+# FPKM
+NormFPKM <- function(mtrx, len) {
+  len[is.na(len)] <- median(len); 
+  apply(mtrx, 2, function(x) x/sum(x)/len*10^9); 
+}
+
+####################################################################################
+# TPM
+NormTPM <- function(mtrx, len) {
+  len[is.na(len)] <- median(len); 
+  
+  d <- apply(mtrx, 2, function(x) x/len*1000); 
+  apply(d, 2, function(d) d/(sum(d)/10^6)); 
+}
+
+####################################################################################
 # DESeq2
 NormDESeq <- function(mtrx) {
   require(DESeq2); 
@@ -157,44 +229,6 @@ NormRLE <- function(mtrx, ref=c('mean', 'median', 'first', 'last')) {
 }
 
 ####################################################################################
-# FPKM
-NormFPKM <- function(mtrx, len) {
-  len[is.na(len)] <- median(len); 
-  apply(mtrx, 2, function(x) x/sum(x)/len*10^9); 
-}
-
-####################################################################################
-# TPM
-NormTPM <- function(mtrx, len) {
-  len[is.na(len)] <- median(len); 
-  
-  d <- apply(mtrx, 2, function(x) x/len*1000); 
-  apply(d, 2, function(d) d/(sum(d)/10^6)); 
-}
-
-####################################################################################
-NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, ...) {
-  
-  ref<-tolower(ref)[1];
-  if (ref[1]=='median') x<-apply(mtrx, 1, median) else
-    if (ref[1]=='first') x<-mtrx[, 1] else 
-      if (ref[1]=='last') x<-mtrx[, ncol(mtrx)] else 
-        x<-rowMeans(mtrx);
-  
-  d0<-lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
-  
-  d<-parallel::mclapply(d0, function(y) {
-    z<-residuals(loess(y~x));
-    z+x;
-  }, mc.cores = thread); 
-
-  d<-do.call('cbind', d);
-  dimnames(d)<-dimnames(mtrx); 
-  
-  d;
-}
-
-####################################################################################
 # normalize.loess {affy}
 # http://web.mit.edu/~r/current/arch/i386_linux26/lib/R/library/affy/html/normalize.loess.html
 NormAffyLoess<-function(mtrx, log.it=FALSE, ...) {
@@ -235,5 +269,4 @@ NormCyclicLoess <- function(mtrx) {
   
   normalizeCyclicLoess(mtrx, method='pairs')
 }
-
 ####################################################################################
