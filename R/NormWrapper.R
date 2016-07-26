@@ -55,7 +55,7 @@ NormLinear<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), trim=c(0, 1
   d <- apply(mtrx, 2, function(y) {
     mdl <- lm(y[ind] ~ x[ind]); 
     cof <- coefficients(mdl);
-    prd <- cof[2]*x + cof[1];
+    prd <- (x - cof[1]) / cof[2];
     y - prd + x;
   }); 
   
@@ -64,7 +64,7 @@ NormLinear<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), trim=c(0, 1
 
 ####################################################################################
 # Rescale by fitting loess regression
-NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, degree=1, ...) {
+NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, degree=1, seed=1:nrow(mtrx), ...) {
   # degree:  the degree of the polynomials to be used, normally 1 or 2.
   
   ref <- tolower(ref)[1];
@@ -75,14 +75,15 @@ NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, de
       
   d0 <- lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
       
-  sp <- min(0.9, round(2000/nrow(mtrx)+0.05, 1)); 
+  sp <- min(0.9, round(2000/length(seed)+0.05, 1)); 
       
   d <- parallel::mclapply(d0, function(y) {
-    l <- loess(y ~ x, degree = degree, span = sp);
-    z <- residuals(l);
-    z + x;
+    dat <- data.frame(x=x, y=y); 
+    mdl <- loess(y ~ x, degree = degree, span = sp, data=dat[seed, , drop=FALSE]);
+    prd <- predict(mdl, newdata=data.frame(x=x)); 
+    res <- y - prd;
+    res + x;
   }, mc.cores = thread);
-  
   d <- do.call('cbind', d);
   dimnames(d) <- dimnames(mtrx);
   

@@ -6,12 +6,32 @@ NormalizeRNAseq <- function(cnt, len=NA, round=FALSE,
   normLog <- function(mthd, mtrx) {
     sz <- sum(rowMeans(mtrx+1)/10^6); 
     d  <- log2((mtrx+0.5)/sz); 
+    
     d  <- do.call(mthd, list(mtrx=d)); 
+    
     d  <- exp(d*log(2)); 
     d  <- d*sz-0.5;
     d[d<0] <- 0;
     d
   }; 
+  
+  log.transform <- function(ct) {
+    c <- ct; 
+    c[c>1] <- 1; 
+    c <- ct[rowSums(c)==ncol(c), ]; 
+    q <- apply(cbind(rowMeans(c), c), 2, function(x) quantile(log2(x), probs=seq(0, 1, 0.01)));
+    
+    nsd <- apply(q[, -1], 2, function(y) {
+      x <- q[, 1]; 
+      sapply(1:length(x), function(i) {
+        l <- lm(y[-i] ~ x[-i]); 
+        p <- predict(l, newdata=data.frame(y=y));
+        f <- coefficients(l); 
+        p <- f[[1]]+f[[2]]*x; 
+        (p[i]-y[i])/sd(abs(y[-i]-p[-i])); 
+      }); 
+    }); 
+  }
   
   norm <- list(Original=cnt); 
   
