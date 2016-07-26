@@ -71,9 +71,12 @@ NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, de
   if (ref[1]=='median') x <- apply(mtrx, 1, median) else
     if (ref[1]=='first') x <- mtrx[, 1] else 
       if (ref[1]=='last') x <- mtrx[, ncol(mtrx)] else 
-        x <- rowMeans(mtrx);
-      
+        x <- rowMeans(mtrx, na.rm=TRUE);
+  rnk <- rank(x, ties.method = 'random'); 
+          
   d0 <- lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
+  s0 <- c(which(rnk<=1000), which(rnk>=(nrow(mtrx)-999)));
+  seed <- union(seed, s0); 
       
   sp <- min(0.9, round(2000/length(seed)+0.05, 1)); 
       
