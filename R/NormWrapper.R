@@ -10,10 +10,13 @@ NormMethods<-function () {
     "NormLoess",           # rescale by fitting loess regression to a reference sample
     "NormMedian",          # rescale by median of non-zero genes
     "NormQQ",              # quantile-quantile normalization
-    "NormRLE", "NormTMM",  # calcNormFactors() function of the edgeR package, using relative log or trimmed mean
+    "NormRLE",             # calcNormFactors() function of the edgeR package, using the relative log (RLE) method
+    "NormRlog",            # rlog() function of the DESeq2 function
+    "NormTMM",             # calcNormFactors() function of the edgeR package, using the weighted trimmed mean of M-values (TMM) method
     "NormTotalCount",      # rescale by total read count, RNA-seq only
     "NormTPM",             # transcripts per million, RNA-seq only
-    "NormUpperQuantile")   # rescale by upper quantile of non-zero genes
+    "NormUpperQuantile",   # rescale by upper quantile of non-zero genes
+    "NormVST")             # varianceStabilizingTransformation() function of the DESeq2 function
 }
 ##################################################################################################################
 
@@ -72,13 +75,12 @@ NormLoess<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), thread=4, de
     if (ref[1]=='first') x <- mtrx[, 1] else 
       if (ref[1]=='last') x <- mtrx[, ncol(mtrx)] else 
         x <- rowMeans(mtrx, na.rm=TRUE);
-  rnk <- rank(x, ties.method = 'random'); 
-          
-  d0 <- lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
-  s0 <- c(which(rnk<=1000), which(rnk>=(nrow(mtrx)-999)));
+
+  rnk  <- rank(x, ties.method = 'random'); 
+  d0   <- lapply(1:ncol(mtrx), function(i) mtrx[, i]); 
+  s0   <- c(which(rnk<=1000), which(rnk>=(nrow(mtrx)-999)));
   seed <- union(seed, s0); 
-      
-  sp <- min(0.9, round(2000/length(seed)+0.05, 1)); 
+  sp   <- min(0.9, round(2000/length(seed)+0.05, 1)); 
       
   d <- parallel::mclapply(d0, function(y) {
     dat <- data.frame(x=x, y=y); 
@@ -182,11 +184,31 @@ NormTPM <- function(mtrx, len) {
 NormDESeq <- function(mtrx) {
   require(DESeq2); 
   
-  f <- estimateSizeFactorsForMatrix(mtrx); 
-  d <- sapply(1:ncol(mtrx), function(i) mtrx[, i]/f[i]); 
-  colnames(d) <- colnames(mtrx); 
+  suppressMessages({
+    dds <- DESeqDataSetFromMatrix(mtrx, colData = DataFrame(factor(rep(1, ncol(mtrx)))), design = ~1);
+    dds <- estimateSizeFactors(dds);
+    dds <- estimateDispersions(dds);
+  }); 
+
+  counts(dds, normalized = TRUE); 
+}
+
+####################################################################################
+# Regularized log transformation in DESeq2
+NormRlog <- function(mtrx) {
+  require(DESeq2); 
   
-  d;
+  d <- rlog(mtrx);
+  dimnames(d) <- dimnames(mtrx); 
+  
+  d; 
+}
+
+####################################################################################
+# Variance stabilizing transformation in DESeq2
+NormVST <- function(mtrx) {
+  require(DESeq2); 
+  varianceStabilizingTransformation(mtrx); 
 }
 
 ####################################################################################

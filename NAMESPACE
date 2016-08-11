@@ -50,6 +50,8 @@ export("NormFPKM");
 export("NormMedian");
 export("NormQQ");
 export("NormRLE");
+export("NormRlog");
+export("NormVST");
 export("NormTMM");
 export("NormTotalCount");
 export("NormTPM");

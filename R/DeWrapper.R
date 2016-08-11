@@ -18,7 +18,7 @@ DeMethods <- function (all.info=FALSE) {
 # Whether the method is applicable to count data only
 DeCountMethods <- function () c('DeT'=FALSE, 'DeSam'=FALSE, 'DeRankP'=FALSE, 'DeDeSeq'=TRUE, 'DeEdgeR'=TRUE, 'DeVoomLimma'=TRUE);
 
-DeWrapper <- function(mtrx, grps, mthd=DeMethods()[1], paired=FALSE, logged=TRUE, args=list()) {
+DeWrapper <- function(mtrx, grps, mthd, paired=FALSE, logged=TRUE, args=list()) {
     # mtrx    A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
     # grps    A list of two vectors, each vector has the column indexes (numeric vectors) or column names (character vectors) of a group; vectors are named by group names  
     # mthd    Name of the method to use for differential expression analysis
