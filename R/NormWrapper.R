@@ -65,6 +65,8 @@ NormLinear<-function(mtrx, ref=c('mean', 'median', 'first', 'last'), trim=c(0, 1
   }); 
   
   dimnames(d) <- dimnames(mtrx); 
+  
+  d; 
 }
 
 ####################################################################################
