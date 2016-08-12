@@ -5,8 +5,10 @@ NormMethods<-function () {
   c("NormAffyConstant",    # normalize.constant() function of the affy package, using constant scaling factors
     "NormAffyLoess",       # normalize.loess() function of the affy package, fitting loess normalization
     "NormAffyQspline",     # normalize.qspline() function of the affy package, using quantiles to fit cubic splines
+    "NormCyclicLoess",     # normalizeCyclicLoess() function of the limma package
     "NormDESeq",           # estimateSizeFactors() function of the DESeq2 package for RNA-seq, median of ratio
     "NormFPKM",            # fragment per kilobases per million reads, RNA-seq only
+    "NormLinear",          # lm() function of the base package, rescale by fitting linear regression
     "NormLoess",           # rescale by fitting loess regression to a reference sample
     "NormMedian",          # rescale by median of non-zero genes
     "NormQQ",              # quantile-quantile normalization

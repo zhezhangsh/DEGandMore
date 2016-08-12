@@ -58,6 +58,7 @@ export("NormTPM");
 export("NormUpperQuantile");
 export("NormWrapper");
 export("NormLoess");
+export("NormLinear”);
 export("NormAffyLoess");
 export("NormAffyQspline");
 export("NormMethods");
