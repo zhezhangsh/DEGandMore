@@ -17,5 +17,8 @@ PrepareDe <- function(mtrx, grps, pair) {
   e2 <- mtrx[, grps[[2]], drop=FALSE];
   d  <- cbind(e1, e2);
   
+  grps[[1]] <- 1:ncol(e1);
+  grps[[2]] <- (ncol(e1)+1):(ncol(e1)+ncol(e2)); 
+  
   list(d, grps, pair);
 }
