@@ -54,7 +54,7 @@ VoomLimma <- function(mtrx, grps, paired=FALSE, plot=FALSE, ...) {
   group <- rep(names(grps), sapply(grps, length));
   
   if (paired) {
-    x      <- factor(paste('Pair', rep(1:n, 2), sep='_'));
+    x      <- factor(paste('Pair', rep(1:length(grps[[1]]), 2), sep='_'));
     y      <- factor(paste('Group', rep(1:2, each=length(grps[[1]])), sep='_'));
     design <- model.matrix(~x+y);
   } else {

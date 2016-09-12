@@ -105,7 +105,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   ###################################################################################################
   ###################################################################################################
   
-  if (length(norm==2) > 0) {
+  if (length(norm[norm==2]) > 0) {
     un <- 2^d2;
     un <- un * (mean(d0, na.rm=TRUE)/mean(un, na.rm=TRUE));
     m1 <- rowMeans(un[, grps[[1]], drop=FALSE]);
