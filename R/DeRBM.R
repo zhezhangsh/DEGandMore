@@ -4,6 +4,9 @@
 
 DeRBM <- function(mtrx, grps, paired=FALSE, logged=TRUE, iter=1, ...) {
   
+  require(DEGandMore);
+  require(RBM);
+  
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];

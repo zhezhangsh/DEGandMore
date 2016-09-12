@@ -18,7 +18,7 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   }
       
   dds  <- DESeq(dds);
-  res  <- results(dds, c('cond', names(grps)[2:1]));
+  res  <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
   
   # Summary statistics
   lgfc <- res[, 2];

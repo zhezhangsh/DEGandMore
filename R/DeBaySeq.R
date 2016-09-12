@@ -1,6 +1,6 @@
 # Empirical Bayesian analysis of patterns of differential expression in count data
 # baySeq package: http://bioconductor.org/packages/release/bioc/html/baySeq.html
-DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DESeq', 'Median', 'UQ', 'TC', 'QQ'), 
+DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 'TMM', 'RLE', 'Median', 'UQ', 'TC', 'QQ'), 
                      samplesize=1000, bootStraps=2, cl=4) {
   # normalization methods:
     # TMM: Trimmed mean method of calcNormFactors() function of the edgeR package
@@ -20,22 +20,24 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DE
   paired   <- prepared[[3]];
   
   norm <- tolower(normalization)[1]; 
+  if (norm=='deseq')  mtrx <- NormDESeq(mtrx);
   if (norm=='tmm')    mtrx <- NormTMM(mtrx);
   if (norm=='rle')    mtrx <- NormRLE(mtrx);
-  if (norm=='deseq')  mtrx <- NormDESeq(mtrx);
   if (norm=='median') mtrx <- NormMedian(mtrx);
   if (norm=='uq')     mtrx <- NormUpperQuantile(mtrx);
   if (norm=='tc')     mtrx <- NormTotalCount(mtrx);
   if (norm=='qq')     mtrx <- NormQQ(mtrx);
-  mtrx <- round(mtrx); 
-  mtrx <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
+  mtrx0 <- mtrx;
+  mtrx  <- round(mtrx); 
+  mtrx  <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
   
   n <- sapply(grps, length); 
   
-  cl <- NULL; 
-  if (is.integer(cl)) {
+  ncl <- cl[1];
+  cl  <- NULL; 
+  if (is.numeric(ncl[1])) {
     try(require(snow));
-    try(cl <- makeCluster(max(1, cl), "SOCK")); 
+    try(cl <- makeCluster(max(1, round(ncl)), "SOCK")); 
   }
   
   if (paired & n[1]==n[2]) {
@@ -61,10 +63,11 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DE
   
   if (!is.null(cl)) stopCluster(cl); 
 
-  m1 <- rowMeans(mtrx[, grps[[1]], drop=FALSE], na.rm=TRUE);
-  m2 <- rowMeans(mtrx[, grps[[2]], drop=FALSE], na.rm=TRUE);
+  m1 <- rowMeans(mtrx0[, grps[[1]], drop=FALSE], na.rm=TRUE);
+  m2 <- rowMeans(mtrx0[, grps[[2]], drop=FALSE], na.rm=TRUE);
   q  <- p.adjust(p, method='BH');
-  fc <- log2(pmax(0.5, m2)) - log2(pmax(0.5, m1)); 
+  fc <- CalculateCountLog2FC(m1, m2, mtrx, grps);
+  
   s <- cbind(m1, m2, m2-m1, fc, p, q);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
                    'LogFC', 'Pvalue', 'FDR');

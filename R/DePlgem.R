@@ -1,7 +1,7 @@
 # PLGEM
 # http://www.bioconductor.org/packages/release/bioc/html/LMGene.html
 # run.plgem {plgem}
-DePlgem <- function(mtrx, grps, paired=FALSE, rnaseq=FALSE) {
+DePlgem <- function(mtrx, grps, paired=FALSE) {
   
   require(DEGandMore);
   require(plgem); 
@@ -13,7 +13,7 @@ DePlgem <- function(mtrx, grps, paired=FALSE, rnaseq=FALSE) {
   
   n <- sapply(grps, length);
   
-  if (rnaseq) mtrx <- round(mtrx); 
+  #if (rnaseq) mtrx <- round(mtrx); 
   
   if (paired & n[1]==n[2]) {
     prs <- rep(paste('pair', 1:n[1], sep='_'), 2);
@@ -31,7 +31,7 @@ DePlgem <- function(mtrx, grps, paired=FALSE, rnaseq=FALSE) {
   eset <- ExpressionSet(mtrx, phenoData = anno); 
   
   res  <- run.plgem(eset); 
-  
+
   pv <- res$p.value[, 1];
   l2 <- res$PLGEM.STN[, 1];
   m1 <- rowMeans(mtrx[, grps[[1]], drop=FALSE]); 

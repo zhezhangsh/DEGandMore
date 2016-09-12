@@ -3,8 +3,10 @@
 # callDEs {ABSSeq}
 DeAbsSeq <- function(mtrx, grps, paired=FALSE, norm.method=c("geometric", "quartile", "total", "none"), ...) {
   # norm.method   suggestion: use 'upperquantile' for ChIP-seq data
+  
   require(DEGandMore);
   require(ABSSeq);
+  if(is.loaded('DESeq2')) detach("package:DESeq2", unload=TRUE);
   
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];

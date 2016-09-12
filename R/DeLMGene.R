@@ -1,7 +1,7 @@
 # LMGene
 # http://www.bioconductor.org/packages/release/bioc/html/LMGene.html
 # LMGene {LMGene}
-DeLMGene <- function(mtrx, grps, paired=FALSE, min.count=min(8, ncol(mtrx))) {
+DeLMGene <- function(mtrx, grps, paired=FALSE) {
   
   require(DEGandMore);
   require(LMGene); 
@@ -41,10 +41,13 @@ DeLMGene <- function(mtrx, grps, paired=FALSE, min.count=min(8, ncol(mtrx))) {
   m1 <- rowMeans(ex[, grps[[1]], drop=FALSE]); 
   m2 <- rowMeans(ex[, grps[[2]], drop=FALSE]); 
   
-  pv[rowSums(mtrx) <= min.count] <- 1;
-  m1[rowSums(mtrx) <= min.count] <- 0;
-  m2[rowSums(mtrx) <= min.count] <- 0;
+#   pv[rowSums(mtrx) <= min.count] <- 1;
+#   m1[rowSums(mtrx) <= min.count] <- 0;
+#   m2[rowSums(mtrx) <= min.count] <- 0;
 
+
+  m1 <- exp(m1)/2;
+  m2 <- exp(m2)/2;
   l2 <- m2-m1;
   qv <- p.adjust(pv, method='BH');
   
@@ -55,8 +58,7 @@ DeLMGene <- function(mtrx, grps, paired=FALSE, min.count=min(8, ncol(mtrx))) {
   qv[is.na(qv)] <- 1;
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s, group=grps, LMGene=res);

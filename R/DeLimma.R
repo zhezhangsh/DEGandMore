@@ -11,7 +11,7 @@ DeLimma <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
   n <- sapply(grps, length);
   
   if (paired & n[1]==n[2]) {
-    pair   <- factor(rep(1:2, each=n[1])); 
+    pair   <- factor(rep(1:n[1], 2)); 
     comp   <- factor(rep(names(grps), sapply(grps, length))); 
     design <- model.matrix(~pair+comp);
     fit    <- lmFit(mtrx, design);

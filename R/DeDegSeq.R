@@ -6,6 +6,8 @@ DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MA
   require(DEGandMore);
   require(DEGseq);
   
+  if(is.loaded('ABSSeq')) detach("package:ABSSeq", unload=TRUE);
+  
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];
@@ -14,22 +16,19 @@ DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MA
   if (paired) warning("Paired test not supported by DEGseq; performing unpaired test instead.\n");
   
   mthd <- method[1]; 
-  norm <- normalMethod[1];                     
   if (!(mthd %in% c("CTR", "FET", "MARS", "MATR", "FC"))) mthd <- 'LRT';      
-  #if (!(norm %in% c("loess", "loess"))) norm <- 'none';
 
   mtrx1 <- as.matrix(cbind(rownames(mtrx), mtrx[, grps[[1]], drop=FALSE])); 
   mtrx2 <- as.matrix(cbind(rownames(mtrx), mtrx[, grps[[2]], drop=FALSE])); 
-  
+
   DEGexp(geneExpMatrix1 = mtrx1, geneCol1=1, expCol1=2:ncol(mtrx1), groupLabel1 = names(grps)[1], 
          geneExpMatrix2 = mtrx2, geneCol2=1, expCol2=2:ncol(mtrx2), groupLabel2 = names(grps)[2],
          method = mthd, normalMethod = 'none', outputDir=tempdir()); 
-  
   res <- read.table(paste(tempdir(), 'output_score.txt', sep='/'), row=1, header=TRUE, sep='\t'); 
   
   m1 <- res[, 1]/length(grps[[1]]);
   m2 <- res[, 2]/length(grps[[2]]);
-  l2 <- res[, 4]; 
+  l2 <- -res[, 4]; 
   pv <- res[, 5];
   qv <- p.adjust(pv, method='BH');
   
@@ -46,7 +45,7 @@ DeDegSeq <- function(mtrx, grps, paired=FALSE, method=c("LRT", "CTR", "FET", "MA
   
   lst <- list(geneExpMatrix1 = mtrx1, geneCol1=1, expCol1=2:ncol(mtrx1), groupLabel1 = names(grps)[1], 
               geneExpMatrix2 = mtrx2, geneCol2=1, expCol2=2:ncol(mtrx2), groupLabel2 = names(grps)[2],
-              method = mthd, normalMethod = norm, outputDir=tempdir());
+              method = mthd, normalMethod = 'none', outputDir=tempdir());
   
   list(stat=s[rownames(mtrx), ], group=grps, degseq=lst); 
 }

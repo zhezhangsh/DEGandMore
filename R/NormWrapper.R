@@ -186,6 +186,7 @@ NormTPM <- function(mtrx, len) {
 ####################################################################################
 # DESeq2
 NormDESeq <- function(mtrx) {
+  
   require(DESeq2); 
   
   suppressMessages({
@@ -194,7 +195,7 @@ NormDESeq <- function(mtrx) {
     dds <- estimateDispersions(dds);
   }); 
 
-  counts(dds, normalized = TRUE); 
+  DESeq2::counts(dds, normalized = TRUE); 
 }
 
 ####################################################################################

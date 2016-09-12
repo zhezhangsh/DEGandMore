@@ -1,5 +1,6 @@
 
 export("AddAPCluster");
+export("CalculateCountLog2FC");
 export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
@@ -26,6 +27,8 @@ export("DePoissonSeq");
 export("DeRankP");
 export("DeRankProd");
 export("DeRBM");
+export("DeRNAseq");
+export("DeRNAseqMethods");
 export("DeSam");
 export("DeSamSeq");
 export("DeSSeq");

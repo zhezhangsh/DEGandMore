@@ -5,18 +5,20 @@ DePoissonSeq <- function(mtrx, grps, paired = FALSE) {
   
   require(DEGandMore);
   require(PoissonSeq);
-  
+
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
   dat <- list(n = mtrx, y = rep(1:2, sapply(grps, length)), type = 'twoclass', pair = paired);
-  par <- list(npermu = min(1000, 20*ncol(mtrx)), ct.sum=0, ct.mean=0); 
+  par <- list(trans = TRUE, npermu = min(1000, 20*ncol(mtrx)), ct.sum=0, ct.mean=0); 
   res <- PS.Main(dat, para=par); 
+   
+  norm <- NormTMM(mtrx); # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2864565/ https://www.ncbi.nlm.nih.gov/pubmed/20196867/
   
-  m1 <- rowMeans(mtrx[, grps[[1]], drop=FALSE]);
-  m2 <- rowMeans(mtrx[, grps[[2]], drop=FALSE]);
+  m1 <- rowMeans(norm[, grps[[1]], drop=FALSE]);
+  m2 <- rowMeans(norm[, grps[[2]], drop=FALSE]);
   l2 <- res[rownames(mtrx), 'log.fc']; 
   pv <- res[rownames(mtrx), 'pval']; 
   qv <- p.adjust(pv, method='BH');

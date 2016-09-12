@@ -16,7 +16,7 @@ DeMethods <- function (all.info=FALSE) {
 ######################################################################################
 
 # Whether the method is applicable to count data only
-DeCountMethods <- function () c('DeT'=FALSE, 'DeSam'=FALSE, 'DeRankP'=FALSE, 'DeDeSeq'=TRUE, 'DeEdgeR'=TRUE, 'DeVoomLimma'=TRUE);
+# DeCountMethods <- function () c('DeT'=FALSE, 'DeSam'=FALSE, 'DeRankP'=FALSE, 'DeDeSeq'=TRUE, 'DeEdgeR'=TRUE, 'DeVoomLimma'=TRUE);
 
 DeWrapper <- function(mtrx, grps, mthd, paired=FALSE, logged=TRUE, args=list()) {
     # mtrx    A numeric matrix of gene expression data. Rows are unique genes and columns include 2 groups of samples to be compared
@@ -45,9 +45,10 @@ DeWrapper <- function(mtrx, grps, mthd, paired=FALSE, logged=TRUE, args=list()) 
     grp1 <- colnames(mtrx)[grps[[2]]];
     
     # Full argument list
-    all.args <- list(mtrx=mtrx, grps=grps, paired=paired);
-    if (DeCountMethods()[mthd]) logged <- FALSE else all.args <- append(all.args, logged); 
+    fun.args <- names(as.list(args(mthd))); 
+    all.args <- list(mtrx=mtrx, grps=grps, paired=paired, logged=logged);
     all.args <- append(all.args, args);
+    all.args <- all.args[names(all.args) %in% fun.args];
     
     res <- do.call(mthd, all.args); # call the selected method with an argument list
     res$stat <- res$stat[rownames(mtrx), , drop=FALSE];

@@ -5,4 +5,4 @@ Authors@R: person("Zhe", "Zhang", , "zhangz@email.chop.edu", role = c("aut", "cr
 Description: Analyses related to differential gene expression and functional annotation
 Depends: R (>= 3.0.0), snow
 License: What license is it under?
-LazyData: true
+LazyLoad: FALSE

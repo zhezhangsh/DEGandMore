@@ -31,7 +31,7 @@ DeSSeq <- function(mtrx, grps, paired=FALSE, ...) {
   pv <- res[, 'pval']; 
   m1 <- res[, 2];
   m2 <- res[, 3];
-  l2 <- res[, 4]; 
+  l2 <- -res[, 4]; 
   qv <- p.adjust(pv, method='BH');
   
   m1[is.na(m1)] <- 0;
@@ -41,8 +41,7 @@ DeSSeq <- function(mtrx, grps, paired=FALSE, ...) {
   qv[is.na(qv)] <- 1;
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s[rownames(mtrx), ], group=grps, sseq=res);

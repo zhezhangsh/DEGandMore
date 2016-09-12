@@ -1,0 +1,1796 @@
+ls()
+x<-"205204_at 216388_s_at 244467_at 207937_x_at 225403_at 200903_s_at 226991_at 209079_x_at 210115_at 212846_at 228442_at 220588_at 201563_at 236835_at 208680_at 235509_at 231517_at 209679_s_at 229270_x_at 219901_at 212282_at 203206_at 222360_at 212400_at 213245_at 201892_s_at 226799_at 201272_at 207826_s_at 223018_at 226267_at 238520_at 202788_at 223738_s_at 224468_s_at 222914_s_at 207621_s_at 218671_s_at 226333_at 226809_at 203333_at 37549_g_at 226580_atCluster Gene Fold symbol change1 NMB -1.17 1 LTB4R -1.33 1 LOC440829 -2.65 1 FGFR1 -1.22 1 C9orf23 -1.23 1 AHCY -1.23 1 NFATC2 -2.11 1 PCDHGC3 -2.06 1 RPL39L -1.31 1 KIAA0179 -1.27 1 AI770171 -2.06 1 BCAS4 -1.43 1 SORD -1.37 1 LOC645431 -1.64 1 PRDX1 -1.19 1 C8orf38 -1.27 1 ZYG11A -1.88 1 LOC57228 -1.92 1 LOC646044 -1.38 1 FGD6 -2.16 1 TMEM97 -1.32 1 FAM53B -1.36 1 DPH5 -1.17 1 FAM102A -1.48 1 ADCY1 -2.76 1 IMPDH2 -1.17 1 AK026881 -1.79 1 AKR1B1 -1.11 1 ID3 -1.77 1 NOB1 -1.12 1 JDP2 -1.52 1 TRERF1 -2.35 1 MAPKAPK3 -1.31 1 PGM2 -1.09 1 C19orf48 -1.19 1 TM
+EM121 -1.15 1 PEMT -1.13 1 ATPIF1 -1.11 1 AV700030 -2.28 1 FLJ30428 -1.57 2 KIFAP3 1.41 2 PTHB1 1.33 2 BRMS1L 1.52F_Score Rank p_ValueFDR000 0.000435 0.001667 0.001778 0.001818 0.002 0.002376 0.002447 0.004435 0.004828 0.004861 0.004901 0.004966 0.00526 0.005305 0.005346 0.005376 0.006966 0.006989 0.007047 0.007157 0.007254 0.007285 0.007304 0.00793 0.008006 0.008013 0.008228 0.008278 0.008423 0.008673 0.008801 0.009164 0.009585 0.009635 0.009696 0.009746 0.009951 00 06141.14 7 40.14 10 39.86 11 33.66 23 32.1 30 29.48 45 29.57 44 31.08 35 25.66 101 25.96 94 24.19 124 23.27 145 23.29 144 23.15 151 23.18 149 23 154 22.68 164 22.74 159 22.03 186 20.1 267 19.87 279 20.33 254 19.57 299 19.59 295 19.51 302 19.6 293 19.23 314 19.2 316 19.19 317 18.98 333 19 331 18.88 336 18.81 339 18.75 342 18.46 371 18.23 386 18.24 384 18.13 395 18.13 393 17.92 412 45.71 6 40.55 8 40.35 93.8E-07 4.73E-07 5.04E-07 2.16E-06 3.19E-06 6.26E-06 6.1E-06 4.12E-06 1.78E-05 1.63E-05 2.71E-05 3.55E-05 3.53E-05 3.68E-05 3.65E-05 3.
+84E-05 4.24E-05 4.15E-05 5.15E-05 9.37E-05 0.000101 8.72E-05 0.000111 0.00011 0.000113 0.00011 0.000124 0.000125 0.000125 0.000134 0.000134 0.000139 0.000142 0.000144 0.000159 0.000171 0.000171 0.000177 0.000177 0.00019 1.44E-07 4.33E-07 4.51E-07#
+203836_s_at217995_at 205352_at 225914_s_at 225639_at 205685_at 224648_at 228764_s_at 219734_at 204601_at 201658_at 212959_s_at 208093_s_at 227279_at 201522_x_at 227525_at 212335_at 212291_at 225924_at 222692_s_at 201889_at 208953_at 201813_s_at 1569346_a_at 200945_s_at 207966_s_at 201952_at 203882_at 235347_at 213049_at 222024_s_at 212355_at 205483_s_at 203173_s_at 217737_x_at 208759_at 202304_at 203291_at 213238_at 212742_at 208089_s_at 218085_at 235583_at 202180_s_at 1554015_a_at 225858_s_at 212310_at 204308_s_at 203724_s_at 209447_at 217733_s_at2 MAP3K5 1.55 2 SQRDL 1.36 2 SERPINI1 1.76 2 CAB39L 1.77 2 SKAP2 1.44 2 CD86 1.66 2 GPBP1 1.25 2 CHMP4A 1.21 2 SIDT1 1.49 2 N4BP1 1.29 2 ARL1 1.21 2 GNPTAB 1.47 2 NDEL1 1.18 2 TCEAL3 1.34 2 SNRPN 1.25 2 GLCCI1 1.47 2 GNS 1.36 2 HIPK1 1.32 2 KIAA1450 2.62 2 FNDC3B 1.89 2 FAM3C 1.67 2 LARP5 1.14 2 TBC1D5 1.31 2 P2RX1 1.28 2 SEC31A 1.18 2 GLG1 1.27 2 ALCAM 1.37 2 ISGF3G 1.3 2 LRCH3 1.29 2 GARNL1 1.29 2 AKAP13 1.3 2 KIAA0323 1.27 2 ISG15 1.83 2 MGC16824 1.17 2 C20or
+f43 1.11 2 IKBKB 1.22 2 FNDC3A 1.34 2 CNOT4 1.16 2 ATP10D 1.71 2 ZNF364 1.15 2 TDRD3 1.16 2 CHMP5 1.26 2 ILDR1 1.68 2 MVP 1.57 2 CHD2 1.21 2 BIRC4 1.28 2 MIA3 1.27 2 KIAA0329 1.59 2 RUFY3 1.78 2 SYNE1 1.5 2 TMSB10 1.1833.89 22 34.37 21 35.89 17 35.96 16 32.4 29 32.47 28 32.49 27 29.22 48 28.86 54 30.27 40 30.29 39 29.07 50 26.81 81 27.65 70 31.58 32 27.04 80 30.6 37 27.7 68 27.48 73 28.22 62 30.83 36 27.55 72 27.2 76 28.22 60 28.29 59 28.3 58 31.41 33 25.15 106 25 108 24.82 111 24.69 112 24.49 118 24.42 120 23.84 131 23.8 133 23.85 130 23.82 132 23.53 138 23.44 142 23.86 129 23.5 139 23.26 146 23.32 143 22.88 156 22.66 165 22.73 160 22.13 182 22.18 180 22.68 163 21.99 188 22.26 1782.04E-06 1.81E-06 1.26E-06 1.24E-06 2.95E-06 2.9E-06 2.88E-06 6.7E-06 7.37E-06 5.09E-06 5.06E-06 6.98E-06 1.29E-05 1.02E-05 3.63E-06 1.21E-05 4.67E-06 1.01E-05 1.07E-05 8.76E-06 4.4E-06 1.05E-05 1.16E-05 8.75E-06 8.59E-06 8.56E-06 3.79E-06 2.05E-05 2.14E-05 2.26E-05 2.34E-05 2.48E-05 2.54E-05 3E-05 3.04E-05 2.99E-05 3.02E-05 3.2
+9E-05 3.38E-05 2.99E-05 3.32E-05 3.56E-05 3.5E-05 3.99E-05 4.26E-05 4.17E-05 4.99E-05 4.93E-05 4.24E-05 5.22E-05 4.81E-050.000455 0.000476 0.000588 0.000625 0.001379 0.001429 0.001481 0.001667 0.001667 0.00175 0.001795 0.0018 0.001852 0.001857 0.001875 0.001875 0.001892 0.001912 0.001918 0.001935 0.001944 0.001944 0.001974 0.002 0.002034 0.002069 0.002121 0.003113 0.003241 0.003784 0.003929 0.004237 0.00425 0.004656 0.004662 0.004692 0.004697 0.00471 0.004718 0.004729 0.004748 0.004795 0.004825 0.005256 0.005273 0.005313 0.00533 0.005333 0.005337 0.005372 0.00539362#
+238510_at226008_at 214059_at 202395_at 226713_at 218324_s_at 208920_at 213271_s_at 203159_at 222613_at 212467_at 212807_s_at 221519_at 201989_s_at 208030_s_at 221156_x_at 235830_at 227701_at 203247_s_at 212006_at 205105_at 219458_s_at 222230_s_at 223177_at 203596_s_at 204573_at 214749_s_at 202962_at 209750_at 226682_at 222281_s_at 227697_at 202284_s_at 226391_at 222235_s_at 212341_at 218048_at 224404_s_at 223209_s_at 211729_x_at 243521_at 222620_s_at 203097_s_at 201641_at 206175_x_at 223892_s_at 201972_at 224696_s_at 235812_at 229350_x_at 214114_x_at2 ZNF720 1.24 2 NDNL2 1.56 2 IFI44 1.72 2 NSF 1.36 2 CCDC50 1.55 2 SPATS2 1.2 2 SRI 1.65 2 DOPEY1 1.36 2 GLS 1.32 2 C12orf4 1.14 2 DNAJC13 1.09 2 SORT1 1.86 2 FBXW4 1.18 2 CREBL2 1.25 2 ADD1 1.26 2 CCPG1 1.55 2 NT5DC1 1.3 2 C10orf118 1.33 2 ZNF24 1.14 2 UBXD2 1.15 2 MAN2A1 2.13 2 NSUN3 1.14 2 ACTR10 1.1 2 GLI3 1.21 2 IFIT5 1.48 2 CROT 1.48 2 ARMCX6 1.13 2 KIF13B 1.29 2 NR1D2 1.33 2 LOC283666 4.01 2 AW517716 2.78 2 SOCS3 2.78 2 CDKN1A 1.32 2 NDUFB2 1.27 2 GALNA
+CT-2 1.34 2 YIPF6 1.19 2 COMMD3 1.26 2 FCRL5 2.72 2 SELS 1.43 2 BLVRA 1.52 2 AW590862 1.16 2 DNAJC1 1.28 2 RAPGEF2 1.74 2 BST2 1.21 2 ZNF222 1.19 2 TMBIM4 1.18 2 ATP6V1A 1.26 2 WDR22 1.13 2 C16orf69 1.15 2 PARP10 1.23 2 FASTK 1.1222.02 187 22.11 183 21.96 190 21.73 200 21.75 198 21.79 196 21.47 207 21.62 202 21.23 213 20.89 230 21.03 222 21.03 221 20.92 227 21.06 219 21.03 220 20.59 242 20.53 244 20.46 249 20.48 246 20.39 253 20.07 270 20.09 268 20.4 252 19.78 287 20.15 264 19.84 281 19.76 289 20.2 260 20.25 256 19.58 296 19.6 294 19.42 306 19.32 310 19.34 308 19.25 312 19.15 322 19.13 323 19.15 320 19.04 328 18.91 334 18.67 357 18.65 358 18.69 354 18.77 340 18.73 346 18.7 351 18.63 359 18.52 368 18.45 372 18.32 376 18.2 3885.17E-05 5.03E-05 5.26E-05 5.65E-05 5.62E-05 5.53E-05 6.12E-05 5.83E-05 6.58E-05 7.31E-05 7.01E-05 7E-05 7.24E-05 6.94E-05 6.99E-05 8.03E-05 8.18E-05 8.37E-05 8.31E-05 8.56E-05 9.47E-05 9.4E-05 8.51E-05 0.000104 9.22E-05 0.000102 0.000104 9.08E-05 8.94E-05 0.00011 0.00011 0.000117 0.00
+012 0.000119 0.000123 0.000127 0.000128 0.000127 0.000131 0.000137 0.000149 0.000149 0.000148 0.000144 0.000145 0.000147 0.00015 0.000156 0.000159 0.000166 0.0001730.005401 0.00541 0.005421 0.00575 0.005758 0.005765 0.005845 0.005891 0.006197 0.006522 0.006577 0.006606 0.006608 0.006621 0.006636 0.00686 0.006885 0.006908 0.006911 0.006917 0.006926 0.00694 0.006944 0.006969 0.007008 0.007011 0.007024 0.007038 0.00707 0.00723 0.007279 0.007484 0.007677 0.007695 0.007949 0.007981 0.007988 0.008031 0.00811 0.008413 0.008683 0.008715 0.008729 0.008735 0.008757 0.008775 0.008858 0.009103 0.009167 0.009574 0.00969163#
+209194_at218581_at 221788_at 227802_at 223217_s_at 238695_s_at 213134_x_at 215438_x_at 218491_s_at 231843_at 208910_s_at 203867_s_at 223917_s_at 208660_at 224714_at 241937_s_at 201614_s_at 224046_s_at 220762_s_at 213669_at 218058_at 206037_at 209664_x_at 212625_at 221953_s_at 214299_at 201457_x_at 213132_s_at 206074_s_at 217854_s_at 236080_at 205264_at 218141_at 200083_at 212048_s_at 205920_at 213581_at 206106_at 227968_at 213521_at 218590_at 201710_at 216251_s_at 221746_at 207339_s_at 202078_at 206055_s_at 209418_s_at 201075_s_at 218161_s_at 238190_at2 CETN2 1.13 2 ABHD4 1.33 2 PGM3 1.23 2 AI075999 1.69 2 NFKBIZ 1.64 2 RAB39B 1.27 2 BTG3 1.25 3 GSPT1 -1.17 3 THYN1 -1.22 3 DDX55 -1.25 3 C1QBP -1.26 3 NLE1 -1.24 3 SLC39A3 -1.34 3 CS -1.13 3 MKI67IP -1.14 3 WDR4 -1.37 3 RUVBL1 -1.22 3 PDE7A -1.36 3 GNB1L -1.16 3 FCHO1 -1.35 3 CXXC1 -1.42 3 CCBL1 -1.15 3 NFATC1 -1.5 3 STX10 -1.25 3 MMP24 -1.12 3 TOP3A -1.16 3 BUB3 -1.16 3 MCAT -1.18 3 HMGA1 -1.25 3 POLR2E -1.13 3 BE276063 -1.15 3 CD3EAP -1.37 3 UBE2O -1.17 3
+USP22 -1.09 3 YARS -1.16 3 SLC6A6 -1.55 3 PDCD2 -1.18 3 MAPK12 -1.37 3 PDDC1 -1.17 3 PTPN18 -1.38 3 PEO1 -1.14 3 MYBL2 -1.25 3 TTLL12 -1.28 3 UBL4A -1.14 3 LTB -2.15 3 COPS3 -1.1 3 SNRPA1 -1.17 3 THOC5 -1.09 3 SMARCC1 -1.24 3 CLN6 -1.26 3 TUFM -1.1118.03 406 18.04 404 18.01 407 17.96 410 17.89 419 17.91 416 17.91 415 39.34 12 37.14 15 33.31 25 30.18 41 26.56 85 25.78 98 26.26 89 25.85 97 25.71 100 26.12 91 25.39 104 24.67 114 24.58 117 23.65 137 23.72 136 23.5 140 23.21 147 22.18 179 21.72 201 21.16 217 20.89 231 20.83 232 20.77 235 19.98 276 20.47 247 20.18 263 20.22 257 19.58 298 19.58 297 19.24 313 19.15 321 19.08 326 18.99 332 18.83 338 18.72 348 18.62 360 18.52 369 18.51 370 18.41 375 18.41 374 18.13 396 18.15 392 18.05 400 18.03 4050.000183 0.000183 0.000184 0.000187 0.000192 0.000191 0.000191 5.67E-07 9.37E-07 2.35E-06 5.21E-06 1.38E-05 1.72E-05 1.5E-05 1.68E-05 1.75E-05 1.56E-05 1.92E-05 2.36E-05 2.42E-05 3.18E-05 3.11E-05 3.32E-05 3.62E-05 4.92E-05 5.66E-05 6.73E-05 7.31E-05 7.45E-05 7.59E-05 9.
+74E-05 8.33E-05 9.15E-05 9.01E-05 0.000111 0.000111 0.000123 0.000127 0.00013 0.000134 0.000141 0.000146 0.000151 0.000156 0.000157 0.000162 0.000161 0.000177 0.000176 0.000182 0.0001830.009778 0.009802 0.009803 0.009829 0.009857 0.009904 0.009928 000.0004 0.001707 0.002235 0.002347 0.00236 0.002371 0.0024 0.002527 0.002692 0.00386 0.004103 0.004599 0.004632 0.004714 0.004898 0.005363 0.005721 0.006175 0.006494 0.006509 0.006553 0.006848 0.006923 0.006996 0.007121 0.007181 0.007205 0.007923 0.008006 0.008037 0.008253 0.008669 0.008736 0.008917 0.009079 0.009135 0.00928 0.009305 0.009672 0.009719 0.0098 0.00980264#
+203194_s_at213918_s_at 219911_s_at 204394_at 203060_s_at 229332_at 226611_s_at 209861_s_at 225777_at 218883_s_at 218104_at 228977_at 218993_at 201770_at 218512_at 218081_at 202559_x_at 1564907_s_at 201196_s_at 201328_at 205733_at 209036_s_at 226249_at 221920_s_at 224460_s_at 201930_at 219110_at 228252_at 202468_s_at 224610_at 202144_s_at 210044_s_at 1558381_a_at 224326_s_at 201391_at 238012_at 208273_at 243745_at 211623_s_at 204033_at 204510_at 222781_s_at 209421_at 228205_at 204128_s_at 212036_s_at 226262_at 244422_at 202534_x_at 225458_at 202911_at3 NUP98 -1.17 4 NIPBL -1.33 4 SLCO4A1 -1.61 4 SLC43A1 -1.7 4 PAPSS2 -3.38 4 GLOXD1 -2.36 4 PRR6 -1.83 4 METAP2 -1.19 4 C9orf140 -1.6 4 MLF1IP -1.33 4 TEX10 -1.19 4 LOC729680 -1.57 4 RNMTL1 -1.14 4 SNRPA -1.17 4 WDR12 -1.19 4 C20orf27 -1.31 4 C1orf77 -1.09 4 MATR3 -1.38 4 AMD1 -1.21 4 ETS2 -1.28 4 BLM -1.27 4 MDH2 -1.08 4 SNX30 -1.47 4 SLC25A37 -1.65 4 L2HGDH -1.3 4 MCM6 -1.27 4 NOLA1 -1.19 4 PIF1 -1.26 4 CTNNAL1 -1.37 4 SNHG1 -1.19 4 ADSL -1.12 4 LYL1 -1.56 4
+GAPDHS -1.17 4 PCGF6 -1.1 4 TRAP1 -1.26 4 DPP7 -1.3 4 ZNF695 -1.79 4 AP1S2 -1.31 4 FBL -1.13 4 TRIP13 -1.27 4 CDC7 -1.28 4 C9orf40 -1.28 4 MSH2 -1.28 4 TKT -1.14 4 RFC3 -1.26 4 PNN -1.12 4 AA534526 -1.22 4 AI494573 -1.42 4 DHFR -1.3 4 LOC25845 -1.2 4 MSH6 -1.1917.92 413 51.26 1 50.95 2 49.9 3 45.73 5 39.24 13 35.84 18 33.14 26 30.09 42 29.23 47 28.99 52 27.59 71 30.36 38 28.22 61 28.01 66 25.65 102 25.88 96 26.15 90 25.21 105 24.63 115 24.14 125 23.98 126 23.2 148 23.08 153 23 155 22.42 171 22.39 174 22.39 173 22.44 169 22.53 166 21.82 195 21.23 214 21.25 212 21.28 210 20.65 240 20.06 271 19.84 282 20.1 266 19.85 280 19.55 301 19.3 311 19.23 315 19.15 319 19.08 325 18.71 350 18.7 352 18.6 363 18.28 379 18.22 387 18.06 399 18.04 4030.00019 4.76E-08 5.06E-08 6.2E-08 1.43E-07 5.79E-07 1.27E-06 2.45E-06 5.33E-06 6.68E-06 7.12E-06 1.04E-05 4.97E-06 8.76E-06 9.27E-06 1.78E-05 1.67E-05 1.55E-05 2.02E-05 2.39E-05 2.75E-05 2.88E-05 3.62E-05 3.75E-05 3.84E-05 4.57E-05 4.62E-05 4.62E-05 4.56E-05 4.43E-05 5.5E-05 6.5
+8E-05 6.54E-05 6.48E-05 7.87E-05 9.48E-05 0.000102 9.37E-05 0.000101 0.000112 0.000121 0.000124 0.000127 0.00013 0.000147 0.000147 0.000152 0.000168 0.000172 0.000181 0.0001830.009927 00000 0.000556 0.000769 0.001667 0.001702 0.001731 0.001831 0.001842 0.001967 0.00197 0.002353 0.002396 0.002556 0.003143 0.003826 0.0044 0.004603 0.005 0.005098 0.005226 0.00538 0.005402 0.005434 0.005444 0.005482 0.005692 0.006168 0.006226 0.006286 0.006833 0.0069 0.006986 0.006992 0.007 0.007176 0.007717 0.007905 0.008056 0.008062 0.008743 0.00875 0.008898 0.009578 0.009638 0.009749 0.00982665#
+209900_s_at1559220_at 204866_at 212240_s_at 225347_at 225564_at 221808_at 229817_at 221752_at 220768_s_at 219274_at 201847_at 229828_at 210788_s_at 218017_s_at 242714_at 202975_s_at 218909_at 216020_at 233759_s_at 209917_s_at 212733_at 210224_at 213194_at 203758_at 212441_at 202085_at 203384_s_at 203885_at 202149_at 203227_s_at 223134_at 222514_at 207571_x_at 225074_at 226196_s_at 212543_at 200701_at 1555832_s_at 231866_at 217043_s_at 219648_at 217743_s_at 201393_s_at 209090_s_at 205403_at 204286_s_at 224722_at 202121_s_at 224502_s_at 225957_at4 SLC16A1 -1.23 4 BG025779 -1.14 5 PHF16 3.85 5 PIK3R1 1.36 5 ARL8A 1.28 5 SPATA13 1.75 RAB9 1.56 5 ZNF608 2.19 5 SSH1 1.48 5 CSNK1G3 1.25 5 TSPAN12 2.97 5 LIPA 1.35 5 AL044007 1.25 5 DHRS7 1.35 5 HGSNAT 1.48 5 AW500340 3.08 5 RHOBTB3 2.53 5 RPS6KC1 1.24 5 IFIH1 1.49 5 SMEK2 1.13 5 TP53AP1 1.37 5 KIAA0226 1.24 5 MR1 1.28 5 ROBO1 4.61 5 CTSO 1.42 5 KIAA0232 1.23 5 TJP2 1.34 5 GOLGA1 1.24 5 RAB21 1.22 5 NEDD9 1.69 5 TSPAN31 1.34 5 BBX 1.29 5 RRAGC 1.23 5 C1orf38 1.68
+5 RAB2B 1.27 5 C14orf179 1.31 5 AIM1 1.77 5 NPC2 1.26 5 KLF6 1.46 5 LNPEP 1.48 5 SYT7 1.32 5 MREG 1.35 5 TMEM30A 1.18 5 IGF2R 1.29 5 SH3GLB1 1.28 5 IL1R2 3.17 5 PMAIP1 1.4 5 MIB1 1.39 5 CHMP2A 1.15 5 KIAA1191 1.26 5 LOC153222 1.4118.04 401 17.9 417 37.31 14 33.42 24 35.01 19 31.9 31 29.08 49 28.11 65 29.64 43 28.13 64 27.07 79 27.79 67 28.74 55 27.26 75 28.49 57 25.73 99 26.26 88 25.92 95 25.99 93 26.09 92 24.99 109 24.84 110 24.68 113 24.59 116 24.42 119 23.76 135 23.91 128 23.09 152 22.42 172 22.14 181 22.27 177 22.68 162 22.38 175 21.94 191 21.97 189 22.43 170 22.81 157 22.47 167 21.9 192 21.82 194 21.86 193 21.2 215 21.17 216 21.27 211 21.11 218 20.82 233 20.98 224 20.91 228 20.78 234 20.71 236 20.7 2370.000183 0.000191 9.02E-07 2.29E-06 1.55E-06 3.34E-06 6.95E-06 9.03E-06 6.01E-06 8.99E-06 1.2E-05 9.84E-06 7.62E-06 1.14E-05 8.14E-06 1.74E-05 1.5E-05 1.65E-05 1.62E-05 1.57E-05 2.15E-05 2.25E-05 2.35E-05 2.41E-05 2.53E-05 3.07E-05 2.94E-05 3.74E-05 4.58E-05 4.98E-05 4.79E-05 4.24E-05 4.63E-05 5.29E-05
+5.25E-05 4.57E-05 4.07E-05 4.51E-05 5.35E-05 5.49E-05 5.43E-05 6.65E-05 6.7E-05 6.51E-05 6.84E-05 7.48E-05 7.1E-05 7.26E-05 7.57E-05 7.75E-05 7.76E-050.009875 0.00988 0 0.000417 0.000526 0.001613 0.001837 0.001846 0.00186 0.001875 0.001899 0.00194 0.002 0.002 0.002105 0.002323 0.002386 0.002421 0.002473 0.0025 0.003303 0.003818 0.003894 0.004138 0.004286 0.004667 0.004688 0.005066 0.005349 0.005359 0.005367 0.00537 0.005371 0.005393 0.005397 0.005412 0.005414 0.005449 0.005573 0.005722 0.005751 0.006186 0.006204 0.006256 0.006468 0.006481 0.006563 0.006579 0.006581 0.006737 0.00679366#
+224957_at220507_s_at 200673_at 229146_at 223422_s_at 204198_s_at 222408_s_at 218020_s_at 222498_at 201133_s_at 204780_s_at 218132_s_at 231927_at 202318_s_at 225522_at 219863_at 205641_s_at 1554806_a_at 212498_at 217974_at 208783_s_at 201851_at 213073_at 201193_at 228478_at 201311_s_at 226122_at 207098_s_at 201999_s_at 221918_at 222401_s_at 203955_at 226440_at 215930_s_at 209004_s_at 231690_at 227056_at 203732_at 201968_s_at 212150_at 200977_s_at5 LOC497661 1.18 5 UPB1 1.39 5 LAPTM4A 1.2 5 C7orf31 1.24 5 ARHGAP24 2.89 5 RUNX3 1.25 5 YPEL5 1.53 5 ZFAND3 1.25 5 AZI2 1.21 5 PJA2 1.13 5 FAS 1.42 5 TSEN34 1.15 5 ATF6 1.26 5 SENP6 1.14 5 AAK1 1.31 5 HERC5 1.43 5 TRADD 1.3 5 FBXO8 1.22 5 AF056433 1.21 5 TM7SF3 1.43 5 CD46 1.18 5 SH3GL1 1.15 5 ZFYVE26 1.3 5 IDH1 1.23 5 AA889954 1.27 5 SH3BGRL 1.15 5 PLEKHG1 1.71 5 MFN1 1.37 5 DYNLT1 1.35 5 PCTK2 1.35 5 TMEM50A 1.14 5 KIAA0649 1.38 5 DUSP22 1.29 5 CTAGE5 1.32 5 FBXL5 1.21 5 AI962352 1.45 5 KIAA0141 1.26 5 TRIP4 1.16 5 PGM1 1.2 5 KIAA0143 1.19 5 TAX1BP1 1.2720.44 2
+51 20.52 245 20.05 272 19.94 277 20 274 19.83 284 20.19 262 19.79 286 20.19 261 19.79 285 20.11 265 20.21 258 19.7 291 19.67 292 19.56 300 19.34 309 19.07 327 19.1 324 18.83 337 18.67 356 18.74 345 18.73 347 18.75 344 18.75 343 18.59 364 18.62 361 18.61 362 18.57 365 18.55 367 18.42 373 18.31 377 18.26 382 18.29 378 18.25 383 18.2 389 18.07 398 18 408 18.04 402 17.95 411 17.91 414 17.87 4208.43E-05 8.21E-05 9.52E-05 9.85E-05 9.66E-05 0.000102 9.12E-05 0.000103 9.1E-05 0.000103 9.34E-05 9.06E-05 0.000106 0.000107 0.000111 0.00012 0.00013 0.000129 0.000141 0.000148 0.000145 0.000146 0.000145 0.000145 0.000152 0.000151 0.000151 0.000154 0.000154 0.000161 0.000167 0.00017 0.000168 0.00017 0.000173 0.000181 0.000185 0.000183 0.000188 0.00019 0.0001930.006853 0.006857 0.006875 0.006895 0.006898 0.006937 0.006985 0.006993 0.007011 0.007018 0.007019 0.007093 0.007113 0.007123 0.007167 0.00767 0.008043 0.008086 0.008694 0.008708 0.008725 0.008732 0.00875 0.008776 0.008874 0.008892 0.008923 0.008932 0.008992 0.0092
+76 0.009549 0.009581 0.009603 0.009634 0.009666 0.009774 0.009804 0.009851 0.009854 0.009952 0.009976"
+x<-strsplit(x, '\n')
+x
+length(x)
+x<-x[[1]]
+length(x)
+x[[1]]
+strsplit(x, ' ')
+length(x)
+strsplit(x[[1]])
+x[[1]]
+strsplit(x[[1]], ' ')
+y<-lapply(x, function(x) strsplit(x, ' '))
+y
+z<-unlist(y)
+z
+a<-z[is.na(as.numeric(z))]
+a
+length(a)
+b<-a[grep('_at', a)]
+b
+length(b)
+a
+c<-a[-grep('_at', a)]
+c
+c<-c[-1:5]
+c<-c[6:length(c)]
+length(c)
+c<-c[-grep('_', c)]
+length(c)
+c
+sort(c)
+length(b)
+length(c)
+length(unique(c))
+sort(c)
+c<-c[c!='FDR']
+c<-c[c!='Rank']
+length(c)
+cbind(b, c)
+cbind(b, c)->d
+write.csv(d, row=F, 'gene_list.csv')
+write.csv(d, row.names=F, colnames=F, 'gene_list.csv')
+write.csv(d, row.names=F, col.names=F, 'gene_list.csv')
+getwd()
+load("/Users/zhangz/Dropbox/Zhang/2015-11-19_BI_Presentation/timeline.rdata")
+library(timeline)
+tm
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=6, event.group.col='Side')
+tm[[2]][[1]]<-''
+?timeline
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=6, event.group.col='Side')
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=3, event.group.col='Side')
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=3, event.group.col='Side', event.line=TRUE)
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=2)
+timeline(tm[[1]], tm[[2]], event.above=FALSE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4, event.col='blue')
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4)
+a<-tm[[1]]
+a
+a[1,1]<-'More immune cells'
+a[a[,4]=='2016-12-31', 4]
+a[a[,4]=='2016-12-31', 4]<-'2016-06-30'
+a
+tm[[1]]<-a
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4)
+tm[[2]]
+x<-tm
+load("/Users/zhangz/Dropbox/Zhang/2015-11-19_BI_Presentation/timeline.rdata")
+tm[[2]]
+tm<-x
+tm[[2]][12, 1]
+tm[[2]][12, 2]
+tm[[2]][13, 2]<-'2015-11-01'
+tm[[2]][14, 2]<-'2016-02-01'
+tm[[2]][12, 2]<-'2015-08-01'
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=4)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=3, event.group.col='Side', event.line=TRUE, event.spots=6)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=4, event.group.col='Side', event.line=TRUE, event.spots=6)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=4, event.group.col='Side', event.line=TRUE, event.spots=8)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=4, event.group.col='Side', event.line=TRUE, event.spots=10)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=2, event.group.col='Side', event.line=TRUE, event.spots=10)
+timeline(tm[[1]], tm[[2]], event.above=TRUE, num.label.steps=4, event.group.col='Side', event.line=TRUE, event.spots=10)
+RCurl::getURL("sftp://sftp-cancer.sanger.ac.uk/cosmic/grch38/cosmic/v75", userpwd=("zhangz@email.chop.edu:Zhezhan9")
+)
+library(RCurl)
+RCurl::getURL("http://sftp-cancer.sanger.ac.uk/cosmic/grch38/cosmic/v75", userpwd=("zhangz@email.chop.edu:Zhezhan9")
+)
+RCurl::getURL("http://sftp-cancer.sanger.ac.uk/cosmic/grch38/cosmic/v75", userpwd=("zhangz@email.chop.edu:Zhezhan9"))->ln
+load("/Users/zhangz/Dropbox/Falk/2015-01_RNAseq_Worm/R/anno.rdata")
+strheight('abc', 'inch')
+strheight('abc', 'inches')
+load("/Users/zhangz/Dropbox/Sullivan/RNA-seq/Monocyte/anno_Monocyte.rdata")
+strheight('', unist='inches')
+strwidth('abc', cex=1)
+rm(list=ls())
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  out/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, num.breaks=15, min=min(d, na.rm=TRUE), max=max(d, na.rm=TRUE), key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+d<-readRDS('~/Desktop/d.rdata')
+dim(d)
+sz<-CalculateColoredBlockSize(d, 1, 6)
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  out/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, num.breaks=15, min=min(d, na.rm=TRUE), max=max(d, na.rm=TRUE), key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+sz<-CalculateColoredBlockSize(d, 1, 6)
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}
+sz<-CalculateColoredBlockSize(d, 1, 6)
+sz
+quartz(w=sz[1], h=sz[2])
+PlotColoredBlock(d)
+dim(d)
+head(d)
+PlotColoredBlock(d, 63, -3.2, 3.2)
+PlotColoredBlock(d, 63)
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-min(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(d)
+dim(d)
+head(d)
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(d)
+quartz(12, 4)
+quartz(w=12, h=4)
+\
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, offset=1.5, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, offset=1, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, limit.h, srt=90, offset=1.5, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, nr+0.1*space.h, srt=90, offset=1, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, nr+1, srt=90, offset=1, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+nrow(t(d))
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, nr+1, srt=90, offset=1, pos=3, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (min > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(t(d))
+quartz(w=12, h=4)
+PlotColoredBlock(t(d))
+PlotColoredBlock(d))
+PlotColoredBlock(d), key='enrichment score')
+PlotColoredBlock(d, key='enrichment score')
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  # Plot key#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    if (abs(min) > 0.01) {#
+      min<-round(min, 3); #
+      max<-round(max, 3); #
+    }#
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(d, key='enrichment score')
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.75*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.75*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  # Plot key#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    min<-round(min, ceiling(log10(abs(min)))); #
+    max<-round(max, ceiling(log10(abs(min)))); #
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.75*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.75*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(d, key='enrichment score')
+PlotColoredBlock(d, key='enrichment score', -3.2, 3.2, 63)
+quartz(w=6, h=2)
+quartz(w=2, h=6)
+PlotColoredBlock(d, key='enrichment score', -3.2, 3.2, 63)
+CalculateColoredBlockSize(d[1:20, ])
+quartz(w=7, h=5)
+PlotColoredBlock(d, key='enrichment score', -3.2, 3.2, 63)
+PlotColoredBlock(d[1:50, ], key='enrichment score', -3.2, 3.2, 63)
+PlotColoredBlock(d[1:20, ], key='enrichment score', -3.2, 3.2, 63)
+# Return blue-pinkogram colors. #
+GetBluePickogramColors<-function(n) {#
+  # n   Number of colors#
+  library(gplots);#
+  if (n<2) {#
+    warning('Number of colors less than 2, return NA');#
+    NA;#
+  } else {#
+    l<-floor(n/2); #
+    if (l<=4) lo<-c('#A9A9FF', '#FF9DB0') else #
+      if (l<=8) lo<-c('#D5D5FF', '#FFAADA') else#
+        if (l<=16) lo<-c('#E2DFFF', '#FFC2E6') else#
+          lo<-c('#EEE5FF', '#FFE5EE');#
+    col1<-colorpanel(l, '#0000FF', lo[1]);#
+    col2<-colorpanel(l, lo[2], '#FF0000');#
+    if (2*l==n) c(col1, col2) else c(col1, '#EEE5EE', col2); #
+  }#
+}#
+#
+# Helper function of PlotColoredBlock(), calculate preferred device size for color block heatmap#
+CalculateColoredBlockSize<-function(d, ratio=1, max.size=12) {#
+  # d         The matix to be plotted#
+  # ratio     Default height-to-width ratio of each block#
+  # max.size  Maximum width and height allowed for the whole plot, in inches#
+  sz<-0.2;#
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  block.w<-sz*nc;#
+  block.h<-ratio*sz*nr;#
+  full.w<-block.w + ratio*0.12*max(nchar(rownames(d))) + 0.4; #
+  full.h<-block.h + 0.12*max(nchar(colnames(d))) + 0.4; #
+#
+  c(full.w, full.h)/max(1, max(c(full.w, full.h))/max.size); #
+}#
+#
+# Default method to plot customized heatmap-like blue-red colored grid, with column and row name labels#
+PlotColoredBlock<-function(d, min=NA, max=NA, num.breaks=15, key='') {#
+  # d             Data matrix to plot; column and row names will be plotted#
+  # num.breaks    Number of color breakpoints#
+  # min, max      Minimal and maximal values to plot; round values lower or higher than the values#
+  # key           Plot key if not empty#
+  library(awsomics); #
+  if (num.breaks<1) num.breaks<-32;#
+  col<-GetBluePickogramColors(num.breaks);#
+  if (is.na(min)) min<-min(d, na.rm=TRUE); #
+  if (is.na(max)) max<-max(d, na.rm=TRUE); #
+  if (min > min(d, na.rm=TRUE)) d[!is.na(d) & d<min]<-min;#
+  if (max < max(d, na.rm=TRUE)) d[!is.na(d) & d>max]<-max;#
+  breaks<-seq(min, max, length.out = length(col)+1); #
+  # column/row names#
+  rnm<-rownames(d); #
+  cnm<-colnames(d); #
+  nr<-nrow(d);#
+  nc<-ncol(d);#
+  # Current device size in inch#
+  W<-par()$fin[1] - .2;#
+  H<-par()$fin[2] - .2; #
+  str.h<-strheight('', unit='inches'); # default string height#
+  # Total block size#
+  block.w<-1.2*str.h*nc; #
+  block.h<-1.2*str.h*nr;  #
+  ratio<-c(0.1, 10); # minimal and maximal label/block ratio#
+  # lable size#
+  wid.r<-max(strwidth(rnm, units='inches')); #
+  wid.c<-max(strwidth(cnm, units='inches')); #
+  str.r<-wid.r/max(1, str.h/(0.75*H/nr)); #
+  str.c<-wid.c/max(1, str.h/(0.75*W/nc));#
+  str.r<-max(ratio[1]*block.w, min(ratio[2]*block.w, str.r)); #
+  str.c<-max(ratio[1]*block.h, min(ratio[2]*block.h, str.c)); #
+  # label + block size#
+  full.w<-block.w+str.r;#
+  full.h<-block.h+str.c;#
+#
+  # ratio to device size#
+  ratio.w<-W/full.w;#
+  ratio.h<-H/full.h;#
+  # plot heatmap#
+  par(mar=c(0.1, 0.1, 0.1, 0.1)); #
+  limit.w<-ceiling(full.w/(block.w/nc)); #
+  limit.h<-ceiling(full.h/(block.h/nr)); #
+  plot(0, type='n', xlim=c(0, limit.w), ylim=c(0, limit.h), xaxs='i', yaxs='i', axes=FALSE, xlab='', ylab='');#
+  image(0:nc, 0:nr, t(d[nr:1,]), col=col, breaks=breaks, add=TRUE);#
+#
+  # plot row names#
+  space.w<-(1-nc/limit.w)*W;#
+  cex.w<-(space.w-0.2)/wid.r; #
+  cex.w<-min(cex.w, 0.66*(H/limit.h)/str.h); #
+  text(nc, (nr:1)-0.5, pos=4, label=rnm, cex=cex.w);#
+  # plot column names#
+  space.h<-(1-nr/limit.h)*H;#
+  cex.h<-(space.h-0.2)/wid.c; #
+  cex.h<-min(cex.h, 0.66*(W/limit.w)/str.h); #
+  text((1:nc)-0.5, (nr+limit.h)/2, srt=90, label=cnm, cex=cex.h);#
+  # Plot key#
+  if (!is.na(key) & key!='') {#
+    # key name#
+    key.w<-0.6*(space.w-0.2)/strwidth(key, units='inches');#
+    key.h<-0.2*space.h/str.h#
+    text((nc+limit.w)/2, nr, pos=3, label=key, col='purple', cex=min(key.w, key.h)); #
+    key.w<-limit.w-nc; #
+    key.h<-limit.h-nr;#
+    key.x<-c(nc + 0.15*key.w, nc + 0.85*key.w); #
+    key.y<-c(nr + 0.4*key.h, nr + 0.4*key.h + min(nr/25, 0.4*key.h)); #
+    image(seq(key.x[1], key.x[2], length.out=num.breaks+1), key.y, matrix(breaks, nc=1), col=col, breaks=breaks, add=TRUE);#
+    min<-round(min, ceiling(log10(abs(min)))); #
+    max<-round(max, ceiling(log10(abs(min)))); #
+    text(nc+0.15*key.w, nr + 0.4*key.h, pos=1, label=min, cex=0.8*cex.h); #
+    text(nc+0.85*key.w, nr + 0.4*key.h, pos=1, label=max, cex=0.8*cex.h); #
+  }#
+  abline(v=0:nc, h=0:nr, lwd=0.25, col='#333333');#
+  box();#
+}
+PlotColoredBlock(d[1:20, ], key='enrichment score', -3.2, 3.2, 63)
+d<-cbind(d, d[, 3:1])
+PlotColoredBlock(d[1:20, ], key='enrichment score', -3.2, 3.2, 63)
+PlotColoredBlock(d[1:100, ], key='enrichment score', -3.2, 3.2, 63)
+library(DESeq2)
+cnts <- matrix(rnbinom(n=1000, mu=100, size=1/0.5), ncol=10)#
+cond <- factor(rep(1:2, each=5))
+dds <- DESeqDataSetFromMatrix(cnts, DataFrame(cond), ~ cond)
+## try http:// if https:// URLs are not supported#
+source("https://bioconductor.org/biocLite.R")#
+biocLite(ask=FALSE)
+require(DESeq2);
+?DESeqDataSetFromMatrix
+countData <- matrix(1:100,ncol=4)#
+condition <- factor(c("A","A","B","B"))#
+dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition), ~ condition)
+library(DESeq2)
+countData <- matrix(1:100,ncol=4)#
+ condition <- factor(c("A","A","B","B"))#
+ dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition), ~ condition)
+source("https://bioconductor.org/biocLite.R")#
+biocLite("BiocUpgrade")     ## R version 2.15 or later
+library(DESeq2); countData <- matrix(1:100,ncol=4)#
+ condition <- factor(c("A","A","B","B"))#
+ dds <- DESeqDataSetFromMatrix(countData, DataFrame(condition), ~ condition)
+dds
+source("https://bioconductor.org/biocLite.R")#
+biocLite("ABSSeq")
+require("BiocInstaller");
+biocLite("ggbio", ask=FALSE);
+require("BiocInstaller");#
+#
+biocLite("TxDb.Hsapiens.UCSC.hg38.knownGene", ask=FALSE);#
+biocLite("org.Hs.eg.db", ask=FALSE);#
+biocLite("GenomicAlignments", ask=FALSE);#
+biocLite("ggbio", ask=FALSE);
+setwd('~/Documents/DEGandMore/data/')
+dir()
+load('de.RData')
+ls()
+library(DEGandMore)
+system.time(s <- DeBader(mtrx, grps))

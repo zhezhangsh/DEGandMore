@@ -1,28 +1,27 @@
 # Significance analysis of sequencing data
 # SAMseq {samr}
-DeSamSeq <- function(mtrx, grps, paired=FALSE, normalization=c('TMM', 'RLE', 'DESeq', 'Median', 'UQ', 'TC', 'QQ'), 
+DeSamSeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 'TMM', 'RLE', 'Median', 'UQ', 'TC', 'QQ'), 
                      nperms=max(100, 10*ncol(mtrx)), nresamp=max(20, 4*ncol(mtrx)), ...) {
   # norm.method   suggestion: use 'upperquantile' for ChIP-seq data
   require(DEGandMore);
   require(samr);
-  
+
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
-  
-  
+
   norm <- tolower(normalization)[1]; 
+  if (norm=='deseq')  mtrx <- NormDESeq(mtrx); 
   if (norm=='tmm')    mtrx <- NormTMM(mtrx);
   if (norm=='rle')    mtrx <- NormRLE(mtrx);
-  if (norm=='deseq')  mtrx <- NormDESeq(mtrx);
   if (norm=='median') mtrx <- NormMedian(mtrx);
   if (norm=='uq')     mtrx <- NormUpperQuantile(mtrx);
   if (norm=='tc')     mtrx <- NormTotalCount(mtrx);
   if (norm=='qq')     mtrx <- NormQQ(mtrx);
   mtrx <- round(mtrx); 
   mtrx <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
-  
+  print(3); 
   n    <- sapply(grps, length); 
   
   capture.output(

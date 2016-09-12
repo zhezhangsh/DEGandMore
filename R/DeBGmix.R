@@ -1,7 +1,7 @@
 # BGmix
 # https://www.bioconductor.org/packages/3.3/bioc/html/BGmix.html
 # BGmix {BGmix} 
-DeBGmix <- function(mtrx, grps, paired=FALSE, logged=TRUE, niter = 1000, nburn = 1000, ...) {
+DeBGmix <- function(mtrx, grps, paired=FALSE, logged=TRUE, ...) {
   require(DEGandMore);
   require(BGmix);
   
@@ -21,7 +21,7 @@ DeBGmix <- function(mtrx, grps, paired=FALSE, logged=TRUE, niter = 1000, nburn =
     d0 <- mtrx[, grps[[1]], drop=FALSE]-mtrx[, grps[[2]], drop=FALSE]; 
     v0 <- matrix(apply(d0, 1, function(x) var(x, na.rm=TRUE)), nc=1); 
     xx <- matrix(1, nr=1); 
-    dir <- BGmix(m0, v0, n[1], xx=xx, neffects=1, jstar = 0, ntau = 1, indtau = 0, niter = niter, nburn = nburn); 
+    dir <- BGmix(m0, v0, n[1], xx=xx, neffects=1, jstar = 0, ntau = 1, indtau = 0, niter = 100, nburn = 100); 
     
     par <- ccParams(dir);  
     res <- ccTrace(dir);
@@ -35,7 +35,9 @@ DeBGmix <- function(mtrx, grps, paired=FALSE, logged=TRUE, niter = 1000, nburn =
   } else {
     mm <- cbind(m1, m2);
     ss <- cbind(v1, v2);
-    dir <- BGmix(mm, ss, n, niter = niter, nburn = nburn); 
+    dimnames(mm) <- dimnames(ss) <- list(NULL, NULL);
+    
+    dir <- BGmix(mm, ss, n, niter = 100, nburn = 100); 
     
     par <- ccParams(dir); 
     res <- ccTrace(dir); 

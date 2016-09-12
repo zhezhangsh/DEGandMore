@@ -1,7 +1,7 @@
 # tweeDEseq
 # http://bioconductor.org/packages/release/bioc/html/tweeDEseq.html
 # tweeDE {tweeDEseq}
-DeTweeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
+DeTweeDeSeq <- function(mtrx, grps, paired=FALSE, cl=4, ...) {
   
   require(DEGandMore);
   require(tweeDEseq);
@@ -16,7 +16,7 @@ DeTweeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   
   f   <- rep(names(grps), sapply(grps, length)); 
   ct  <- normalizeCounts(mtrx); 
-  res <- tweeDE(ct, group = f, mc.cores = 4); 
+  res <- tweeDE(ct, group = f, mc.cores = max(1, cl)); 
   
   pv <- res[, 6];
   m1 <- res[, 2];
@@ -31,8 +31,7 @@ DeTweeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   qv[is.na(qv)] <- 1;
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s[rownames(mtrx), ], group=grps, tweeDEseq=res);

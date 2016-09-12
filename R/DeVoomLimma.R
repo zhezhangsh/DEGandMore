@@ -9,24 +9,32 @@ DeVoomLimma<-function(mtrx, grps, paired=FALSE, plot=FALSE, ...) {
   paired   <- prepared[[3]];
   
   res  <- VoomLimma(mtrx=mtrx, grps=grps, paired=paired, plot=plot, ...);
-  
-  e1   <- mtrx[, grps[[1]], drop=FALSE];
-  e2   <- mtrx[, grps[[2]], drop=FALSE];
-  m1   <- rowMeans(e1, na.rm=TRUE);
-  m2   <- rowMeans(e2, na.rm=TRUE);
 
-  lgfc <- res[[1]][, 1];
-  p    <- res[[1]][, 2];
-  q    <- res[[2]][, 'adj.P.Val'];
-  lgfc[is.na(lgfc)] <- 0;
-  p[is.na(p)]       <- 1;
-  q[is.na(q)]       <- 1;
+  stat <- res[[1]][rownames(mtrx), , drop=FALSE]; 
+  norm <- res[[2]][rownames(mtrx), , drop=FALSE];
   
-  s <- cbind(cbind(m1, m2, m2-m1)[rownames(res[[1]]), ], lgfc, p, q);
+  adj <- mean(mtrx, na.rm=TRUE)/mean(2^norm, na.rm=TRUE);
+  
+  m1 <- 2^rowMeans(norm[, grps[[1]], drop=FALSE], na.rm=TRUE);
+  m2 <- 2^rowMeans(norm[, grps[[2]], drop=FALSE], na.rm=TRUE);
+  m1 <- pmax(0, adj*m1-0.5);
+  m2 <- pmax(0, adj*m2-0.5);
+  
+  l2 <- stat[, 1];
+  p  <- stat[, 4];
+  q  <- p.adjust(p, method='BH');
+  
+  m1[is.na(m1)] <- 0;
+  m2[is.na(m2)] <- 0;
+  l2[is.na(l2)] <- 0;
+  p[is.na(p)]   <- 1;
+  q[is.na(q)]   <- 1;
+  
+  s <- cbind(m1, m2, m2-m1, l2, p, q);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
-  s <- cbind(s, res[[2]][, c(2, 3, 6)]);
+  rownames(s) <- rownames(mtrx); 
   
-  list(stat=s[rownames(mtrx), ], group=grps, voom=res);
+  list(stat=s, group=grps, voom=res);
 }
 
 
@@ -58,7 +66,7 @@ VoomLimma <- function(mtrx, grps, paired=FALSE, plot=FALSE, ...) {
   dge  <- calcNormFactors(dge);
   v    <- voom(dge, design, plot=plot)$E;
   fit  <- lmFit(v, design);
-  fit2 <- eBayes(fit2)
+  fit2 <- eBayes(fit)
   
-  topTable(fit2, coef='yGroup_2', number=nrow(ct)); 
+  list(stat=topTable(fit2, coef='yGroup_2', number=nrow(ct)), normalized=v); 
 }
