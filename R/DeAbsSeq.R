@@ -6,7 +6,6 @@ DeAbsSeq <- function(mtrx, grps, paired=FALSE, norm.method=c("geometric", "quart
   
   require(DEGandMore);
   require(ABSSeq);
-  if(is.loaded('DESeq2')) detach("package:DESeq2", unload=TRUE);
   
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
@@ -19,10 +18,9 @@ DeAbsSeq <- function(mtrx, grps, paired=FALSE, norm.method=c("geometric", "quart
     sz <- rep(1, ncol(mtrx)); 
   } else sz <- 0; 
   f <- factor(rep(names(grps), sapply(grps, length))); 
-  obj <- ABSDataSet(mtrx, groups = f, normMethod = nm, sizeFactor = sz, paired = paired); 
-  obj <- normalFactors(obj);
-  obj <- callParameter(obj);
-  obj <- callDEs(obj); 
+  
+  obj <- ABSDataSet(mtrx, groups = f, normMethod = nm, sizeFactor = sz, paired=paired);
+  obj <- ABSSeq(obj); 
   res <- ABSSeq::results(obj)[rownames(mtrx), , drop=FALSE];
   
   m1 <- exp(log(2)*res[, 'Amean']) - 1;
@@ -41,6 +39,8 @@ DeAbsSeq <- function(mtrx, grps, paired=FALSE, norm.method=c("geometric", "quart
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
                    'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
+  
+  if(is.loaded('ABSSeq')) detach("package:ABSSeq", unload=TRUE);
   
   list(stat=s[rownames(mtrx), ], group=grps, ABSSeq=obj);
 }

@@ -3,6 +3,7 @@
 # run.plgem {plgem}
 DePlgem <- function(mtrx, grps, paired=FALSE) {
   
+  require(Biobase);
   require(DEGandMore);
   require(plgem); 
 

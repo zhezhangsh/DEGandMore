@@ -92,9 +92,9 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
     d  <- d[rev(order(DeMethodMeta[names(d), 'speed']))];
     nm <- names(d); 
     
-    cl <- makeCluster(num.cluster, type='SOCK');
-    stat <- clusterApplyLB(cl, d[nm!='DePlgem'], runDe); 
-    stopCluster(cl); 
+    cl <- snow::makeCluster(num.cluster, type='SOCK');
+    stat <- snow::clusterApplyLB(cl, d[nm!='DePlgem'], runDe); 
+    snow::stopCluster(cl); 
     names(stat) <- names(d)[nm!='DePlgem']; 
     
     if ('DePlgem' %in% nm) stat$DePlgem <- runDe(d[['DePlgem']]);
