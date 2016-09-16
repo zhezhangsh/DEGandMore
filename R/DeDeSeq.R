@@ -16,9 +16,14 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
     cond <- DataFrame(cond=factor(rep(names(grps), n))); 
     dds  <- DESeqDataSetFromMatrix(mtrx, cond, ~ cond);
   }
-      
-  dds  <- DESeq(dds);
+  
+  dds <- estimateSizeFactors(dds);
+  dds <- estimateDispersions(dds);
+  dds <- nbinomWaldTest(dds, useQR = FALSE);
   res  <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
+  
+#   dds  <- DESeq(dds);
+#   res  <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
   
   # Summary statistics
   lgfc <- res[, 2];
