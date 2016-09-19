@@ -34,7 +34,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   if (is.null(names(grps))) names(grps) <- c('A', 'B');
   if (is.na(names(grps)[1])) names(grps)[1] <- 'A';
   if (is.na(names(grps)[2])) names(grps)[1] <- 'B';
-  mtrx <- mtrx[, c(grps[[1]], grps[[2]])];
+  ct <- ct[, c(grps[[1]], grps[[2]])];
   ################################################################################################################
   
   ###########################################################################################################
@@ -119,7 +119,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   
   if (just.stat) stat <- lapply(stat, function(s) s$stat[, 1:6]); 
   
-  input <- list(original=mtrx, filtered=d0, methods=mthds, groups=grps, paired=paired, minimal.count=min.count, 
+  input <- list(original=ct, filtered=d0, methods=mthds, groups=grps, paired=paired, minimal.count=min.count, 
                 number.cluster=num.cluster, normalization=c(norm.count, norm.logged));
   list(input=input, output=stat); 
 }
