@@ -1,6 +1,6 @@
 DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.cluster=1, just.stat = TRUE,
                      norm.count = c('DESeq', 'TMM', 'RLE', 'QQ', 'UpperQuantile', 'Median', 'TotalCount'),
-                     norm.logged = c('Loess', 'VST', 'Rlog', 'QQ', 'UpperQuantile', 'Median')) {
+                     norm.logged = c('Loess', 'VST', 'Rlog', 'QQ', 'UpperQuantile', 'Median'), force.norm = FALSE) {
   
   require(DEGandMore);
   data(DeMethodMeta);
@@ -46,13 +46,12 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   #####################################################################################################################
   # Prepare normalized data if some methods require it
   norm <- DeMethodMeta[mthds, 'normalized'];
-  if (length(norm[norm==1]) > 0) {
+  if (length(norm[norm==1])>0 | force.norm) {
     norm1 <- paste('Norm', norm.count[1], sep=''); 
     if (!(norm1 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.count), '\n');
     d1 <- NormWrapper(d0, norm1); 
   }
-  norm <- DeMethodMeta[mthds, 'normalized'];
-  if (length(norm[norm==2]) > 0) {
+  if (length(norm[norm==2])>0 | force.norm) {
     norm2 <- paste('Norm', norm.logged[1], sep=''); 
     if (!(norm2 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.logged), '\n');
     if (norm.logged[1] %in% c('VST', 'Rlog')) {
@@ -119,8 +118,12 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   
   if (just.stat) stat <- lapply(stat, function(s) s$stat[, 1:6]); 
   
-  input <- list(original=ct, filtered=d0, methods=mthds, groups=grps, paired=paired, minimal.count=min.count, 
-                number.cluster=num.cluster, normalization=c(norm.count, norm.logged));
+  normalized <- list();
+  if (length(norm[norm==1])>0 | force.norm) normalized$count  <- d1;
+  if (length(norm[norm==2])>0 | force.norm) normalized$logged <- d2;
+  
+  input <- list(original=ct, filtered=d0, normalized=normalized, methods=mthds, groups=grps, paired=paired, 
+                minimal.count=min.count, number.cluster=num.cluster, normalization=c(norm.count, norm.logged));
   list(input=input, output=stat); 
 }
 ##########################################################################################################
