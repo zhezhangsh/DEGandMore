@@ -11,7 +11,57 @@ output:
       collapsed: no
 ---
 
-<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm"><font color="darkblue">
+**RNA-seq 2G** is a web portal with >20 statistical methods that perform two-group analysis of differential gene expression. It uses read count data from RNA-seq or similar data matrix as input and generates test statistics in consistent format as output. 
+</font></div>
 
+# Introduction
 
+Two-group comparison of differential expression (DE) is the most common analysis of transcriptome data. For RNA-seq data, the comparison is usually performed on a gene-level matrix of read counts, with the read counts corresponding to the number of sequencing reads mapped to each gene in each RNA-seq sample. 
+
+Statistical methods that have been applied to two-group DE of RNA-seq data are widely different in terms of their data distribution assumption, input/output format, performance, sensitivity, and user-friendliness. 
+
+```{r include=FALSE}
+require(knitr);
+require(DEGandMore); 
+require(awsomics); 
+data("DeMethodMeta");
+
+tbl <- data.frame(Name=DeMethodMeta[[1]], Call=rownames(DeMethodMeta), DeMethodMeta[, 2:9], stringsAsFactors = FALSE);
+tbl[[1]] <- AddHref(tbl[[1]], DeMethodMeta$Link)
+```
+
+<div style="color:darkblue; padding:0 0.1cm">
+**Table 1** DE method features. 
 </div>
+
+<div align='center', style="padding:0 0.1cm"> 
+`r kable(tbl, row.names=FALSE)`
+</div>
+
+
+# Run DE analysis
+
+## Prepare inputs
+
+### Read count matrix
+
+### Grouping samples
+
+### Other parameters
+
+## Run DE analysis online
+
+## Run DE analysis offline
+
+# Browse DE results
+
+## Test statistics 
+
+
+
+
+
+
+***
+_END OF DOCUMENT_

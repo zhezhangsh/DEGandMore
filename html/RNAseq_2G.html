@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Zhe Zhang" />
+
+<meta name="date" content="2016-09-26" />
+
+<title>RNA-seq 2G</title>
+
+<script src="RNAseq_2G_files/jquery-1.11.3/jquery.min.js"></script>
+<script src="RNAseq_2G_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="RNAseq_2G_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="RNAseq_2G_files/tocify-1.9.1/jquery.tocify.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="RNAseq_2G_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="RNAseq_2G_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="RNAseq_2G_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="RNAseq_2G_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<link rel="stylesheet"
+      href="RNAseq_2G_files/highlight/default.css"
+      type="text/css" />
+<script src="RNAseq_2G_files/highlight/highlight.js"></script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script src="RNAseq_2G_files/navigation-1.1/tabsets.js"></script>
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+  padding-left: 10px;
+}
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">RNA-seq 2G</h1>
+<h4 class="author"><em>Zhe Zhang</em></h4>
+<h4 class="date"><em>2016-09-26</em></h4>
+
+</div>
+
+
+<div style="border:black 1px solid; padding: 0.5cm 0.5cm">
+<font color="darkblue"> <strong>RNA-seq 2G</strong> is a web portal with &gt;20 statistical methods that perform two-group analysis of differential gene expression. It uses read count data from RNA-seq or similar data matrix as input and generates test statistics in consistent format as output. </font>
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>Two-group comparison of differential expression (DE) is the most common analysis of transcriptome data. For RNA-seq data, the comparison is usually performed on a gene-level matrix of read counts, with the read counts corresponding to the number of sequencing reads mapped to each gene in each RNA-seq sample.</p>
+<p>Statistical methods that have been applied to two-group DE of RNA-seq data are widely different in terms of their data distribution assumption, input/output format, performance, sensitivity, and user-friendliness.</p>
+<div style="color:darkblue; padding:0 0.1cm">
+<strong>Table 1</strong> DE method features.
+</div>
+<div align="center" ,="" style="padding:0 0.1cm">
+<table>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Call</th>
+<th align="left">Default</th>
+<th align="left">Speed</th>
+<th align="left">Paired</th>
+<th align="left">Logged</th>
+<th align="left">Normalization</th>
+<th align="left">Distribution</th>
+<th align="left">Test</th>
+<th align="left">Function</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><a href="https://en.wikipedia.org/wiki/Student%27s_t-test" target="_blank">StudentsT</a></td>
+<td align="left">DeLimma</td>
+<td align="left">Yes</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Student’s t test, equal variance</td>
+<td align="left">TDist {stats}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="https://bioconductor.org/packages/release/bioc/html/limma.html" target="_blank">limma</a></td>
+<td align="left">DeT</td>
+<td align="left">Yes</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Empirical Bayes moderation</td>
+<td align="left">ebayes {limma}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://bioconductor.org/packages/release/bioc/html/edgeR.html" target="_blank">edgeR</a></td>
+<td align="left">DeEdgeR</td>
+<td align="left">Yes</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Negative binomial</td>
+<td align="left">Exact/Likelihood ratio</td>
+<td align="left">exactTest {edgeR}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/DESeq.html" target="_blank">DESeq2</a></td>
+<td align="left">DeDeSeq</td>
+<td align="left">Yes</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Negative binomial</td>
+<td align="left">Generalized linear model</td>
+<td align="left">DESeq {DESeq2}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://bioconductor.org/packages/release/bioc/html/ABSSeq.html" target="_blank">ABSSeq</a></td>
+<td align="left">DeAbsSeq</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Negative binomial</td>
+<td align="left">Sum of counts</td>
+<td align="left">callDEs {ABSSeq}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="https://www.bioconductor.org/packages/3.3/bioc/html/BGmix.html" target="_blank">BGmix</a></td>
+<td align="left">DeBGmix</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Bayesian mixture model</td>
+<td align="left">BGmix {BGmix}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://cran.r-project.org/web/packages/PoissonSeq/index.html" target="_blank">PoissonSeq</a></td>
+<td align="left">DePoissonSeq</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Poisson log-linear</td>
+<td align="left">Poisson goodness-of-fit</td>
+<td align="left">PS.Main {PoissonSeq}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/3.3/bioc/html/RBM.html" target="_blank">RBM</a></td>
+<td align="left">DeRBM</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Empirical Bayes &amp; resampling</td>
+<td align="left">RBM_T {RBM}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="http://www.ncbi.nlm.nih.gov/pubmed/24485249" target="_blank">voom</a></td>
+<td align="left">DeVoomLimma</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Log-normal</td>
+<td align="left">Empirical Bayes moderation</td>
+<td align="left">voom {limma}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="https://en.wikipedia.org/wiki/Welch%27s_t-test" target="_blank">WelchsT</a></td>
+<td align="left">DeWelch</td>
+<td align="left">No</td>
+<td align="left">Fast</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Welch’s t test, unequal variance</td>
+<td align="left">TDist {stats}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/DEGseq.html" target="_blank">DEGseq</a></td>
+<td align="left">DeDegSeq</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Binomial/Poisson</td>
+<td align="left">Likelihood Ratio Test</td>
+<td align="left">DEGexp {DEGseq}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/EBSeq.html" target="_blank">EBSeq</a></td>
+<td align="left">DeEbSeq</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Negative Binomial</td>
+<td align="left">Empirical Bayesian</td>
+<td align="left">EBTest {EBSeq}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://bioconductor.org/packages/3.3/bioc/html/NOISeq.html" target="_blank">NOISeq</a></td>
+<td align="left">DeNoiSeq</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Nonparametric</td>
+<td align="left">Empirical Bayes</td>
+<td align="left">noiseqbio {NOISeq}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="https://www.bioconductor.org/packages/release/bioc/html/plgem.html" target="_blank">PLGEM</a></td>
+<td align="left">DePlgem</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Power Law Global Error Model</td>
+<td align="left">run.plgem {plgem}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://bioconductor.org/packages/release/bioc/html/RankProd.html" target="_blank">RankProd</a></td>
+<td align="left">DeRankP</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Nonparametric</td>
+<td align="left">Rank product</td>
+<td align="left">RP {RankProd}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://statweb.stanford.edu/~tibs/SAM/" target="_blank">SAM</a></td>
+<td align="left">DeSam</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Alternative t test with permutation</td>
+<td align="left">samr {samr}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="http://statweb.stanford.edu/~tibs/SAM/" target="_blank">SAMSeq</a></td>
+<td align="left">DeSamSeq</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Nonparametric</td>
+<td align="left">Wilcoxon with resampling</td>
+<td align="left">SAMseq {samr}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/3.3/bioc/html/sSeq.html" target="_blank">sSeq</a></td>
+<td align="left">DeSSeq</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Negative Binomial</td>
+<td align="left">Shrinkage Approach of Dispersion Estimation</td>
+<td align="left">nbTestSH {sSeq}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://en.wikipedia.org/wiki/Wilcoxon_signed-rank_test" target="_blank">Wilcoxon</a></td>
+<td align="left">DeWilcoxon</td>
+<td align="left">No</td>
+<td align="left">Medium</td>
+<td align="left">Yes</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Nonparametric</td>
+<td align="left">Wilcoxon signed-rank test</td>
+<td align="left">wilcox.test {stats}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/baySeq.html" target="_blank">baySeq</a></td>
+<td align="left">DeBaySeq</td>
+<td align="left">No</td>
+<td align="left">Slow</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Negative binomial</td>
+<td align="left">Empirical Bayesian</td>
+<td align="left">getLikelihoods {baySeq}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="http://bioconductor.org/packages/3.3/bioc/html/bridge.html" target="_blank">bridge</a></td>
+<td align="left">DeBridge</td>
+<td align="left">No</td>
+<td align="left">Slow</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">T/Gaussian</td>
+<td align="left">Bayesian hierarchical model</td>
+<td align="left">bridge.2samples {bridge}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/LMGene.html" target="_blank">LMGene</a></td>
+<td align="left">DeLMGene</td>
+<td align="left">No</td>
+<td align="left">Slow</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Normal</td>
+<td align="left">Linear model &amp; glog transformation</td>
+<td align="left">genediff {LMGene}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="https://bioconductor.org/packages/release/bioc/html/ALDEx2.html" target="_blank">ALDEx2</a></td>
+<td align="left">DeAldex2</td>
+<td align="left">No</td>
+<td align="left">Slower</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Dirichlet</td>
+<td align="left">Welch’s t/Wilcoxon/Kruskal Wallace</td>
+<td align="left">aldex {ALDEx2}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="https://www.bioconductor.org/packages/3.3/bioc/html/BADER.html" target="_blank">BADER</a></td>
+<td align="left">DeBader</td>
+<td align="left">No</td>
+<td align="left">Slower</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Overdispersed poisson</td>
+<td align="left">Bayesian</td>
+<td align="left">BADER {BADER}</td>
+</tr>
+<tr class="odd">
+<td align="left"><a href="http://bioinformatics.oxfordjournals.org/content/early/2015/04/21/bioinformatics.btv209" target="_blank">edgeRun</a></td>
+<td align="left">DeEdgeRun</td>
+<td align="left">No</td>
+<td align="left">Slower</td>
+<td align="left">Yes</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Negative binomial</td>
+<td align="left">Exact unconditional</td>
+<td align="left">UCexactTest {edgeRun}</td>
+</tr>
+<tr class="even">
+<td align="left"><a href="http://bioconductor.org/packages/release/bioc/html/tweeDEseq.html" target="_blank">tweeDEseq</a></td>
+<td align="left">DeTweeDeSeq</td>
+<td align="left">No</td>
+<td align="left">Slower</td>
+<td align="left">No</td>
+<td align="left">No</td>
+<td align="left">Yes</td>
+<td align="left">Poisson-Tweedie</td>
+<td align="left">Poisson-like</td>
+<td align="left">tweeDE {tweeDEseq}</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="run-de-analysis" class="section level1">
+<h1><span class="header-section-number">2</span> Run DE analysis</h1>
+<div id="prepare-inputs" class="section level2">
+<h2><span class="header-section-number">2.1</span> Prepare inputs</h2>
+<div id="read-count-matrix" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Read count matrix</h3>
+</div>
+<div id="grouping-samples" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Grouping samples</h3>
+</div>
+<div id="other-parameters" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Other parameters</h3>
+</div>
+</div>
+<div id="run-de-analysis-online" class="section level2">
+<h2><span class="header-section-number">2.2</span> Run DE analysis online</h2>
+</div>
+<div id="run-de-analysis-offline" class="section level2">
+<h2><span class="header-section-number">2.3</span> Run DE analysis offline</h2>
+</div>
+</div>
+<div id="browse-de-results" class="section level1">
+<h1><span class="header-section-number">3</span> Browse DE results</h1>
+<div id="test-statistics" class="section level2">
+<h2><span class="header-section-number">3.1</span> Test statistics</h2>
+<hr />
+<p><em>END OF DOCUMENT</em></p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
