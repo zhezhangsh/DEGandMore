@@ -137,12 +137,12 @@ DeRNAseqMethods <- function(group=NA) {
   
   ########################################################
   # Method categories
-  default <- rownames(DeMethodMeta)[DeMethodMeta$default==1];
+  default <- rownames(DeMethodMeta)[DeMethodMeta$Default=='Yes'];
   speed <- list(
-    fast    = rownames(DeMethodMeta)[DeMethodMeta$speed==1],
-    medium  = rownames(DeMethodMeta)[DeMethodMeta$speed==2],
-    slow    = rownames(DeMethodMeta)[DeMethodMeta$speed==3],
-    slower  = rownames(DeMethodMeta)[DeMethodMeta$speed==4]
+    fast    = rownames(DeMethodMeta)[DeMethodMeta$Speed=='Fast'],
+    medium  = rownames(DeMethodMeta)[DeMethodMeta$Speed=='Medium'],
+    slow    = rownames(DeMethodMeta)[DeMethodMeta$Speed=='Slow'],
+    slower  = rownames(DeMethodMeta)[DeMethodMeta$Speed=='Slower']
   );
   ########################################################
   
