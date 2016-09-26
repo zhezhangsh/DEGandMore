@@ -46,12 +46,14 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   #####################################################################################################################
   # Prepare normalized data if some methods require it
   norm <- DeMethodMeta[mthds, 'Normalization'];
-  if (length(norm[norm==1])>0 | force.norm) {
+  logd <- DeMethodMeta[mthds, 'Logged'];
+  
+  if (length(norm[norm=='No' & logd=='No'])>0 | force.norm) {
     norm1 <- paste('Norm', norm.count[1], sep=''); 
     if (!(norm1 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.count), '\n');
     d1 <- NormWrapper(d0, norm1); 
   }
-  if (length(norm[norm==2])>0 | force.norm) {
+  if (length(norm[logd == 'Yes'])>0 | force.norm) {
     norm2 <- paste('Norm', norm.logged[1], sep=''); 
     if (!(norm2 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.logged), '\n');
     if (norm.logged[1] %in% c('VST', 'Rlog')) {
