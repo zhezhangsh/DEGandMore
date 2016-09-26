@@ -31,7 +31,7 @@ DeNoiSeq <- function(mtrx, grps, paired=FALSE, replicates=c('biological', 'techn
     
     m1 <- res[, 1];
     m2 <- res[, 2];
-    l2 <- res[, 5];
+    l2 <- -res[, 5];
     pv <- 1-res[, 4];
     qv <- p.adjust(pv, method='BH');
   } else {
