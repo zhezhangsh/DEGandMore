@@ -106,13 +106,13 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   ###################################################################################################
   ###################################################################################################
   
-  if (length(norm[norm==2]) > 0) {
+  if (length(logd[logd=='Yes']) > 0) {
     un <- 2^d2;
     un <- un * (mean(d0, na.rm=TRUE)/mean(un, na.rm=TRUE));
     m1 <- rowMeans(un[, grps[[1]], drop=FALSE]);
     m2 <- rowMeans(un[, grps[[2]], drop=FALSE]);
     tb <- cbind(m1, m2, m2-m1); 
-    stat[norm==2] <- lapply(stat[norm==2], function(s) {
+    stat[logd=='Yes'] <- lapply(stat[logd=='Yes'], function(s) {
       s$stat[, 1:3] <- tb;
       s;
     });
@@ -121,8 +121,8 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   if (just.stat) stat <- lapply(stat, function(s) s$stat[, 1:6]); 
   
   normalized <- list();
-  if (length(norm[norm==1])>0 | force.norm) normalized$count  <- d1;
-  if (length(norm[norm==2])>0 | force.norm) normalized$logged <- d2;
+  if (length(norm[norm=='No' & logd=='No'])>0 | force.norm) normalized$count  <- d1;
+  if (length(logd[logd=='Yes'])>0 | force.norm) normalized$logged <- d2;
   
   input <- list(original=ct, filtered=d0, normalized=normalized, methods=mthds, groups=grps, paired=paired, 
                 minimal.count=min.count, number.cluster=num.cluster, normalization=c(norm.count, norm.logged));
