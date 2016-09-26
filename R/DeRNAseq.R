@@ -45,7 +45,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   
   #####################################################################################################################
   # Prepare normalized data if some methods require it
-  norm <- DeMethodMeta[mthds, 'normalized'];
+  norm <- DeMethodMeta[mthds, 'Normalization'];
   if (length(norm[norm==1])>0 | force.norm) {
     norm1 <- paste('Norm', norm.count[1], sep=''); 
     if (!(norm1 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.count), '\n');
@@ -68,9 +68,9 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   ####################################################################
   # Prepare inputs
   d <- lapply(mthds, function(m) {
-    lg <- DeMethodMeta[m, 'logged']==1;
-    nm <- DeMethodMeta[m, 'normalized']; 
-    if (nm == 0) d <- d0 else if (nm == 1) d <- d1 else d <- d2;
+    lg <- DeMethodMeta[m, 'Logged']=='Yes';
+    nm <- DeMethodMeta[m, 'Normalization']=='Yes'; 
+    if (!lg & nm) d <- d0 else if (!lg) d <- d1 else d <- d2;
     list(method=m, data=d, group=grps, paired=paired, logged=lg); 
   });
   names(d) <- mthds;
@@ -88,7 +88,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
     }
     ####################################################################
     
-    d  <- d[rev(order(DeMethodMeta[names(d), 'speed']))];
+    d  <- d[rev(order(DeMethodMeta[names(d), 'Speed']))];
     nm <- names(d); 
     
     cl <- snow::makeCluster(num.cluster, type='SOCK');
