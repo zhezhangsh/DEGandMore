@@ -128,7 +128,6 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
 }
 ##########################################################################################################
 
-
 ##########################################################################################################
 # Method groups for DE analysis of RNA-seq data
 DeRNAseqMethods <- function(group=NA) {
