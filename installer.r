@@ -18,7 +18,7 @@ if (length(pkg) > 0) {
 }
 
 # install GitHub packages (force to install to keep)
-pkg2 <- c('RoCA', 'rchive', 'awsomics', 'DEGandMore')
+pkg3 <- c('RoCA', 'rchive', 'awsomics', 'DEGandMore')
 require(devtools); 
 install_github('zhezhangsh/RoCAR');
 install_github('zhezhangsh/rchive');
