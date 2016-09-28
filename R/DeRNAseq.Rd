@@ -10,7 +10,7 @@ This function uses read count matrix from RNA-seq data and a similar user interf
 \usage{
 DeRNAseq(ct, grps, paired = FALSE, mthd = 0, min.count = 6, just.stats = TRUE,
          norm.count = c('DESeq', 'TMM', 'RLE', 'QQ', 'UpperQuantile', 'Median', 'TotalCount'),
-         norm.logged = c('Loess', 'VST', 'Rlog', 'QQ', 'UpperQuantile', 'Median')
+         norm.logged = c('Loess', 'VST', 'Rlog', 'QQ', 'UpperQuantile', 'Median', force.norm = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -48,6 +48,9 @@ DeRNAseq(ct, grps, paired = FALSE, mthd = 0, min.count = 6, just.stats = TRUE,
   } 
   \item{norm.logged}{
   The normalization option for methods use log2 transformed data as input.
+  } 
+  \item{force.norm}{
+  If TRUE, force normalization of both read counts and logged data no matter whether they are required by the DE methods. 
   } 
 }
 \details{
