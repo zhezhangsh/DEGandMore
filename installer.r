@@ -3,7 +3,7 @@ installed <- rownames(installed.packages());
 
 # Install required cran packages
 pkg1 <- c('devtools', 'XML', 'readxl', 'shinythemes');
-pkg  <- setdiff(pkgs, installed);
+pkg  <- setdiff(pkg1, installed);
 if (length(pkg) > 0) {
   install.packages(pkg); 
 }
