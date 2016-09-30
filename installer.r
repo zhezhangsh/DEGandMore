@@ -16,6 +16,8 @@ if (length(pkg) > 0) {
   source("http://bioconductor.org/biocLite.R");
   biocLite(pkg); 
 }
+# Install older version, the newest version doesn't support paired test
+install_url("https://www.bioconductor.org/packages/3.2/bioc/src/contrib/ABSSeq_1.6.1.tar.gz");
 
 # install GitHub packages (force to install to keep)
 pkg3 <- c('RoCA', 'rchive', 'awsomics', 'DEGandMore')
