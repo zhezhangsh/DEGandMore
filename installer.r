@@ -7,6 +7,7 @@ pkg  <- setdiff(pkg1, installed);
 if (length(pkg) > 0) {
   install.packages(pkg); 
 }
+install_url("https://cran.r-project.org/src/contrib/Archive/multicore/multicore_0.2.tar.gz"); 
 
 # install Bioconductor packages
 pkg2 <- c("ABSSeq", "ALDEx2", "BADER", "baySeq", "BGmix", "bridge", "DEGseq", "DESeq2", "EBSeq", "edgeR", "edgeRun", 
