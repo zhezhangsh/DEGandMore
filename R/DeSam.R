@@ -41,7 +41,7 @@ DeSam<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
   if (logged) lgfc<-m2-m1 else lgfc<-log2(fc);
   lgfc[is.na(lgfc)]<-0; 
   s <- cbind(m1, m2, m2-m1, lgfc, pmin(1, pmax(0, p)), pmin(1, pmax(0, q)));
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   
   list(stat=s[rownames(mtrx), ], group=grps, sam=sam, sig=x)
 }

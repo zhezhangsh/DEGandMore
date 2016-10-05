@@ -42,8 +42,7 @@ DeSamSeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 
   q  <- p.adjust(p, method='BH');
   fc <- log2(pmax(0.5, m2)) - log2(pmax(0.5, m1)); 
   s  <- cbind(m1, m2, m2-m1, fc, p, q);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s[rownames(mtrx), ], group=grps, sam=samfit);

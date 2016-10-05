@@ -19,7 +19,7 @@ DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=min(100, 2*ncol(m
   s<-cbind(s, stat$single.rank[, c(8, 9, 2, 3, 1)]);
   s[, 'FDR'] <- p.adjust(s[, 'Pvalue'], method='BH'); 
   
-  colnames(s)<-c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR', 'RP1', 'RP2', 'Rank');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   
   list(stat=s[rownames(mtrx), ], group=grps, rp=list(original=stat$rp, summarized=stat[1:2]));
 }
@@ -67,22 +67,11 @@ SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.rank
     p <- ps[, 1];
     p[fc > 0] <- ps[fc > 0, 2]; 
     p[is.na(fc) | is.na(p)] <- 1;
-#     p<-rep(1, length(rk)); 
-#     ind1<-tbs[[1]][, 5]>0 & !is.na(tbs[[1]][, 5]); 
-#     p[ind1]<-tbs[[1]][ind1, 3];
-#     ind2<-tbs[[2]][, 5]>0 & !is.na(tbs[[2]][, 5]); 
-#     p[ind2]<-tbs[[2]][ind2, 3];
     p<-pmin(1, 2*p);
     a<-cbind(Rank=rk, RP1=tbs[[1]][,2], RP2=tbs[[2]][,2], tbs[[1]][, 5:6], Pvalue=p, FDR=p.adjust(p, method='BH'));
     if (!identical(NA, genename)) rownames(a)<-genename;
     tbs$single.rank<-a;
   }
-  
-  #if (write.excel) {
-  #	xls<-tbs[1:2]
-  #	if (single.ranking) xls[['Single rank']]<-cbind(Gene=names(tbs[[3]]), Rank=as.vector(tbs[[3]]));
-  #	Excel(xls, paste(class1, 'vs', class2));
-  #}
   
   if (write.rnk) {
     if (single.ranking) {

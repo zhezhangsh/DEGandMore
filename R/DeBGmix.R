@@ -64,8 +64,7 @@ DeBGmix <- function(mtrx, grps, paired=FALSE, logged=TRUE, ...) {
   unlink(dir, recursive = TRUE); 
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s, group=grps, bgmix=list(parameter=par, trace=res));

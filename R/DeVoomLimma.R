@@ -31,7 +31,7 @@ DeVoomLimma<-function(mtrx, grps, paired=FALSE, plot=FALSE, ...) {
   q[is.na(q)]   <- 1;
   
   s <- cbind(m1, m2, m2-m1, l2, p, q);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s, group=grps, voom=res);

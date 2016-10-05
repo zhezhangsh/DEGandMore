@@ -38,8 +38,7 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   m2 <- rowMeans(e2, na.rm=TRUE);
   q <- p.adjust(pval, method='BH');
   s <- cbind(m1, m2, m2-m1, lgfc, pval, q);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
 

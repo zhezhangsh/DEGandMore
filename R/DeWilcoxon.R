@@ -32,8 +32,8 @@ DeWilcoxon <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
   }); 
   p[is.na(p)] <- 1;
   stat <- cbind(m1, m2, diff, lgfc, p, p.adjust(p, method='BH'));
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(stat) <- rownames(mtrx);
-  colnames(stat) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
 
   list(stat=stat[rownames(mtrx), ], group=grps);
 }

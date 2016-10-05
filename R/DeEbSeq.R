@@ -51,8 +51,7 @@ DeEbSeq <- function(mtrx, grps,  paired=FALSE, iter=5, normalization=c('median',
   
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 
-                   'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   list(stat=s[rownames(mtrx), ], group=grps, eb=eb); 

@@ -57,7 +57,7 @@ DeAldex2 <- function(mtrx, grps, paired=FALSE, test=c('Welch', 'Wilcoxon'), mc.s
   ml <- loess(ct ~ ef, degree = 1, span = sp, drop=FALSE);
   
   s <- cbind(m1, m2, m2-m1, l2, pv, qv);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps)[2:1], collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
   s <- cbind(s, res[rownames(mtrx), p0], eff[, 'diff.btw'], eff[, 'effect']); 

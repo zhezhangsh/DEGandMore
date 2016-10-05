@@ -22,7 +22,7 @@ DeDeSeq2 <- function(mtrx, grps, paired=FALSE, ...) {
   stat[is.na(stat[,4]), 4] <- 0;
   stat[is.na(stat[,5]), 5] <- 1;
   stat[is.na(stat[,6]), 6] <- 1;
-  colnames(stat) <- c(paste('Mean', names(grps), sep='_'), paste(names(grps), collapse='-'), 'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   stat<-cbind(stat, res[, c(1, 3, 4)]);
   
   list(stat=stat[rownames(mtrx), ], group=grps, deseq=ds);
