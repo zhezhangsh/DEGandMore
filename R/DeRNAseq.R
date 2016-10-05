@@ -125,7 +125,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   if (length(logd[logd=='Yes'])>0 | force.norm) normalized$logged <- d2;
   
   input <- list(original=ct, filtered=d0, normalized=normalized, methods=mthds, groups=grps, paired=paired, 
-                minimal.count=min.count, number.cluster=num.cluster, normalization=c(norm.count, norm.logged));
+                minimal.count=min.count, number.cluster=num.cluster, normalization=c(norm.count[1], norm.logged[1]));
   list(input=input, output=stat); 
 }
 ##########################################################################################################
