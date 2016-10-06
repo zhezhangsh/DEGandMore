@@ -19,7 +19,7 @@ DeRankP<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=min(100, 2*ncol(m
   s<-cbind(s, stat$single.rank[, c(8, 9, 2, 3, 1)]);
   s[, 'FDR'] <- p.adjust(s[, 'Pvalue'], method='BH'); 
   
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
+  colnames(s)[1:6] <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   
   list(stat=s[rownames(mtrx), ], group=grps, rp=list(original=stat$rp, summarized=stat[1:2]));
 }

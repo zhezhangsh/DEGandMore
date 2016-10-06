@@ -46,7 +46,7 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   q[is.na(q)]   <- 1;
   
   s <- cbind(m1, m2, m2-m1, l2, p, q, stat[, 2]);
-  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
+  colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR', colnames(stat)[2]);
   rownames(s) <- rownames(mtrx); 
 
   list(stat=s[rownames(mtrx), ], group=grps, dge=dge);
