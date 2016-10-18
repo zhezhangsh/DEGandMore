@@ -44,5 +44,5 @@ DeBallgown <- function(mtrx, grps, paired=FALSE) {
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rownames(mtrx); 
   
-  list(stat=s, group=grps, limma=fit);
+  list(stat=s, group=grps);
 }
