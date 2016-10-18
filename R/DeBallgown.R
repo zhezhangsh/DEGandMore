@@ -15,10 +15,20 @@ DeBallgown <- function(mtrx, grps, paired=FALSE) {
   phen <- data.frame(group=comp);
 
   # Calculate log2-FC using the upper-quanitle method. Detail at stattest {ballgown} help page, parameter libadjust
-  lg <- log2(mtrx+1); 
-  l2 <- log2(stattest(gowntable=lg, pData=phen, covariate='group', feature='gene', getFC=TRUE, log=TRUE)[, 3]);
+  libadjust = apply(mtrx, 2, function(x) {
+    lognz = log2(x[x != 0] + 1)
+    q3 = quantile(lognz, 0.75)
+    sum(lognz[lognz < q3])
+  }); 
+  libadjust <- libadjust/mean(libadjust); 
+  expr <- log2(mtrx+1);
+  expr <- sapply(1:ncol(expr), function(i) expr[, i]/libadjust[i]); 
+  
   m1 <- rowMeans(mtrx[, grps[[1]]]); 
-  m2 <- m1*2^l2;
+  m2 <- rowMeans(mtrx[, grps[[2]]]);
+  l2 <- m2-m1;
+  m1 <- 2^m1;
+  m2 <- 2^m2;
   
   if (paired & n[1]==n[2]) {
     pair <- factor(rep(1:n[1], 2)); 
@@ -26,9 +36,9 @@ DeBallgown <- function(mtrx, grps, paired=FALSE) {
     phen <- data.frame(group=comp, pair=pair);
     mod0 <- model.matrix(~ phen$pair);
     mod1 <- model.matrix(~ phen$pair + phen$group);
-    stat <- stattest(gowntable=mtrx, pData=phen, mod=mod1, mod0=mod0, feature='gene', log=FALSE);
+    stat <- stattest(gowntable=expr, pData=phen, mod=mod1, mod0=mod0, feature='gene', log=TRUE);
   } else {
-    stat <- stattest(gowntable=mtrx, pData=phen, covariate='group', feature='gene', log=FALSE);
+    stat <- stattest(gowntable=expr, pData=phen, covariate='group', feature='gene', log=TRUE);
   }
 
   pv <- stat[, 3]; 
