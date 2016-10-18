@@ -8,6 +8,7 @@ export("CreateOiReport");
 export("DeAbsSeq");
 export("DeAldex2");
 export("DeBader");
+export("DeBallgown");
 export("DeBaySeq");
 export("DeBGmix");
 export("DeBridge");

@@ -15,9 +15,9 @@ DeBridge <- function(mtrx, grps, paired=FALSE, logged=TRUE, ...) {
   d1  <- mtrx[, grps[[1]], drop=FALSE];
   d2  <- mtrx[, grps[[2]], drop=FALSE];
   
-  res <- bridge.2samples(d1, d2, log=logged, all.out=FALSE);
+  res <- bridge.2samples(d1, d2, log=logged, all.out=FALSE, robust = FALSE, B=5000);
   
-  pv  <- 1-res$post.p; 
+  pv  <- pmax(0, 1-res$post.p); 
   qv <- p.adjust(pv, method='BH');
   m1 <- rowMeans(d1, na.rm=TRUE);
   m2 <- rowMeans(d2, na.rm=TRUE);

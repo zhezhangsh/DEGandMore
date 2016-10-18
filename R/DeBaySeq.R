@@ -66,7 +66,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 
   m1 <- rowMeans(mtrx0[, grps[[1]], drop=FALSE], na.rm=TRUE);
   m2 <- rowMeans(mtrx0[, grps[[2]], drop=FALSE], na.rm=TRUE);
   q  <- p.adjust(p, method='BH');
-  fc <- CalculateCountLog2FC(m1, m2, mtrx, grps);
+  fc <- CalculateCountLog2FC(m2, m1, mtrx, grps);
   
   s <- cbind(m1, m2, m2-m1, fc, p, q);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
