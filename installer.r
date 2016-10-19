@@ -29,6 +29,7 @@ install_github('zhezhangsh/awsomicsR');
 install_github('zhezhangsh/DEGandMore');
 
 # install individual packages
+devtools::intsall_url("http://www.bios.unc.edu/research/genomic_software/BBSeq/index_files/BBSeq_3.0.zip");
 
 # Check if all packages can be loaded
 pkgs   <- c(pkg1, pkg2, pkg3); 
