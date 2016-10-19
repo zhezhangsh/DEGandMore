@@ -28,6 +28,8 @@ install_github('zhezhangsh/rchive');
 install_github('zhezhangsh/awsomicsR');
 install_github('zhezhangsh/DEGandMore');
 
+# install individual packages
+
 # Check if all packages can be loaded
 pkgs   <- c(pkg1, pkg2, pkg3); 
 loaded <- sapply(pkgs, function(pkg) require(pkg, character.only = TRUE));
