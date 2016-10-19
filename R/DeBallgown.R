@@ -1,5 +1,4 @@
 DeBallgown <- function(mtrx, grps, paired=FALSE) {
-  
   require(DEGandMore);
   require(ballgown); 
   
@@ -22,10 +21,11 @@ DeBallgown <- function(mtrx, grps, paired=FALSE) {
   }); 
   libadjust <- libadjust/mean(libadjust); 
   expr <- log2(mtrx+1);
-  expr <- sapply(1:ncol(expr), function(i) expr[, i]/libadjust[i]); 
+  expr <- sapply(1:ncol(expr), function(i) pmax(log2(4/3), expr[, i])/libadjust[i]); 
+  dimnames(expr) <- dimnames(mtrx); 
   
-  m1 <- rowMeans(mtrx[, grps[[1]]]); 
-  m2 <- rowMeans(mtrx[, grps[[2]]]);
+  m1 <- rowMeans(expr[, grps[[1]]]); 
+  m2 <- rowMeans(expr[, grps[[2]]]);
   l2 <- m2-m1;
   m1 <- 2^m1;
   m2 <- 2^m2;
