@@ -1,6 +1,6 @@
-DeGPSeq <- function(mtrx, grps, paired=FALSE) {
+DeGPseq <- function(mtrx, grps, paired=FALSE) {
   require(DEGandMore);
-  require(dexus); 
+  require(GPseq); 
   
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];

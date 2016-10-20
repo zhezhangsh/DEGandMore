@@ -21,7 +21,7 @@ export("DeEdgeR");
 export("DeEdgeRun");
 export("DegHeatmap");
 export("DegPCA");
-export("DeGPSeq");
+export("DeGPseq");
 export("DeLimma");
 export("DeLMGene");
 export("DeMetaseqR");
