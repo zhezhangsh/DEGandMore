@@ -11,7 +11,7 @@ install_url("https://cran.r-project.org/src/contrib/Archive/multicore/multicore_
 
 # install Bioconductor packages
 pkg2 <- c("ABSSeq", "ALDEx2", "BADER", "ballgown", "baySeq", "BGmix", "bridge", "DEGseq", "DESeq2", "EBSeq", "edgeR", "edgeRun", 
-          "limma", "LMGene", "NOISeq", "plgem", "PoissonSeq", "RankProd", "RBM", "samr", "sSeq", "tweeDEseq"); 
+          "limma", "LMGene", "metaseqR", "NOISeq", "plgem", "PoissonSeq", "RankProd", "RBM", "samr", "sSeq", "tweeDEseq"); 
 pkg  <- setdiff(pkg2, installed);
 if (length(pkg) > 0) {
   source("http://bioconductor.org/biocLite.R");
