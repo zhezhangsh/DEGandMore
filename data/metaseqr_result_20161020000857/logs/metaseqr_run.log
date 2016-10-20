@@ -1,0 +1,69 @@
+[ 2016-10-20 00:08:57 ] INFO 2016-10-20 00:08:57: Data processing started... 
+[ 2016-10-20 00:08:57 ] INFO Read counts file: x.txt 
+[ 2016-10-20 00:08:57 ] INFO Conditions: Control, Patient 
+[ 2016-10-20 00:08:57 ] INFO Samples to include: Control_1, Control_2, Control_3, Patient_1, Patient_2, Patient_3 
+[ 2016-10-20 00:08:57 ] INFO Samples to exclude: none 
+[ 2016-10-20 00:08:57 ] INFO Requested contrasts:  
+[ 2016-10-20 00:08:57 ] INFO Annotation: download 
+[ 2016-10-20 00:08:57 ] INFO Organism: custom 
+[ 2016-10-20 00:08:57 ] INFO Reference source: ensembl 
+[ 2016-10-20 00:08:57 ] INFO Count type: gene 
+[ 2016-10-20 00:08:57 ] INFO Exon filters: min.active.exons 
+[ 2016-10-20 00:08:57 ] INFO   min.active.exons:  
+[ 2016-10-20 00:08:57 ] INFO     exons.per.gene: 5 
+[ 2016-10-20 00:08:57 ] INFO     min.exons: 2 
+[ 2016-10-20 00:08:57 ] INFO     frac: 0.2 
+[ 2016-10-20 00:08:57 ] INFO Gene filters: length, avg.reads, expression, biotype 
+[ 2016-10-20 00:08:57 ] INFO   length:  
+[ 2016-10-20 00:08:57 ] INFO     length: 500 
+[ 2016-10-20 00:08:57 ] INFO   avg.reads:  
+[ 2016-10-20 00:08:57 ] INFO     average.per.bp: 100 
+[ 2016-10-20 00:08:57 ] INFO     quantile: 0.25 
+[ 2016-10-20 00:08:57 ] INFO   expression:  
+[ 2016-10-20 00:08:57 ] INFO     median: TRUE 
+[ 2016-10-20 00:08:57 ] INFO     mean: FALSE 
+[ 2016-10-20 00:08:57 ] INFO     quantile: NA 
+[ 2016-10-20 00:08:57 ] INFO     known: NA 
+[ 2016-10-20 00:08:57 ] INFO     custom: NA 
+[ 2016-10-20 00:08:57 ] INFO   biotype:  
+[ 2016-10-20 00:08:57 ] INFO Filter application: postnorm 
+[ 2016-10-20 00:08:57 ] INFO Normalization algorithm: edaseq 
+[ 2016-10-20 00:08:57 ] INFO Normalization arguments:  
+[ 2016-10-20 00:08:57 ] INFO   within.which: loess 
+[ 2016-10-20 00:08:57 ] INFO   between.which: full 
+[ 2016-10-20 00:08:57 ] INFO Statistical algorithm: deseq, edger, noiseq, bayseq, limma, nbpseq 
+[ 2016-10-20 00:08:57 ] INFO Statistical arguments:  
+[ 2016-10-20 00:08:57 ] INFO   deseq: blind, fit-only, local 
+[ 2016-10-20 00:08:57 ] INFO   edger: classic, 5, 10, movingave, NULL, grid, 11, c(-6, 6), NULL, CoxReid, 10000, NULL, auto, NULL, NULL, NULL, NULL, 0.125, NULL, auto, chisq, TRUE, FALSE, c(0.05, 0.1) 
+[ 2016-10-20 00:08:57 ] INFO   noiseq: 0.5, n, biological, class, NULL, 0.2, 5, 0.02, 1, 15, 100, 1.5, 0.9, 0, NULL, 500, 1 
+[ 2016-10-20 00:08:57 ] INFO   bayseq: 10000, NULL, TRUE, QL, FALSE, FALSE, TRUE, BIC, FALSE, NULL, NULL, 1, 1e-04, FALSE, FALSE, FALSE, FALSE, NULL 
+[ 2016-10-20 00:08:57 ] INFO   limma: none 
+[ 2016-10-20 00:08:57 ] INFO   nbpseq: nbsmyth, list(nbpseq = "log-linear-rel-mean", nbsmyth = "NBP"), HOA, two.sided 
+[ 2016-10-20 00:08:57 ] INFO Meta-analysis method: simes 
+[ 2016-10-20 00:08:57 ] INFO Multiple testing correction: BH 
+[ 2016-10-20 00:08:57 ] INFO Logarithmic transformation offset: 1 
+[ 2016-10-20 00:08:57 ] INFO Quality control plots: mds, biodetection, countsbio, saturation, readnoise, filtered, correl, pairwise, boxplot, gcbias, lengthbias, meandiff, meanvar, rnacomp, deheatmap, volcano, biodist 
+[ 2016-10-20 00:08:57 ] INFO Figure format: png, jpg, tiff, bmp, pdf, ps 
+[ 2016-10-20 00:08:57 ] INFO Output data: annotation, p.value, adj.p.value, meta.p.value, adj.meta.p.value, fold.change, stats, counts, flags 
+[ 2016-10-20 00:08:57 ] INFO Output scale(s): natural, log2, log10, vst, rpgm 
+[ 2016-10-20 00:08:57 ] INFO Output values: raw, normalized 
+[ 2016-10-20 00:08:57 ] INFO Output statistics: mean, median, sd, mad, cv, rcv 
+[ 2016-10-20 00:08:57 ] INFO Downloading gene annotation for custom... 
+[ 2016-10-20 00:14:10 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:24:24 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:24:40 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:25:06 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:25:19 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:26:03 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:34:56 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:37:37 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:41:21 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:44:46 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:44:48 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:46:05 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:54:18 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:56:52 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:56:53 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:56:53 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:56:53 ] INFO   Contrast: Control_vs_Patient 
+[ 2016-10-20 00:56:54 ] INFO   Contrast: Control_vs_Patient 

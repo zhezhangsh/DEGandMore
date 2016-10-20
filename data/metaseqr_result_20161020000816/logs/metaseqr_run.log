@@ -1,0 +1,76 @@
+[ 2016-10-20 00:08:16 ] INFO 2016-10-20 00:08:16: Data processing started... 
+[ 2016-10-20 00:08:16 ] INFO Read counts file: x.txt 
+[ 2016-10-20 00:08:16 ] INFO Conditions: Control, Patient 
+[ 2016-10-20 00:08:16 ] INFO Samples to include: Control_1, Control_2, Control_3, Patient_1, Patient_2, Patient_3 
+[ 2016-10-20 00:08:16 ] INFO Samples to exclude: none 
+[ 2016-10-20 00:08:16 ] INFO Requested contrasts:  
+[ 2016-10-20 00:08:16 ] INFO Annotation: download 
+[ 2016-10-20 00:08:16 ] INFO Organism: hg18 
+[ 2016-10-20 00:08:16 ] INFO Reference source: ensembl 
+[ 2016-10-20 00:08:16 ] INFO Count type: gene 
+[ 2016-10-20 00:08:16 ] INFO Exon filters: min.active.exons 
+[ 2016-10-20 00:08:16 ] INFO   min.active.exons:  
+[ 2016-10-20 00:08:16 ] INFO     exons.per.gene: 5 
+[ 2016-10-20 00:08:16 ] INFO     min.exons: 2 
+[ 2016-10-20 00:08:16 ] INFO     frac: 0.2 
+[ 2016-10-20 00:08:16 ] INFO Gene filters: length, avg.reads, expression, biotype 
+[ 2016-10-20 00:08:16 ] INFO   length:  
+[ 2016-10-20 00:08:16 ] INFO     length: 500 
+[ 2016-10-20 00:08:16 ] INFO   avg.reads:  
+[ 2016-10-20 00:08:16 ] INFO     average.per.bp: 100 
+[ 2016-10-20 00:08:16 ] INFO     quantile: 0.25 
+[ 2016-10-20 00:08:16 ] INFO   expression:  
+[ 2016-10-20 00:08:16 ] INFO     median: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     mean: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     quantile: NA 
+[ 2016-10-20 00:08:16 ] INFO     known: NA 
+[ 2016-10-20 00:08:16 ] INFO     custom: NA 
+[ 2016-10-20 00:08:16 ] INFO   biotype:  
+[ 2016-10-20 00:08:16 ] INFO     unprocessed_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     pseudogene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     miRNA: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     retrotransposed: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     protein_coding: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     processed_pseudogene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     snRNA: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     snRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     Mt_tRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     miRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     misc_RNA: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     tRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     snoRNA: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     scRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     rRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     snoRNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     rRNA: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     misc_RNA_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     IG_V_gene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     IG_D_gene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     IG_J_gene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     IG_C_gene: FALSE 
+[ 2016-10-20 00:08:16 ] INFO     IG_pseudogene: TRUE 
+[ 2016-10-20 00:08:16 ] INFO     scRNA: FALSE 
+[ 2016-10-20 00:08:16 ] INFO Filter application: postnorm 
+[ 2016-10-20 00:08:16 ] INFO Normalization algorithm: edaseq 
+[ 2016-10-20 00:08:16 ] INFO Normalization arguments:  
+[ 2016-10-20 00:08:16 ] INFO   within.which: loess 
+[ 2016-10-20 00:08:16 ] INFO   between.which: full 
+[ 2016-10-20 00:08:16 ] INFO Statistical algorithm: deseq, edger, noiseq, bayseq, limma, nbpseq 
+[ 2016-10-20 00:08:16 ] INFO Statistical arguments:  
+[ 2016-10-20 00:08:16 ] INFO   deseq: blind, fit-only, local 
+[ 2016-10-20 00:08:16 ] INFO   edger: classic, 5, 10, movingave, NULL, grid, 11, c(-6, 6), NULL, CoxReid, 10000, NULL, auto, NULL, NULL, NULL, NULL, 0.125, NULL, auto, chisq, TRUE, FALSE, c(0.05, 0.1) 
+[ 2016-10-20 00:08:16 ] INFO   noiseq: 0.5, n, biological, class, NULL, 0.2, 5, 0.02, 1, 15, 100, 1.5, 0.9, 0, NULL, 500, 1 
+[ 2016-10-20 00:08:16 ] INFO   bayseq: 10000, NULL, TRUE, QL, FALSE, FALSE, TRUE, BIC, FALSE, NULL, NULL, 1, 1e-04, FALSE, FALSE, FALSE, FALSE, NULL 
+[ 2016-10-20 00:08:16 ] INFO   limma: none 
+[ 2016-10-20 00:08:16 ] INFO   nbpseq: nbsmyth, list(nbpseq = "log-linear-rel-mean", nbsmyth = "NBP"), HOA, two.sided 
+[ 2016-10-20 00:08:16 ] INFO Meta-analysis method: simes 
+[ 2016-10-20 00:08:16 ] INFO Multiple testing correction: BH 
+[ 2016-10-20 00:08:16 ] INFO Logarithmic transformation offset: 1 
+[ 2016-10-20 00:08:16 ] INFO Quality control plots: mds, biodetection, countsbio, saturation, readnoise, filtered, correl, pairwise, boxplot, gcbias, lengthbias, meandiff, meanvar, rnacomp, deheatmap, volcano, biodist 
+[ 2016-10-20 00:08:16 ] INFO Figure format: png, jpg, tiff, bmp, pdf, ps 
+[ 2016-10-20 00:08:16 ] INFO Output data: annotation, p.value, adj.p.value, meta.p.value, adj.meta.p.value, fold.change, stats, counts, flags 
+[ 2016-10-20 00:08:16 ] INFO Output scale(s): natural, log2, log10, vst, rpgm 
+[ 2016-10-20 00:08:16 ] INFO Output values: raw, normalized 
+[ 2016-10-20 00:08:16 ] INFO Output statistics: mean, median, sd, mad, cv, rcv 
+[ 2016-10-20 00:08:16 ] INFO Downloading gene annotation for hg18... 
+[ 2016-10-20 00:08:25 ] INFO Reading counts file x.txt... 
