@@ -79,4 +79,5 @@ export("SummarizeRP");
 export("VoomLimma");
 export("WriteExcel");
 export("WriteExcelSheet");
+export("generalized.poisson.likelihood");
 
