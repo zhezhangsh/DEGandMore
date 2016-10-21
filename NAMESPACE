@@ -26,6 +26,7 @@ export("DeLimma");
 export("DeLMGene");
 export("DeMetaseqR");
 export("DeMethods");
+export("DeNBPSeq");
 export("DeNoiSeq");
 export("DePlgem");
 export("DePoissonSeq");
