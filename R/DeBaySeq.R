@@ -1,7 +1,6 @@
 # Empirical Bayesian analysis of patterns of differential expression in count data
 # baySeq package: http://bioconductor.org/packages/release/bioc/html/baySeq.html
-DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 'TMM', 'RLE', 'Median', 'UQ', 'TC', 'QQ'), 
-                     samplesize=1000, bootStraps=2, cl=4) {
+DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=1000, bootStraps=2, cl=4) {
   # normalization methods:
     # TMM: Trimmed mean method of calcNormFactors() function of the edgeR package
     # RLS: Relative log method of calcNormFactors() function of the edgeR package
@@ -19,20 +18,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
-  norm <- tolower(normalization)[1]; 
-  if (norm=='deseq')  mtrx <- NormDESeq(mtrx);
-  if (norm=='tmm')    mtrx <- NormTMM(mtrx);
-  if (norm=='rle')    mtrx <- NormRLE(mtrx);
-  if (norm=='median') mtrx <- NormMedian(mtrx);
-  if (norm=='uq')     mtrx <- NormUpperQuantile(mtrx);
-  if (norm=='tc')     mtrx <- NormTotalCount(mtrx);
-  if (norm=='qq')     mtrx <- NormQQ(mtrx);
-  mtrx0 <- mtrx;
-  mtrx  <- round(mtrx); 
-  mtrx  <- mtrx[, c(grps[[1]], grps[[2]]), drop=FALSE]; 
-  
-  n <- sapply(grps, length); 
-  
+  n   <- sapply(grps, length); 
   ncl <- cl[1];
   cl  <- NULL; 
   if (is.numeric(ncl[1])) {
@@ -41,14 +27,22 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 
   }
   
   if (paired & n[1]==n[2]) {
-    d  <- list(mtrx[, grps[[1]]], mtrx[, grps[[2]]]); 
-    rp <- 1:n[1]; 
-    gp <- list(NDE = rep(1, n[1])); 
-    cd <- new("countData", data = d, replicates = rp,  groups = gp, densityFunction = bbDensity); 
+    cd <- new("countData", data = array(c(mtrx[, grps[[1]]], mtrx[, grps[[2]]]), dim = c(nrow(mtrx), n[1], 2)),
+              replicates = c(1:n[1]), groups = list(NDE = rep(1, n[1]), DE = 1:n[1]), densityFunction = bbDensity); 
     libsizes(cd) <- getLibsizes(cd); 
     cd  <- getPriors(cd, samplesize = samplesize, cl = cl);
-    cd  <- getLikelihoods(cd, pET = 'BIC', nullData = TRUE, bootStraps = bootStraps, cl = cl); 
-    p <- 1 - exp(cd@posteriors[, 1]); 
+    cd  <- getLikelihoods(cd, pET = 'BIC', nullData = TRUE, cl = cl); 
+    res <- topCounts(cd, 1, number = nrow(mtrx), normaliseData = TRUE); 
+    pv  <- 1 - res$Likelihood; 
+    nom <- lapply(1:n[1], function(x) {
+      x <- as.vector(res[, x+1]); 
+      x <- strsplit(x, ':'); 
+      x <- do.call('rbind', x); 
+      apply(x, 2, as.numeric);
+    });
+    m1  <- rowMeans(sapply(nom, function(x) x[, 1])); 
+    m2  <- rowMeans(sapply(nom, function(x) x[, 2])); 
+    rnm <- rownames(mtrx)[res[, 1]]; 
   } else {
     rp  <- rep(names(grps), n); 
     nde <- rep(1, ncol(mtrx)); 
@@ -58,19 +52,21 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, normalization=c('None', 'DESeq', 
     libsizes(cd) <- getLibsizes(cd); 
     cd  <- getPriors.NB(cd, samplesize=samplesize, estimation = "QL", cl=cl);
     cd  <- getLikelihoods(cd, cl = cl, bootStraps = bootStraps, verbose = FALSE); 
-    p <- 1 - exp(cd@posteriors[, 2]); 
+    res <- topCounts(cd, 2, number=nrow(mtrx), normaliseData = TRUE); 
+    pv  <- 1- res$Likelihood; 
+    m1  <- rowMeans(res[, colnames(mtrx)[grps[[1]]]]); 
+    m2  <- rowMeans(res[, colnames(mtrx)[grps[[2]]]]); 
+    rnm <- rownames(mtrx)[res[, 1]]; 
   }; 
   
   if (!is.null(cl)) stopCluster(cl); 
 
-  m1 <- rowMeans(mtrx0[, grps[[1]], drop=FALSE], na.rm=TRUE);
-  m2 <- rowMeans(mtrx0[, grps[[2]], drop=FALSE], na.rm=TRUE);
-  q  <- p.adjust(p, method='BH');
+  q  <- p.adjust(pv, method='BH');
   fc <- CalculateCountLog2FC(m2, m1, mtrx, grps);
   
-  s <- cbind(m1, m2, m2-m1, fc, p, q);
+  s <- cbind(m1, m2, m2-m1, fc, pv, q);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
-  rownames(s) <- rownames(mtrx); 
+  rownames(s) <- rnm; 
   
   list(stat=s[rownames(mtrx), ], group=grps, cd=cd);
 }

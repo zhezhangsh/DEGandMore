@@ -1,0 +1,218 @@
+rnk <- readRDS('~/Downloads/rank.rds')
+dim(rnk)
+library(awsomics)
+PlotPCA(prcomp(t(rnk)))
+PlotPCA(prcomp(t(rnk)), colnames(rnk))
+library(DEGandMore)
+data(DeMethodMeta)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'])
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=2)
+a <- DeMethodMeta[order(DeMethodMeta$Distribution), ]
+rnk <- rnk[, rownames(a)]
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=2)
+dim(a)
+x <- paste(a[[1]], ' (', a$Distribution,  ')', sep='')
+x
+rownames(a)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+colnames(rnk) <- x
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+colnames(rnk)
+x
+dim(a)
+colnames(x) <- rownames(a)
+colnames(rnk) <- rownames(a)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+dim(rnk)
+head(rnk)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=colnames(rnk), legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=colnames(rnk), new.window=FALSE, cex=3, label=1:30)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+PlotPCA(prcomp(t(rnk)), DeMethodMeta[colnames(rnk), 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=colnames(rnk))
+colnames(rnk)
+PlotPCA(prcomp(t(rnk)), x, 'Distribution'], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+x
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+PlotPCA(prcomp(t(rnk[, -28])), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:30)
+PlotPCA(prcomp(t(rnk[, -28])), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29)
+PlotPCA(prcomp(t(rnk[, -28])), x[-28], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29)
+y <- x[-28]
+y
+colnames(rnk)
+y <- DeMethodMeta[colnames(rnk), 'Distribution']
+y
+length(unique(y))
+z <- y[-28]
+length(unique(z))
+col <- rainbow(length(unique(z)))
+col
+names(col) <- unique(z)
+col <- col[y]
+length(col)
+col <- rainbow(length(unique(z)))
+names(col) <- unique(z)
+col <- col[z]
+col
+PlotPCA(prcomp(t(rnk[, -28])), x[-28], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+DeMethodMeta$Distribution
+DeMethodMeta$Distribution[26]
+DeMethodMeta$Distribution[26] <- "Negative binomial"
+DeMethodMeta$Distribution[15] <- "Negative binomial"
+DeMethodMeta$Distribution
+save(DeMethodMeta, file = '~/Documents/DEGandMore/data/DeMethodMeta.RData')
+dim(a)
+x
+head(a)
+colnames(rnk)
+x <- DeMethodMeta[colnames(rnk), 'Distribution']
+x
+x <- x[-28]
+x
+z <- unique(x)
+length(z)
+col <- rainbow(length(z))
+names(col) <- z
+col <- col[x]
+col
+PlotPCA(prcomp(t(rnk[, -28])), x[-28], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+length(col)
+length(x)
+x
+PlotPCA(prcomp(t(rnk[, -28])), colnames(rnk)[-28], legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+colnames(rnk)
+col
+DeMethodMeta[colnames(rnk)[27], ]
+rnk <- rnk[, -28]
+PlotPCA(prcomp(t(rnk)), colnames(rnk), legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+x <- paste(colnames(rnk))
+x
+x <- DeMethodMeta[x, 1]
+x
+y <- DeMethodMeta[colnames(rnk), 'Distribution']
+x <- paste(x, ' (', y, ')', sep='')
+x
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=3, label=1:29, col=col)
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=2, label=1:29, col=col)
+PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=4, label=1:29, col=col)
+s <- readRDS("~/Downloads/stat.rds")
+n <- sapply(s, function(s) rownames(s)[s[,5]<0.01])
+n
+n <- sapply(s, function(s) nrow(s[s[,5]<0.01])
+)
+n
+n <- sapply(s, function(s) nrow(s[s[,5]<0.01, ]))
+n
+sort(n)
+g
+x
+y
+n
+names(y) <- colnames(rnk)
+y
+n <- sort(n)
+n <- n[names(y)]
+n
+length(n)
+n <- sort(n)
+n
+y <- y[names(y)]
+y
+n <- n[1:28]
+y <- y[1:28]
+col
+col <- col[names(n)]
+barplot(n, horiz=TRUE)
+barplot(n, horiz=TRUE, col=col)
+length(n)
+length(col)
+col
+col <- rainbow(length(unique(y)))
+col
+names(col) <- unique(Y)
+names(col) <- unique(y)
+col <- col[y]
+barplot(n, horiz=TRUE, col=col)
+n <- rev(n)
+y <- rev(y)
+col <- rev(col)
+col
+barplot(n, las=3, horiz=TRUE, col=col)
+barplot(n, las=2, horiz=TRUE, col=col, )
+names(n) <- DeMethodMeta[names(n), 1]
+barplot(n, las=2, horiz=TRUE, col=col, )
+par(mar=c(5, 8, 1, 1))
+barplot(n, las=2, horiz=TRUE, col=col, )
+par(mar=c(5, 6, 1, 1))
+barplot(n, las=2, horiz=TRUE, col=col)
+y
+n
+x <- s[['NOISeq']]
+nrow(x[x[,5]<0.01, ])
+dim(x)
+x <- s[['DeNOISeq']]
+nrow(x[x[,5]<0.01, ])
+dim(x)
+names(x)
+names(s)
+x <- s[['DeNoiSeq']]
+dim(x)
+nrow(x[x[,5]<0.01, ])
+names(y)
+z <- DeMethodMeta[names(y), 'Distribution']
+col <- rainbow(length(unique(z)))
+length(col)
+names(col) <- unique(z)
+col[y]
+col[y]->col
+barplot(n, las=2, horiz=TRUE, col=col)
+y
+names(y) <- DeMethodMeta[names(y), 1]
+y <- y[names(n)]
+y
+col <- rainbow(length(unique(z)))
+names(col) <- unique(z)
+col[y]
+col[y]->col
+barplot(n, las=2, horiz=TRUE, col=col)
+col <- rainbow(length(unique(z))+1)
+names(col) <- unique(z)
+col[y]->col
+barplot(n, las=2, horiz=TRUE, col=col)
+col
+length(col)
+col <- rainbow(length(unique(z)))
+col
+barplot(1:9, col=col)
+names(col) <- unique(z)
+col
+col[y]
+y
+col <- rainbow(length(unique(y)))
+names(col) <- unique(y)
+col[y]->col
+barplot(n, las=2, horiz=TRUE, col=col)
+n
+sort(n)
+n0 <- sapply(s, function(x) nrow(x[x[,5]<0.01, ]))
+n0
+sort(n0)
+length(n0)
+length(n)
+n
+y
+names(y) <- names(n)
+y
+z <- DeMethodMeta$Distribution
+z
+names(z) <- DeMethodMeta[[1]]
+y <- z[names(y)]
+y
+col <- rainbow(length(unique(y)))
+col
+names(col) <- unique(y)
+col <- col[y]
+col
+barplot(n, las=2, horiz=TRUE, col=col)
