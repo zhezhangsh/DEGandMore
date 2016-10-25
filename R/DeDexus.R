@@ -1,6 +1,6 @@
 DeDexus <- function(mtrx, grps, paired=FALSE, norm='RLE') {
   require(DEGandMore);
-  require(NBPSeq); 
+  require(dexus); 
   
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];

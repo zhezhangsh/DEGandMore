@@ -61,7 +61,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
   
   if (!is.null(cl)) stopCluster(cl); 
 
-  q  <- p.adjust(pv, method='BH');
+  qv  <- p.adjust(pv, method='BH');
   l2 <- CalculateCountLog2FC(m2, m1, mtrx, grps);
   
   m1[is.na(m1)] <- 0;
@@ -70,7 +70,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
   pv[is.na(pv)] <- 1;
   qv[is.na(qv)] <- 1;
   
-  s <- cbind(m1, m2, m2-m1, fc, pv, q);
+  s <- cbind(m1, m2, m2-m1, l2, pv, qv);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rnm; 
   
