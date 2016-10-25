@@ -39,6 +39,7 @@ export("DeSam");
 export("DeSamSeq");
 export("DeSSeq");
 export("DeT");
+export("DeTSPM");
 export("DeTweeDeSeq");
 export("DeVoomLimma");
 export("DeWelch");

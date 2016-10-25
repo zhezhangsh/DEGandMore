@@ -64,6 +64,12 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
   q  <- p.adjust(pv, method='BH');
   fc <- CalculateCountLog2FC(m2, m1, mtrx, grps);
   
+  m1[is.na(m1)] <- 0;
+  m2[is.na(m2)] <- 0;
+  l2[is.na(l2)] <- 0;
+  pv[is.na(pv)] <- 1;
+  qv[is.na(qv)] <- 1;
+  
   s <- cbind(m1, m2, m2-m1, fc, pv, q);
   colnames(s) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
   rownames(s) <- rnm; 
