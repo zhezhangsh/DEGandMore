@@ -62,7 +62,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
   if (!is.null(cl)) stopCluster(cl); 
 
   q  <- p.adjust(pv, method='BH');
-  fc <- CalculateCountLog2FC(m2, m1, mtrx, grps);
+  l2 <- CalculateCountLog2FC(m2, m1, mtrx, grps);
   
   m1[is.na(m1)] <- 0;
   m2[is.na(m2)] <- 0;

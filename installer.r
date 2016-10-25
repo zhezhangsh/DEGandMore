@@ -30,6 +30,9 @@ install_github('zhezhangsh/DEGandMore');
 
 # install individual packages
 #devtools::install_url("http://www.bios.unc.edu/research/genomic_software/BBSeq/index_files/BBSeq_3.0.zip");
+install.packages(c("sp","pixmap", "snowfall", "VGAM", "mclust", "logcondens", "Iso","XML","rgl")); 
+source("http://www.math.ntnu.no/inla/givemeINLA.R"); 
+install_github("markvdwiel/ShrinkBayes"); 
 
 # Check if all packages can be loaded
 pkgs   <- c(pkg1, pkg2, pkg3); 
