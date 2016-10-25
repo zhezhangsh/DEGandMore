@@ -1,7 +1,6 @@
 DeTSPM <- function(mtrx, grps, paired=FALSE) {
   require(DEGandMore);
-  require(GPseq); 
-  
+
   prepared <- PrepareDe(mtrx, grps, paired);
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];
