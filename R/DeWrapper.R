@@ -13,7 +13,7 @@ DeMethods <- function (all.info=FALSE) {
   
   c("DeAbsSeq", "DeAldex2", "DeBader", "DeBallgown", "DeBaySeq", "DeBGmix", "DeBridge", "DeDegSeq", "DeDeSeq", "DeDexus",
     "DeEbSeq", "DeEdgeR", "DeEdgeRun", "DeGPseq", "DeLimma", "DeLMGene", "DeMetaseqR", "DeNBPSeq", "DeNoiSeq", "DePlgem", 
-    "DePoissonSeq", "DeRankP", "DeRBM", "DeSam", "DeSamSeq", "DeSSeq", "DeT", "DeTweeDeSeq", "DeVoomLimma", "DeWelch", "DeWilcoxon");
+    "DePoissonSeq", "DeRankP", "DeRBM", "DeSam", "DeSamSeq", "DeSSeq", "DeT", "DeTSPM", "DeTweeDeSeq", "DeVoomLimma", "DeWelch", "DeWilcoxon");
 }
 ######################################################################################
 
