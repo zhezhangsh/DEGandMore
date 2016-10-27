@@ -1,7 +1,7 @@
 # ALDEx2
 # https://bioconductor.org/packages/release/bioc/html/ALDEx2.html
 # aldex {ALDEx2}
-DeAldex2 <- function(mtrx, grps, paired=FALSE, test=c('Welch', 'Wilcoxon'), mc.samples = min(128, 8*ncol(mtrx)), ...) {
+DeAldex2 <- function(mtrx, grps, paired=FALSE, test=c('Welch', 'Wilcoxon'), useMC = FALSE, mc.samples = 128, ...) {
 
   require(DEGandMore);
   require(ALDEx2);
@@ -12,13 +12,13 @@ DeAldex2 <- function(mtrx, grps, paired=FALSE, test=c('Welch', 'Wilcoxon'), mc.s
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
   
-  norm <- aldex.clr(data.frame(mtrx), mc.samples=mc.samples, verbose=FALSE, useMC = TRUE); 
+  norm <- aldex.clr(data.frame(mtrx), mc.samples=mc.samples, verbose=FALSE, useMC = useMC); 
   cond <- rep(names(grps), sapply(grps, length)); 
   
   res <- aldex.ttest(norm, cond, paired.test = paired); 
   res <- res[rownames(mtrx), ]; 
   
-  eff <- aldex.effect(norm, cond, verbose = FALSE, useMC = TRUE); 
+  eff <- aldex.effect(norm, cond, verbose = FALSE, useMC = useMC); 
   eff <- eff[rownames(mtrx), ]; 
   
   rownames(eff) <- rownames(res) <- rownames(mtrx); 
