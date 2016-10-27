@@ -1,6 +1,7 @@
 
 export("AddAPCluster");
 export("CalculateCountLog2FC");
+export("CalculateRand");
 export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");

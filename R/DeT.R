@@ -49,8 +49,8 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
      
     # calculated 2-sided p values
     p      <- rep(0.5, length(t));
-    p[t>0] <- 1-pt(t[t>0], df=df[t>0]);
-    p[t<0] <- pt(t[t<0], df=df[t<0]);
+    p[t>0] <- 1-exp(pt(t[t>0], df=df[t>0], log.p=TRUE));
+    p[t<0] <- exp(pt(t[t<0], df=df[t<0], log.p=TRUE));
     p      <- p*2;
     
     # Return a statistic matrix

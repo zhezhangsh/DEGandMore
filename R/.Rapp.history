@@ -93,7 +93,6 @@ y <- DeMethodMeta[colnames(rnk), 'Distribution']
 x <- paste(x, ' (', y, ')', sep='')
 x
 PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
-PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=FALSE, cex=3, label=1:29, col=col)
 PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=3, label=1:29, col=col)
 PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=2, label=1:29, col=col)
 PlotPCA(prcomp(t(rnk)), x, legend=TRUE, legend.single=TRUE, new.window=T, cex=4, label=1:29, col=col)
@@ -216,3 +215,5 @@ names(col) <- unique(y)
 col <- col[y]
 col
 barplot(n, las=2, horiz=TRUE, col=col)
+?p.avlue
+?p.adjust
