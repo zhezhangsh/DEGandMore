@@ -54,8 +54,8 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
     cd  <- getLikelihoods(cd, cl = cl, bootStraps = 1, verbose = FALSE); 
     res <- topCounts(cd, 2, number=nrow(mtrx), normaliseData = TRUE); 
     pv  <- 1- res$Likelihood; 
-    m1  <- rowMeans(res[, colnames(mtrx)[grps[[1]]]]); 
-    m2  <- rowMeans(res[, colnames(mtrx)[grps[[2]]]]); 
+    m1  <- rowMeans(res[, grps[[1]]]); 
+    m2  <- rowMeans(res[, grps[[2]]]); 
     rnm <- rownames(mtrx)[res[, 1]]; 
   }; 
   
