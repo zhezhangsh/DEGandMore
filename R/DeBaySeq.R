@@ -1,6 +1,6 @@
 # Empirical Bayesian analysis of patterns of differential expression in count data
 # baySeq package: http://bioconductor.org/packages/release/bioc/html/baySeq.html
-DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
+DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=100000, cl=2) {
   # normalization methods:
     # TMM: Trimmed mean method of calcNormFactors() function of the edgeR package
     # RLS: Relative log method of calcNormFactors() function of the edgeR package
@@ -51,7 +51,7 @@ DeBaySeq <- function(mtrx, grps, paired=FALSE, samplesize=10000, cl=2) {
     cd  <- new("countData", data = mtrx, replicates = rp,  groups = gp); 
     libsizes(cd) <- getLibsizes(cd); 
     cd  <- getPriors.NB(cd, samplesize=samplesize, estimation = "QL", cl=cl);
-    cd  <- getLikelihoods(cd, cl = cl, bootStraps = 1, verbose = FALSE); 
+    cd  <- getLikelihoods(cd, cl = cl, bootStraps = 2, verbose = FALSE); 
     res <- topCounts(cd, 2, number=nrow(mtrx), normaliseData = TRUE); 
     pv  <- 1- res$Likelihood; 
     m1  <- rowMeans(res[, grps[[1]]]); 
