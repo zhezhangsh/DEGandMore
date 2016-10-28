@@ -34,17 +34,12 @@ DeLMGene <- function(mtrx, grps, paired=FALSE) {
   esti <- tranest(eset, mult = TRUE, method=2);
   tran <- transeS(neweS(mtrx, lvls), lambda = esti[[1]], alpha = esti[[2]]); 
 
-  res  <- genediff(tran, verbose = FALSE); 
+  res  <- genediff(tran, method='MOMlog', verbose = FALSE); # use method "MLE" sometimes throw converge error
   
   ex <- exprs(tran); 
   pv <- res$Gene.Specific[, 1];
   m1 <- rowMeans(ex[, grps[[1]], drop=FALSE]); 
   m2 <- rowMeans(ex[, grps[[2]], drop=FALSE]); 
-  
-#   pv[rowSums(mtrx) <= min.count] <- 1;
-#   m1[rowSums(mtrx) <= min.count] <- 0;
-#   m2[rowSums(mtrx) <= min.count] <- 0;
-
 
   m1 <- exp(m1)/2;
   m2 <- exp(m2)/2;

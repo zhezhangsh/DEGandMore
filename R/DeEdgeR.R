@@ -7,13 +7,14 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   mtrx     <- prepared[[1]];
   grps     <- prepared[[2]];
   paired   <- prepared[[3]];
+  n <- sapply(grps, length);
   
   # create DGEList object, normalize data and estimate dispersion 
   group <- rep(names(grps), sapply(grps, length));
   dge   <- DGEList(counts=mtrx, group=group);
   dge   <- calcNormFactors(dge, method=norm.method);
   
-  if (paired & length(grps[[1]])==length(grps[[2]])) {
+  if (paired & n[1]==n[2]) {
     n <- length(grps[[1]]); 
     x <- factor(paste('Pair', rep(1:n, 2), sep='_'));
     y <- factor(paste('Group', rep(1:2, each=n), sep='_'));

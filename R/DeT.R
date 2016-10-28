@@ -55,8 +55,7 @@ DeT <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     
     # Return a statistic matrix
     stat <- cbind(m1, m2, diff, lgfc, p, p.adjust(p, method='BH'));
-    rownames(stat) <- rownames(mtrx);
-    colnames(stat) <- c(paste('Mean', names(grps), sep='_'), 'Mean_Change', 'LogFC', 'Pvalue', 'FDR');
+    stat <- OutputDe(stat, mtrx, grps, 0.5); 
 
-    list(stat=stat[rownames(mtrx), ], group=grps);
+    list(stat=stat, group=grps);
   }

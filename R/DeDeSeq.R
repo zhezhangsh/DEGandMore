@@ -9,7 +9,7 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
   n <- sapply(grps, length);
   
   # unpaired test
-  if (paired) {
+  if (paired & n[1]==n[2]) {
     cond <- DataFrame(cond=factor(rep(names(grps), n)), pair=factor(c(1:n[1], 1:n[2])));
     dds <- DESeqDataSetFromMatrix(mtrx, cond, ~ cond + pair);
   } else {

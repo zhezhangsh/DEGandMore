@@ -2,6 +2,7 @@
 export("AddAPCluster");
 export("CalculateCountLog2FC");
 export("CalculateRand");
+export("CombinePvalue");
 export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
@@ -73,6 +74,7 @@ export("NormLinear");
 export("NormAffyLoess");
 export("NormAffyQspline");
 export("NormMethods");
+export("OutputDe");
 export("PCALegend");
 export("PrepareDe");
 export("PrepareGSEA");

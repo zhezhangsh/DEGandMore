@@ -12,7 +12,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
     if (tolower(mthds[1]) %in% c('rlog', 'vst')) NormWrapper(cnt, paste('Norm', mthds, sep='')) else {
       cnt[cnt==0] <- 1/3;
       logged <- log2(cnt);
-      NormWrapper(logged, mthds=paste('Norm', mthds, sep=''));
+      NormWrapper(logged, mthd=paste('Norm', mthds, sep=''));
     }
   }
   ######################################################################################################

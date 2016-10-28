@@ -24,7 +24,7 @@ DeBader <- function(mtrx, grps, paired=FALSE, normalized=FALSE, reps = 10000, cl
   m1 <- exp(rowMeans(sapply(res, function(res) res$logMeanA)));
   m2 <- exp(rowMeans(sapply(res, function(res) res$logMeanB)));
   l2 <- log2(exp(rowMeans(sapply(res, function(res) res$logFoldChange)))); 
-  pv <- 1 - 2 * (rowMeans(sapply(res, function(res) res$diffProb)) - 0.5); 
+  pv <- pmin(1, 1 - 2 * (rowMeans(sapply(res, function(res) res$diffProb)) - 0.5)); 
   pv[pv==0 & !is.na(pv)] <- 1/reps;
   qv <- p.adjust(pv, method='BH');
 
