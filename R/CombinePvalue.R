@@ -9,8 +9,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
             # 'min': minimum of all p values
             # 'average': geometric mean
   # offset.ratio  How to replace p value of 0, the ratio to the minimal non-zero p value
-  require(metaseqR); 
-  
+
   pv[is.na(pv)] <- 1;
   pv[pv==0] <- min(pv[pv>0])*offset.ratio;
   
