@@ -12,6 +12,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
 
   pv[is.na(pv)] <- 1;
   pv[pv==0] <- min(pv[pv>0])*offset.ratio;
+  pv[pv==0] <- min(pv[pv>0]); # minimum possible value
   
   mthd <- tolower(mthd); 
   
@@ -35,6 +36,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
     c <- -2*rowSums(log(pv));
     p <- pchisq(c, 2*ncol(pv), lower.tail = FALSE, log.p = TRUE); 
     p <- exp(p + log(ncol(pv))); 
+    p <- pmin(1, p); 
   }
   
   p;  
