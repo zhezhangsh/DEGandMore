@@ -34,7 +34,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   } else {
     c <- -2*rowSums(log(pv));
     p <- pchisq(c, 2*ncol(pv), lower.tail = FALSE, log.p = TRUE); 
-    p <- exp(p); 
+    p <- exp(p + log(ncol(pv))); 
   }
   
   p;  
