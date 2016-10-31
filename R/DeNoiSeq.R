@@ -23,7 +23,7 @@ DeNoiSeq <- function(mtrx, grps, paired=FALSE, replicates=c('biological', 'techn
   n <- sapply(grps, length); 
   f <- data.frame(comp=rep(names(grps), n)); 
   
-  d <- readData(mtrx, factors=f, biotype = rp); 
+  d <- NOISeq::readData(mtrx, factors=f, biotype = rp); 
   
   if (rp == 'biological') {
     noi <- noiseqbio(d, norm=nm, factor='comp', conditions = names(grps));
