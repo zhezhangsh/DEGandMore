@@ -1,5 +1,6 @@
 # Combine p values
-CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'min', 'average'), offset.ratio=0.5) {
+CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'min', 'average'), 
+                          offset.ratio=0.5, normalize=TRUE) {
   # pv      A matrix of p values to combine the columns
   # mthd    Method to combined p values
             # 'fisher': Fisher's meta analysis, default method
@@ -9,10 +10,20 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
             # 'min': minimum of all p values
             # 'average': geometric mean
   # offset.ratio  How to replace p value of 0, the ratio to the minimal non-zero p value
-
+  # normalize     If TRUE, QQ normalize the p value sets first 
+  
   pv[is.na(pv)] <- 1;
-  pv[pv==0] <- min(pv[pv>0])*offset.ratio;
-  pv[pv==0] <- min(pv[pv>0]); # minimum possible value
+  pv[pv < 0] <- 0;
+  pv[pv > 1] <- 1;
+  mn <- min(pv[pv>0]); 
+  pv[pv==0] <- mn*offset.ratio;
+  pv[pv==0] <- mn; # minimum possible value
+  
+  if (normalize) {
+    st <- apply(pv, 2, sort); 
+    mn <- 10^rowMeans(log10(st)); 
+    pv <- apply(pv, 2, function(p) mn[round(rank(p))]); 
+  }
   
   mthd <- tolower(mthd); 
   
