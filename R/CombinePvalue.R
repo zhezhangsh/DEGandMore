@@ -25,7 +25,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
     pv <- apply(pv, 2, function(p) mn[round(rank(p))]); 
   }
   
-  mthd <- tolower(mthd); 
+  mthd <- tolower(mthd[1]); 
   
   if (mthd == 'bonferroni') {
     n <- ncol(pv); 
