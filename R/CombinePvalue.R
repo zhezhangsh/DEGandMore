@@ -1,6 +1,10 @@
 # Combine p values
+CombinePvalueMethods <- function() {
+  c(Fisher='fisher', Simes='simes', Bonferroni='bonferroni', Maximum='max', Minimum='min', Average='average'); 
+}
+
 CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'min', 'average'), 
-                          offset.ratio=0.5, normalize=TRUE) {
+                          offset.ratio=0.5, normalize=TRUE, adjust.fisher=TRUE) {
   # pv      A matrix of p values to combine the columns
   # mthd    Method to combined p values
             # 'fisher': Fisher's meta analysis, default method
@@ -46,7 +50,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   } else {
     c <- -2*rowSums(log(pv));
     p <- pchisq(c, 2*ncol(pv), lower.tail = FALSE, log.p = TRUE); 
-    p <- exp(p + log(ncol(pv))); 
+    if (adjust.fisher) p <- exp(p + log(ncol(pv))) else p <- exp(p); 
     p <- pmin(1, p); 
   }
   

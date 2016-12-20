@@ -2,6 +2,7 @@
 export("AddAPCluster");
 export("CalculateCountLog2FC");
 export("CalculateRand");
+export("CombineMeans"); 
 export("CombinePvalue");
 export("CreateClReport");
 export("CreateDdReport");
