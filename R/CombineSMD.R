@@ -20,9 +20,7 @@ CombineMeans <- function(comps, sm = c('MD', 'SMD', 'ROM')) {
     mx; 
   }); 
   
-  # ns <- apply(ip[[1]], 1, function(x) length(x[!is.na(x)])); 
-  
-  stat <- sapply(1:length(ns), function(i) {
+  stat <- sapply(1:length(id), function(i) {
     m1 <- ip[[1]][i, ]; 
     m2 <- ip[[2]][i, ]; 
     s1 <- ip[[3]][i, ];
