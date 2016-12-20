@@ -4,6 +4,7 @@ export("CalculateCountLog2FC");
 export("CalculateRand");
 export("CombineMeans"); 
 export("CombinePvalue");
+export("CombinePvalueMethods"); 
 export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
