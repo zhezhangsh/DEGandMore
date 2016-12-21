@@ -1,5 +1,5 @@
 # Combine the mean differences of a set of two-group comparisons
-CombineMeans <- function(comps, sm = c('MD', 'SMD', 'ROM')) {
+CombineMean <- function(comps, sm = c('MD', 'SMD', 'ROM')) {
   require(meta); 
   
   sm <- toupper(sm[1]); 
@@ -37,7 +37,7 @@ CombineMeans <- function(comps, sm = c('MD', 'SMD', 'ROM')) {
   
   m0 <- rowMeans(stat[, 8:ncol(stat), drop=FALSE], na.rm=TRUE); 
   
-  stat <- cbind(stat[, 1:5], m0, exp(qp), stat[, 8:ncol(stat)]); 
+  stat <- cbind(stat[, 1:5], m0, qp, stat[, 8:ncol(stat)]); 
   cnm <- paste(sm, names(comps), sep='_'); 
   colnames(stat) <- c('N', 'M_Random', 'P_Random', 'M_Fixed', 'P_Fixed', 'M_Mean', 'P_Heter', cnm);
   rownames(stat) <- id; 
