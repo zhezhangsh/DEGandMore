@@ -37,7 +37,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   mthd <- tolower(mthd[1]); 
   
   if (mthd == 'bonferroni') {
-    p <- apply(pv, 1, function(p) length(n[!is.na(n)])*min(p, na.rm=TRUE));
+    p <- apply(pv, 1, function(p) length(p[!is.na(p)])*min(p, na.rm=TRUE));
     p <- pmin(1, p); 
   } else if (mthd == 'max') {
     p <- apply(pv, 1, function(p) max(p, na.rm=TRUE)); 
