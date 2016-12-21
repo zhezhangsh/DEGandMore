@@ -16,7 +16,7 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   # offset.ratio  How to replace p value of 0, the ratio to the minimal non-zero p value
   # normalize     If TRUE, QQ normalize the p value sets first 
   
-  pv[is.na(pv)] <- 1;
+  # pv[is.na(pv)] <- 1;
   pv[pv < 0] <- 0;
   pv[pv > 1] <- 1;
   mn <- min(pv[pv>0]); 
@@ -32,25 +32,29 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   mthd <- tolower(mthd[1]); 
   
   if (mthd == 'bonferroni') {
-    n <- ncol(pv); 
-    p <- apply(pv, 1, function(p) n*min(p));
+    p <- apply(pv, 1, function(p) length(n[!is.na(n)])*min(p, na.rm=TRUE));
     p <- pmin(1, p); 
   } else if (mthd == 'max') {
-    p <- apply(pv, 1, max); 
+    p <- apply(pv, 1, function(p) max(p, na.rm=TRUE)); 
   } else if (mthd == 'min') {
-    p <- apply(pv, 1, min); 
+    p <- apply(pv, 1, function(p) min(p, na.rm=TRUE)); 
   } else if (mthd == 'average') {
-    p <- 10^rowMeans(log10(pv)); 
+    p <- 10^rowMeans(log10(pv), na.rm=TRUE); 
   } else if (mthd == 'simes') {
     n <- ncol(pv); 
     p <- apply(pv, 1, function(p) {
-      s <- min(n*(sort(p)/(1:n))); 
+      n <- length(p[!is.na(p)]); 
+      s <- min(n*(sort(p)/(1:n)), na.rm=TRUE); 
     }); 
     p <- pmin(1, p); 
   } else {
-    c <- -2*rowSums(log(pv));
-    p <- pchisq(c, 2*ncol(pv), lower.tail = FALSE, log.p = TRUE); 
-    if (adjust.fisher) p <- exp(p + log(ncol(pv))) else p <- exp(p); 
+    p <- apply(pv, 1, function(p) {
+      n <- length(p[!is.na(p)]); 
+      c <- -2*sum(log(p), na.rm=TRUE);
+      p <- pchisq(c, 2*n, lower.tail = FALSE, log.p = TRUE); 
+      if (adjust.fisher) p <- exp(p + log(n)) else p <- exp(p); 
+      p; 
+    }); 
     p <- pmin(1, p); 
   }
   
