@@ -24,9 +24,14 @@ CombinePvalue <- function(pv, mthd=c('fisher', 'simes', 'bonferroni', 'max', 'mi
   pv[pv==0] <- mn; # minimum possible value
   
   if (normalize) {
-    st <- apply(pv, 2, sort); 
-    mn <- 10^rowMeans(log10(st)); 
-    pv <- apply(pv, 2, function(p) mn[round(rank(p))]); 
+    nr <- nrow(pv); 
+    st <- lapply(1:ncol(pv), function(i) sort(pv[, i])); 
+    ps <- sapply(st, function(s) s[round((1:nr)*(length(s)/nr))]); 
+    mn <- 10^rowMeans(log10(ps), na.rm=TRUE); 
+    for (i in 1:ncol(pv)) {
+      x <- st[[i]]; 
+      pv[names(x), i] <- mn[round((1:length(x)*(nr/length(x))))];
+    }
   }
   
   mthd <- tolower(mthd[1]); 
