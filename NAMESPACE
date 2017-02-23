@@ -76,6 +76,7 @@ export("NormLinear");
 export("NormAffyLoess");
 export("NormAffyQspline");
 export("NormMethods");
+export("OraWrapper");
 export("OutputDe");
 export("PCALegend");
 export("PrepareDe");
