@@ -47,7 +47,7 @@ OraWrapper<- function(subset, geneset, background=NA, method=c('fisher'=1, 'chis
       } else pvl <- rep(1, length(pvl));
       
       tbl <- cbind(N_Within=n11, N_Total=n11+n01, "Within(%)"=round(100*n11/(n11+n10), 2), 
-                   "Overall(%)"=round(100*(n11+n01)/rowSums(nnn), 2), "OddRatio"=round(osr, 2), 
+                   "Overall(%)"=round(100*(n11+n01)/rowSums(nnn), 2), "OddsRatio"=round(osr, 2), 
                    PValue=pvl, 'FDR'=p.adjust(pvl, method='BH'));
       rownames(tbl) <- rownames(nnn); 
       
