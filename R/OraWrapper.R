@@ -36,9 +36,14 @@ OraWrapper<- function(subset, geneset, background=NA, method=c('fisher'=1, 'chis
         pvl <- apply(nnn, 1, function(ns) chisq.test(matrix(ns, nr=2))$p.value[[1]]);
         options(warn = -1); 
       } else if (method==3) {
-        options(warn = -1); 
-        pvl <- apply(nnn, 1, function(ns) prop.test(c(ns[1], ns[2]), c(ns[1]+ns[3], ns[2]+ns[4]), alternative='greater')$p.value[[1]])
-        options(warn = 1); 
+        p0 <- (n11+n01)/(n10+n00);
+        n1 <- n11+n10;
+        n2 <- n01+n00;
+        p1 <- n11/(n1);
+        p2 <- n01/(n2);
+        z  <- (p1-p2)/sqrt(p0*(1-p0)*(1/n1+1/n2));
+        pvl <- pnorm(z, lower.tail = FALSE, log.p = TRUE);
+        pvl <- exp(pvl); 
       } else pvl <- rep(1, length(pvl));
       
       tbl <- cbind(N_Within=n11, N_Total=n11+n01, "Within(%)"=round(100*n11/(n10+n10), 2), 
