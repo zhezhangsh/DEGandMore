@@ -31,7 +31,7 @@ OptimizeClustering <- function(mtrx, k0=3, k1=round(sqrt(ncol(mtrx))), method=c(
     sl <- sapply(sc, function(s) mean(s[, 3]));
     ii <- which(sl==max(sl))[1]; 
     
-    sl <- sl[[ii]]; 
+    sl <- sc[[ii]]; 
     sl <- cbind(sl[, 1], sl[, 2], sl[, 3]);
     colnames(sl) <- c('cluster', 'neighbor', 'width'); 
   } else if (evaluation == 'dunn') {
