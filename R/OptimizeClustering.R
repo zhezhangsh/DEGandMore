@@ -15,7 +15,7 @@ OptimizeClustering <- function(mtrx, k0=3, k1=round(sqrt(ncol(mtrx))), method=c(
     require(som);
     cl <- lapply(k0:k1, function(k) { 
       k <- as.numeric(k); 
-      sm <- som(t(mtrx), k, k); 
+      sm <- som(t(mtrx), 1, k); 
       cl <- paste(sm$visual$x, sm$visual$y, sep='_'); 
       cl <- as.integer(factor(cl)); 
       names(cl) <- colnames(mtrx);
