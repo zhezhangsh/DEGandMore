@@ -1,5 +1,5 @@
 # Optimize clustering by finding the best k
-OptimizeClustering <- function(mtrx, k0=3, k1=round(sqrt(ncol(mtrx))), method=c('hierarchical', 'kmeans', 'som'), 
+OptimizeClustering <- function(mtrx, k0=3, k1=round(sqrt(ncol(mtrx))), method=c('kmeans', 'hierarchical', 'som'), 
                                evaluation=c('silhouette', 'dunn', 'davies')) {
   
   method <- tolower(method[1]);
@@ -53,11 +53,16 @@ OptimizeClustering <- function(mtrx, k0=3, k1=round(sqrt(ncol(mtrx))), method=c(
     colnames(sl) <- c('cluster', 'neighbor', 'width'); 
   };
   
+  r2c <- function(d) cor(rowMeans(d), d); 
+  
+  c <- cl[[ii]]; 
+  r <- sapply(1:max(c), function(i) mean(r2c(mtrx[, c==i, drop=FALSE]))) 
   n <- sapply(split(sl[, 1], sl[, 1]), length);
   b <- sapply(split(sl[, 2], sl[, 1]), mean);
   w <- sapply(split(sl[, 3], sl[, 1]), mean);
-  s <- cbind(N=n, Mean_Neighbor=b, Mean_Width=w); 
+  s <- cbind(N=n, Mean_Correlation=r, Mean_Neighbor=b, Mean_Silhouette=w); 
+  m <- sapply(1:max(c), function(i) rowMeans(mtrx[, c==i, drop=FALSE])); 
   
-  list(parameter=c(min=k0, max=k1, optimal=(k0:k1)[ii], method=method, evaluation=evaluation), cluster=cl[[ii]],
-       summary=s, silhouette=sl, all=cl); 
+  list(parameter=c(min=k0, max=k1, optimal=(k0:k1)[ii], method=method, evaluation=evaluation), 
+       cluster=c, mean=m, summary=s, silhouette=sl, all=cl); 
 }
