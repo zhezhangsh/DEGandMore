@@ -9,6 +9,7 @@ export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
 export("CreateOiReport");
+export("CrossPlatformDE");
 export("DeAbsSeq");
 export("DeAldex2");
 export("DeBader");
