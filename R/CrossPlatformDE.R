@@ -23,7 +23,7 @@ CrossPlatformDE <- function(d0, d1, ref0=NA, ref1=NA) {
   
   adj2 <- adj1 <- apply(d1, 2, function(x) x-(m1-m0)); 
   
-  for (i in 1:nrow(adj)) {
+  for (i in 1:nrow(adj1)) {
     v <- v0[i]; 
     if (identical(NA, ref1)) x <- adj1[i, ] else x <- adj1[i, ref1];
     y <- x-mean(x);
