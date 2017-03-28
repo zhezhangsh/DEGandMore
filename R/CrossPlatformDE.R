@@ -19,6 +19,8 @@ CrossPlatformDE <- function(d0, d1, ref0=NA, ref1=NA) {
     v0 <- calV(d0[, ref0]);
   }
   
+  if (identical(NA, ref1)) m1 <- rowMeans(d1) else m1 <- rowMeans(d1[, ref1]);
+  
   adj2 <- adj1 <- apply(d1, 2, function(x) x-(m1-m0)); 
   
   for (i in 1:nrow(adj)) {
