@@ -86,6 +86,7 @@ export("PrepareDe");
 export("PrepareGSEA");
 export("RunningRank");
 export("SummarizeGSEA");
+export("SummarizePiano");
 export("SummarizeRP");
 export("SummarizeStatCl");
 export("VoomLimma");
