@@ -16,7 +16,7 @@ DeLimma <- function(mtrx, grps, paired=FALSE, logged=TRUE) {
     design <- model.matrix(~pair+comp);
     fit    <- lmFit(mtrx, design);
     fit    <- eBayes(fit); 
-    res    <- topTable(fit, coef=2, number=nrow(mtrx));
+    res    <- topTable(fit, coef=paste('comp', names(grps)[2], sep=''), number=nrow(mtrx));
     res    <- res[rownames(mtrx), , drop=FALSE]; 
   } else {
     design <- cbind(Ctrl=rep(1, ncol(mtrx)), Comp=rep(1:2, sapply(grps, length))); 

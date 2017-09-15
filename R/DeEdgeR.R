@@ -12,7 +12,7 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
   # create DGEList object, normalize data and estimate dispersion 
   group <- rep(names(grps), sapply(grps, length));
   dge   <- DGEList(counts=mtrx, group=group);
-  dge   <- calcNormFactors(dge, method=norm.method);
+  dge   <- calcNormFactors(dge, method=norm.method, sumTrim = 0.1);
   
   if (paired & n[1]==n[2]) {
     n <- length(grps[[1]]); 
@@ -29,6 +29,7 @@ DeEdgeR <- function(mtrx, grps, paired=FALSE, norm.method='TMM', ...) {
     stat <- as.data.frame(topTags(lrt, n=nrow(mtrx))); 
   } else {
     dge  <- estimateCommonDisp(dge);
+    dge  <- estimateTagwiseDisp(dge);
     if (ncol(mtrx)==2) dge@.Data[[3]] <- 0.5 else # No replicates
       dge <- estimateTagwiseDisp(dge); 
     stat <- as.data.frame(exactTest(dge, pair=names(grps))[[1]]);

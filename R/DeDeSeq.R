@@ -17,10 +17,29 @@ DeDeSeq <- function(mtrx, grps, paired=FALSE, ...) {
     dds  <- DESeqDataSetFromMatrix(mtrx, cond, ~ cond);
   }
   
-  dds <- estimateSizeFactors(dds);
-  dds <- estimateDispersions(dds);
-  dds <- nbinomWaldTest(dds, useQR = FALSE);
-  res  <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
+  # estSF <- function(mtrx) {
+  #   sm <- rowSums(mtrx);
+  #   qr <- quantile(sm[sm>0], probs=seq(0, 1, 0.1));
+  #   mx <- mtrx[sm>=qr[2] & sm<=qr[10], , drop=FALSE];
+  #   if (paired & n[1]==n[2]) {
+  #     cond <- DataFrame(cond=factor(rep(names(grps), n)), pair=factor(c(1:n[1], 1:n[2])));
+  #     dds <- DESeqDataSetFromMatrix(mx, cond, ~ cond + pair);
+  #   } else {
+  #     cond <- DataFrame(cond=factor(rep(names(grps), n)));
+  #     dds  <- DESeqDataSetFromMatrix(mx, cond, ~ cond);
+  #   };
+  #   dds <- DESeq2::estimateSizeFactors(dds);
+  #   sizeFactors(dds);
+  # };
+
+  # sizeFactors(dds) <- estSF(mtrx);
+  dds <- DESeq2::estimateSizeFactors(dds); # geoMeans=1/(rowMeans(1/mtrx)));
+  dds <- DESeq2::estimateDispersions(dds, fitType = 'local');
+  # dds <- DESeq2::estimateDispersionsGeneEst(dds);
+  # dds <- DESeq2::estimateDispersionsFit(dds, fitType = 'local');
+  # dds <- DESeq2::estimateDispersionsMAP(dds);
+  dds <- DESeq2::nbinomWaldTest(dds, useQR = FALSE);
+  res <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
   
 #   dds  <- DESeq(dds);
 #   res  <- DESeq2::results(dds, c('cond', names(grps)[2:1]));
