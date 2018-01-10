@@ -1,4 +1,4 @@
-DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.cluster=1, just.stat = TRUE,
+DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, min.present = 2, num.cluster=1, just.stat = TRUE,
                      norm.count = c('DESeq', 'TMM', 'RLE', 'QQ', 'UpperQuantile', 'Median', 'TotalCount'),
                      norm.logged = c('Loess', 'VST', 'Rlog', 'QQ', 'UpperQuantile', 'Median'), force.norm = FALSE) {
   
@@ -40,6 +40,7 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
   ###########################################################################################################
   # Only test genes with required number of total read count in all tested samples
   d0 <- ct[rowSums(ct) >= min.count, c(grps[[1]], grps[[2]]), drop=FALSE]; 
+  d0 <- ct[apply(ct, 1, function(c) length(c[c>0]))>=min.present, , drop=FALSE];
   if (nrow(d0) < 1) stop('No genes have total read count more than ', min.count, '; reduce the cutoff.\n'); 
   ###########################################################################################################
   
@@ -52,7 +53,8 @@ DeRNAseq <- function(ct, grps, paired = FALSE, mthds = 0, min.count = 6, num.clu
     norm1 <- paste('Norm', norm.count[1], sep=''); 
     if (!(norm1 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.count), '\n');
     d1 <- NormWrapper(d0, norm1); 
-  }
+  };
+  
   if (length(norm[logd == 'Yes'])>0 | force.norm) {
     norm2 <- paste('Norm', norm.logged[1], sep=''); 
     if (!(norm2 %in% NormMethods())) stop('Normalization method not available: ', sub('Norm', '', norm.logged), '\n');
