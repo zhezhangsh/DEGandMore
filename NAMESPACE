@@ -89,6 +89,7 @@ export("SummarizeGSEA");
 export("SummarizePiano");
 export("SummarizeRP");
 export("SummarizeStatCl");
+export("TransformTxMatrix");
 export("VoomLimma");
 export("WriteExcel");
 export("WriteExcelSheet");
