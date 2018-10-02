@@ -4,6 +4,7 @@ export("CalculateRand");
 export("CombineMean"); 
 export("CombinePvalue");
 export("CombinePvalueMethods"); 
+export("ConvertMatrixByRank");
 export("CreateClReport");
 export("CreateDdReport");
 export("CreateDeReport");
