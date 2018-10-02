@@ -10,7 +10,7 @@ ConvertMatrixByRank <- function(mtrx, rank, ind1, ind2) {
 
   mx <- mtrx;
   mx[, ind1] <- apply(mtrx[, ind1, drop=FALSE], 2, function(x) x-rowMeans(mtrx[, ind1, drop=FALSE]));
-  mx[, ind2] <- apply(mtrx[, ind2, drop=FALSE], 2, function(x) x-rowMeans(mtrx[, ind2, drop=FALSE]));
+  mx[, ind2] <- apply(mtrx[, ind2, drop=FALSE], 2, function(x) x-rowMeans(mtrx[, ind2, drop=FALSE])+rk);
 
   mx;
 }
