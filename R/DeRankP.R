@@ -54,7 +54,7 @@ DeRankProd<-function(mtrx, grps, paired=FALSE, logged=TRUE, nperm=100, ...) {
 # Summarize RP results
 SummarizeRP<-function(rp, class1, class2, genename=NA, save.it=TRUE, single.ranking=FALSE, write.rnk=FALSE, write.excel=FALSE) {
   
-  tbs<-lapply(1:2, function(i) cbind(sapply(rp[4:1], function(rp) rp[[i]]), -1*rp$AveFC, exp(-1*rp$AveFC*log(2))));
+  tbs<-lapply(1:2, function(i) cbind(sapply(rp[4:1], function(rp) rp[, i]), -1*rp$AveFC, exp(-1*rp$AveFC*log(2))));
   colnames(tbs[[1]])<-colnames(tbs[[2]])<-c('Rank', 'RankProduct', 'Pvalue', 'FDR', paste('Log2(', class2, '/', class1, ')', sep=''), 'FoldChange');
   if (!identical(NA, genename)) rownames(tbs[[1]])<-rownames(tbs[[2]])<-genename;
   names(tbs)[1]<-paste(class1, '<', class2);
