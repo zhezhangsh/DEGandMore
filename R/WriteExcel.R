@@ -83,7 +83,7 @@ assign(cells[rowStart:numRow,1], rownames(values), CellStyle(wb, font=font));
 # assign values to cells
 #cells[rowStart:numRow, colStart:numCol]<-
 #    sapply(1:ncol(values), function(i, c, v, s) assign(c[, i], v[, i], s[[i]]), c=cells[rowStart:numRow, colStart:numCol], v=values, s=styles);
-sapply(1:ncol(values), function(i, c, v, s) if (class(c)=='matrix') assign(c[, i], v[, i], s[[i]]) else assign(c[i], v[, i], s[[i]]),
+sapply(1:ncol(values), function(i, c, v, s) if (class(c)[1]=='matrix') assign(c[, i], v[, i], s[[i]]) else assign(c[i], v[, i], s[[i]]),
     c=cells[rowStart:numRow, colStart:numCol], v=values, s=styles);
 
 setZoom(sh, numerator=zoom, denominator=100);
