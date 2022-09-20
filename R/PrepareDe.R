@@ -12,7 +12,7 @@ PrepareDe <- function(mtrx, grps, pair) {
   if (is.null(names(grps)[1])) names(grps)[1]<-'Group0';
   if (is.null(names(grps)[2])) names(grps)[2]<-'Group1';
   
-  if (class(mtrx) != 'matrix') mtrx<-as.matrix(mtrx);
+  if (class(mtrx)[1] != 'matrix') mtrx<-as.matrix(mtrx);
   e1 <- mtrx[, grps[[1]], drop=FALSE];
   e2 <- mtrx[, grps[[2]], drop=FALSE];
   d  <- cbind(e1, e2);
